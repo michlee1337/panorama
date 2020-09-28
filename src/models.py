@@ -9,8 +9,8 @@ class Resource(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     link = db.Column(db.String(500))
-    depth = db.Column(db.Integer) # should these be tags?
-    type = db.Column(db.Integer)
+    depth = db.Column(db.Integer, nullable=True) # should these be tags?
+    type = db.Column(db.Integer, nullable=True)
     concept_id = db.Column(db.Integer, db.ForeignKey('concepts.id'), nullable=False)
     # vote_count << votable decorator?
     # vote_sum
@@ -35,4 +35,4 @@ class Concept(db.Model):
     children = db.relationship('Concept_Relationships', backref='child_concept', primaryjoin=id==Concept_Relationships.parent_id)
 
     def __str__(self):
-        return f"<id={self.id}, title={self.title}, parents = {self.parents}, children = {self.children}>"
+        return f"<id={self.id}, title={self.title}, parents = {self.parents}, children = {self.children}>, resources={self.resources}"
