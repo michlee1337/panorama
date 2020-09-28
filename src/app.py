@@ -12,7 +12,7 @@ app = Flask(__name__)
 #app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
 
 # create database tables
-SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
 # _____ TEMP ______
