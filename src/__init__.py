@@ -15,14 +15,12 @@ app = Flask(__name__)
 # create database tables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
-# print("triggered")
 
 from src import models
 db.create_all()
 
 # _____ TEMP ______
 from src.models import Concept
-# from src.models import User
 
 @app.route('/')
 def hello():
@@ -38,5 +36,4 @@ def concept_test():
 # _____ MAIN ______
 
 if __name__ == '__main__':
-    # app.run(ssl_context=('cert.pem', 'key.pem'), threaded=True, port=5001)
     app.run()
