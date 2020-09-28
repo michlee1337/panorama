@@ -20,7 +20,7 @@ from src import models
 db.create_all()
 
 # _____ TEMP ______
-from src.models import Concept
+from src.models import Concept, Concept_Relationships
 
 @app.route('/')
 def hello():
@@ -29,7 +29,9 @@ def hello():
 
 @app.route('/concept_test')
 def concept_test():
+
     cs = Concept.query.all()
+    print(cs)
     ctitle = [c.title for c in cs]
     return str(ctitle)
 
