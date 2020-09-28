@@ -24,7 +24,6 @@ from src.models import Concept, Concept_Relationships
 
 @app.route('/')
 def hello():
-    print("triggered")
     return "Hello World!"
 
 @app.route('/concept_test')
