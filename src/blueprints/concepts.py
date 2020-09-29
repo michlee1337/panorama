@@ -11,4 +11,4 @@ def view_concept(concept_id):
     '''
     concept = Concept.query.get(concept_id)
 
-    return str(concept)
+    return render_template('view_concept.html', concept=concept)
