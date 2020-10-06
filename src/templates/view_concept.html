@@ -1,11 +1,15 @@
 Title: {{concept.title}}
 </br>
 
-Resources: {{concept.resources}}
-</br>
+Introduction
+{{concept.resources}}
 
-Parents: {{concept.parents}}
-</br>
-
-Children: {{concept.children}}
-</br>
+_____
+Children:
+{% for relationship in concept.children %}
+  {{relationship.child_id}}
+  {% if false %}
+    {{ child_concept.title}}
+    {{ child_concept.resources}}
+  {% endif %}
+{% endfor %}
