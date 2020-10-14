@@ -1,15 +1,19 @@
-Title: {{concept.title}}
-</br>
+{% extends "base.html" %}
 
-Introduction
-{{concept.resources}}
+{% block content %}
+  Title: {{concept.title}}
+  </br>
 
-_____
-Children:
-{% for relationship in concept.children %}
-  {{relationship.child_id}}
-  {% if false %}
-    {{ child_concept.title}}
-    {{ child_concept.resources}}
-  {% endif %}
-{% endfor %}
+  Introduction
+  {{concept.resources}}
+
+  _____
+  Children:
+  {% for relationship in concept.children %}
+    {{relationship.child_id}}
+    {% if false %}
+      {{ child_concept.title}}
+      {{ child_concept.resources}}
+    {% endif %}
+  {% endfor %}
+{% endblock %}
