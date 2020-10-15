@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_fontawesome import FontAwesome
 import sys
 import os
 
@@ -8,6 +9,9 @@ import os
 sys.path.append('.')
 sys.path.append('../src')
 app = Flask(__name__)
+fa = FontAwesome(app)
+
+# app.static_folder = 'static'
 
 # create database tables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']

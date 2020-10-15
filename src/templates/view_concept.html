@@ -1,19 +1,21 @@
 {% extends "base.html" %}
-
 {% block content %}
-  Title: {{concept.title}}
-  </br>
+  <div class="container">
+    <div class="row">
+      <h1> Title: {{concept.title}} </h1>
+    </div>
 
-  Introduction
-  {{concept.resources}}
+    Introduction
+    {{concept.resources}}
 
-  _____
-  Children:
-  {% for relationship in concept.children %}
-    {{relationship.child_id}}
-    {% if false %}
-      {{ child_concept.title}}
-      {{ child_concept.resources}}
-    {% endif %}
-  {% endfor %}
+    _____
+    Children:
+    {% for relationship in concept.children %}
+      {{relationship.child_id}}
+      {% if false %}
+        {{ child_concept.title}}
+        {{ child_concept.resources}}
+      {% endif %}
+    {% endfor %}
+  </div>
 {% endblock %}
