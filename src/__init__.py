@@ -1,14 +1,17 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+# Get Font Awesome
 from flask_fontawesome import FontAwesome
 import sys
 import os
 
-#Create a flask app
+# Create a flask app
 sys.path.append('.')
 sys.path.append('../src')
 app = Flask(__name__)
+
+# Get Font Awesome
 fa = FontAwesome(app)
 
 # app.static_folder = 'static'

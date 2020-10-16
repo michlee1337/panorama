@@ -5,17 +5,28 @@
       <h1> Title: {{concept.title}} </h1>
     </div>
 
-    Introduction
-    {{concept.resources}}
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Introduction</h5>
+            {% for resource in concept.resources %}
+              <a href="{{resource.link}}" class="btn btn-primary">{{resource.name}}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
 
-    _____
-    Children:
-    {% for relationship in concept.children %}
-      {{relationship.child_id}}
-      {% if false %}
-        {{ child_concept.title}}
-        {{ child_concept.resources}}
-      {% endif %}
-    {% endfor %}
+      {% for relationship in concept.children %}
+        <div class="col-sm-4">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">Card title</h5>
+              <a href="#" class="btn btn-primary">a resource</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
 {% endblock %}
