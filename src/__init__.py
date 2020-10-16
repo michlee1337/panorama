@@ -32,6 +32,15 @@ db.create_all()
 #
 # concept1.children.append(concept2)
 #
+# resource1 = models.Resource(name="google", link = "www.google.com", depth=0)
+# resource2 = models.Resource(name="purple", link = "www.purple.com", depth=1)
+# resource3 = models.Resource(name="github", link = "www.github.com", depth=2)
+# concept1.resources.append(resource1)
+# concept1.resources.append(resource2)
+# concept2.resources.append(resource3)
+# db.session.merge(resource1)
+# db.session.merge(resource2)
+# db.session.merge(resource3)
 # db.session.merge(concept1)
 # db.session.merge(concept2)
 #

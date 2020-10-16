@@ -6,26 +6,14 @@
     </div>
 
     <div class="row">
-      <div class="col-sm-4">
-        <div class="card" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">Introduction</h5>
-            {% for resource in concept.resources %}
-              <a href="{{resource.link}}" class="btn btn-primary">{{resource.name}}</a>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
+      {% with title = "Introduction", resources = concept.resources %}
+        {% include "_concept_card.html" %}
+      {% endwith %}
 
       {% for child in concept.children %}
-        <div class="col-sm-4">
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">{{child.title}}</h5>
-              <a href="#" class="btn btn-primary">a resource</a>
-            </div>
-          </div>
-        </div>
+        {% with title = child.title, resources = child.resources %}
+          {% include "_concept_card.html" %}
+        {% endwith %}
       {% endfor %}
     </div>
   </div>
