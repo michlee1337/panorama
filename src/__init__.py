@@ -23,6 +23,24 @@ db = SQLAlchemy(app)
 from src import models
 db.create_all()
 
+# TEST
+# concept1 = models.Concept(
+#     title = "Concept 1")
+#
+# concept2 = models.Concept(
+#     title = "Concept 2")
+#
+# concept1.children.append(concept2)
+#
+# db.session.merge(concept1)
+# db.session.merge(concept2)
+#
+# db.session.commit()
+
+# END TEST
+
+
+
 # register routes
 from blueprints.concepts import concepts_template
 

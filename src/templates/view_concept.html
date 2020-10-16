@@ -17,11 +17,11 @@
         </div>
       </div>
 
-      {% for relationship in concept.children %}
+      {% for child in concept.children %}
         <div class="col-sm-4">
           <div class="card" style="width: 18rem;">
             <div class="card-body">
-              <h5 class="card-title">Card title</h5>
+              <h5 class="card-title">{{child.title}}</h5>
               <a href="#" class="btn btn-primary">a resource</a>
             </div>
           </div>
