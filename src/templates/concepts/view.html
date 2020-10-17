@@ -7,12 +7,12 @@
 
     <div class="row">
       {% with title = "Introduction", resources = concept.resources %}
-        {% include "_concept_card.html" %}
+        {% include "concepts/_card.html" %}
       {% endwith %}
 
       {% for child in concept.children %}
         {% with title = child.title, resources = child.resources %}
-          {% include "_concept_card.html" %}
+          {% include "concepts/_card.html" %}
         {% endwith %}
       {% endfor %}
     </div>
