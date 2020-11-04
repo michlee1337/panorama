@@ -1,4 +1,19 @@
 {% extends "base.html" %}
-{% block content %}
-a form should be here
+{% block app_content %}
+<div class="container">
+  <h1>Create a new concept</h1>
+
+  <form>
+    <div class="form-group">
+      <label for="name">Title</label>
+      <input type="text" class="form-control" id="name">
+    </div>
+    <div class="form-group">
+      <label for="link">Resources</label>
+      <input type="text" class="form-control" id="link">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
 {% endblock %}
