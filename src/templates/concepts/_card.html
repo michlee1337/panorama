@@ -1,9 +1,9 @@
-<div class="col-sm-4">
+<div class="concept_card">
   <div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">{{title}}</h5>
       {% for resource in resources %}
-        <a href="{{resource.link}}" class="btn btn-primary">{{resource.name}}</a>
+        <a href="{{resource.link}}" class="btn btn-primary" target="_blank">{{resource.name}}</a>
       {% endfor %}
     </div>
   </div>

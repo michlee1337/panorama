@@ -1,20 +1,37 @@
 {% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/concepts/view.css') }}">
+    <script src="{{ url_for('static', filename='js/concepts/view.js') }}"></script>
+{% endblock %}
+
 {% block app_content %}
-  <div class="container">
-    <div class="row">
-      <h1> Title: {{concept.title}} </h1>
-    </div>
+  <div class="wrapper">
+    <div class="content">
+      <button type="button" id="sidebarCollapse" class="btn btn-info">
+        <i class="fas fa-align-right"></i>
+        <span>Create StudyPlan</span>
+      </button>
 
-    <div class="row">
-      {% with title = "Introduction", resources = concept.resources %}
-        {% include "concepts/_card.html" %}
-      {% endwith %}
+      <div class="title">
+        <h1> Title: {{concept.title}} </h1>
+      </div>
 
-      {% for child in concept.children %}
-        {% with title = child.title, resources = child.resources %}
+      <div class="concepts">
+
+        {% with title = "Introduction", resources = concept.resources %}
           {% include "concepts/_card.html" %}
         {% endwith %}
-      {% endfor %}
+
+        {% for child in concept.children %}
+          {% with title = child.title, resources = child.resources %}
+            {% include "concepts/_card.html" %}
+          {% endwith %}
+        {% endfor %}
+      </div>
     </div>
+    <nav id="studyplan_creator">
+    </nav>
   </div>
 {% endblock %}
