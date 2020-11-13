@@ -8,25 +8,25 @@
   flex: 1;
 }
 
+.concept_card_resource {
+  display: inline;
+}
+
+/* STUDYPLAN CREATOR */
 #studyplan_creator {
     flex: 0;
-    /* width: 0; */
-    /* position: fixed; */
-    /* top: 0;
-    right: 0; */
+    display: None;
     height: 100vh;
-    /* z-index: 999; */
-    background: #7386D5;
+    background: #17a2b8;
     color: #fff;
     transition: all 0.3s;
 }
 
 #studyplan_creator.active {
     flex: 1;
-    /* position: fixed; */
-    /* top: 0;
-    right: 0; */
+    display: block;
     transition: all 0.3s;
+    padding: 10px;
 }
 
 .concepts {
@@ -38,4 +38,19 @@
 .concept_card {
   flex: 1;
   margin: 15px;
+}
+
+.studyplans-creator_week_resources {
+  background-color: grey;
+  min-height: 100px;
+  display: flex;
+  /* flex-wrap: wrap; */
+}
+
+.studyplan_creator_week_resources_card {
+  /* flex: 1; */
+  /* height: 15px; */
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
 }

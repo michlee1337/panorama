@@ -3,7 +3,8 @@
     <div class="card-body">
       <h5 class="card-title">{{title}}</h5>
       {% for resource in resources %}
-        <a href="{{resource.link}}" class="btn btn-primary" target="_blank">{{resource.name}}</a>
+        <!-- id is for drag and drop in studyplan creator -->
+          <a id={{resource.id}} href="{{resource.link}}" class="btn btn-primary" target="_blank" draggable="true" ondragstart="drag(event)">{{resource.name}}</a>
       {% endfor %}
     </div>
   </div>
