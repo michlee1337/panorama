@@ -6,9 +6,15 @@ $(document).ready(function () {
 
 });
 
+var week = 2;
 // append child for a week
 function addWeek() {
-  console.log('yo');
+  $("#studyplans-creator_wrapper").append(`<div class="studyplans-creator_week">
+    <h4> Week ${week}</h4>
+    <div class="studyplans-creator_week_resources card" ondrop="drop(event)" ondragover="allowDrop(event)">
+    </div>
+  </div>`);
+  week += 1;
 }
 
 // // append child for a resource
