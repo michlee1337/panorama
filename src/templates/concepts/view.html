@@ -20,12 +20,12 @@
 
       <div class="concepts">
 
-        {% with title = "Introduction", resources = concept.resources %}
+        {% with title = "Introduction", concept_id = concept.id ,resources = concept.resources %}
           {% include "concepts/_card.html" %}
         {% endwith %}
 
         {% for child in concept.children %}
-          {% with title = child.title, resources = child.resources %}
+          {% with title = child.title, concept_id = child.id, resources = child.resources %}
             {% include "concepts/_card.html" %}
           {% endwith %}
         {% endfor %}
