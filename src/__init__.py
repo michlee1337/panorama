@@ -73,7 +73,7 @@ app.register_blueprint(users_template)
 # _____ TEMP ______
 @app.route('/')
 def hello():
-    return "Hello World!"
+    return "Hello World! View <a href='concepts/1'>demo page </a>"
 
 @app.route('/concept_test')
 def concept_test():
