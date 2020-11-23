@@ -1,6 +1,10 @@
 This project is a WIP. </br>
 View the latest production code [here](https://panorama-pro.herokuapp.com/).
 
+# Reqs
+Postgresql
+https://www.elliotblackburn.com/installing-postgresql-on-macos-osx/
+
 # Run
 0. Install [Python3](https://www.python.org/downloads/)
 1. Start pip env: `source env/bin/activate`

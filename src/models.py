@@ -29,7 +29,7 @@ class Resource(db.Model):
     depth = db.Column(db.Integer, nullable=True) # should these be tags?
     # description = db.Column(db.String)
     type = db.Column(db.Integer, nullable=True)
-    concept_id = db.Column(db.Integer, db.ForeignKey('concepts.id'), nullable=False)
+    # concept_id = db.Column(db.Integer, db.ForeignKey('concepts.id'), nullable=False)
     # est_time = db.Column(db.Integer, nullable=True) # should these be tags?
     # vote_count = db.Column(db.Integer)
     # vote_sum = db.Column(db.Integer)
@@ -38,13 +38,13 @@ class Resource(db.Model):
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
 
-relationships = Table(
-    'relationships',
-    db.Model.metadata,
-    db.Column('RelationshipId', db.Integer, primary_key=True),
-    db.Column('ParentId', db.Integer, ForeignKey('concepts.id')),
-    db.Column('ChildId', db.Integer, ForeignKey('concepts.id'))
-)
+# relationships = Table(
+#     'relationships',
+#     db.Model.metadata,
+#     db.Column('RelationshipId', db.Integer, primary_key=True),
+#     db.Column('ParentId', db.Integer, ForeignKey('concepts.id')),
+#     db.Column('ChildId', db.Integer, ForeignKey('concepts.id'))
+# )
 
 class Concept(db.Model):
     __tablename__ = 'concepts'
@@ -53,34 +53,63 @@ class Concept(db.Model):
     title = db.Column(db.String(100))
     resources = db.relationship('Resource', backref='concept')
 
-    parents = relationship(
-        'Concept',
-        secondary=relationships,
-        primaryjoin=id == relationships.c.ChildId,
-        secondaryjoin=id == relationships.c.ParentId,
-        backref=backref('children')
-    )
+    # relationships
+    resources = relationship("Resource",
+                secondary=lambda: conept_resources,
+                backref="concepts")
 
-class StudyPlanResource(db.Model):  # workaround to use ordering_list
+
+class Reading(db.Model):  # workaround to use ordering_list
     __tablename__ = 'studyplan_resources'
     id = db.Column(db.Integer, primary_key=True)
-    studyplan_chunk_id = db.Column(db.Integer, ForeignKey('studyplan_chunks.id'))
+
+    # relationships
+    topic_id = db.Column(db.Integer, ForeignKey('topics.id'))
     position = db.Column(db.Integer)
     resource_id = db.Column(db.Integer, ForeignKey('resources.id'))
     resource = db.relationship('Resource')
 
-class StudyPlanChunk(db.Model):
-    __tablename__ = 'studyplan_chunks'
+class Topic(db.Model):
+    __tablename__ = 'topics'
     id = Column(db.Integer, primary_key=True)
+
+    # relationships
+    concept_id = Column(Integer, ForeignKey('concepts.id'))
+    concept = relationship("Concept", backref="topics")
+
     studyplan_id = db.Column(db.Integer, ForeignKey('studyplans.id'))
     position = db.Column(db.Integer)
-    _resources = db.relationship("StudyPlanResource", order_by=[StudyPlanResource.position], collection_class=ordering_list('position'))
-    resources = association_proxy('_resources', 'resources')
+
+    _readings = db.relationship("Reading", order_by=[Reading.position], collection_class=ordering_list('position'))
+    readings = association_proxy('_readings', 'readings')
+
+
 
 class StudyPlan(db.Model):
     __tablename__ = 'studyplans'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     description = db.Column(db.String(1000))
-    chunks = db.relationship("StudyPlanChunk", order_by=[StudyPlanChunk.position],
+    # relationships
+    concept_id = Column(Integer, ForeignKey('concepts.id'))
+    concept = relationship("Concept", backref="studyplans")  # NOTE: Studyplan <> Concept has *TWO* relationships
+    prerequisite_concepts = relationship("Concept",
+                secondary=lambda: prerequisites,
+                backref="prereq_for")  # DEV: this needs a better name
+
+    topics = db.relationship("Topic", order_by=[Topic.position],
                         collection_class=ordering_list('position'))
+
+conept_resources = Table(
+    'conept_resources',
+    db.Model.metadata,
+    Column('resource_id', Integer, ForeignKey('resources.id')),
+    Column('concept_id', Integer, ForeignKey('concepts.id'))
+)
+
+prerequisites = Table(
+    'prerequisites',
+    db.Model.metadata,
+    Column('studyplan_id', Integer, ForeignKey('studyplans.id')),
+    Column('concept_id', Integer, ForeignKey('concepts.id'))
+)
