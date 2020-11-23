@@ -1,14 +1,19 @@
 This project is a WIP. </br>
 View the latest production code [here](https://panorama-pro.herokuapp.com/).
 
-# Reqs
-Postgresql
-https://www.elliotblackburn.com/installing-postgresql-on-macos-osx/
+# Prerequisites
+Install [Python3](https://www.python.org/downloads/)
+Set up [Postgresql](https://www.elliotblackburn.com/installing-postgresql-on-macos-osx/)
+- create database and set the appropriate database url (elaborated below)
+Set up virtual environment
+- create `virtualenv src`
+- set DATABASE_URL [environment variable](https://stackoverflow.com/questions/9554087/setting-an-environment-variable-in-virtualenv)
+- Start `source env/bin/activate`
 
-# Run
-0. Install [Python3](https://www.python.org/downloads/)
-1. Start pip env: `source env/bin/activate`
-2. Run app: `python3 src/__init__.py`
+# Set up Prerequisites
+1. Start virtual enviroment `source env/bin/activate`
+2. Load requirements: `pip install -r requirements.txt`
+3. Run app: `python3 src/__init__.py`
 
 # Dev
 **To Upload a Dropbox Dump Database to Heroku**
