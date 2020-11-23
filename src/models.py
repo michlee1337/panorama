@@ -91,8 +91,8 @@ class StudyPlan(db.Model):
     title = db.Column(db.String(100))
     description = db.Column(db.String(1000))
     # relationships
-    concept_id = Column(Integer, ForeignKey('concepts.id'))
-    concept = relationship("Concept", backref="studyplans")  # NOTE: Studyplan <> Concept has *TWO* relationships
+    # concept_id = Column(Integer, ForeignKey('concepts.id'))
+    # concept = relationship("Concept", backref="studyplans")  # NOTE: Studyplan <> Concept has *TWO* relationships
     prerequisite_concepts = relationship("Concept",
                 secondary=lambda: prerequisites,
                 backref="prereq_for")  # DEV: this needs a better name
