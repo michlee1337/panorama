@@ -66,9 +66,11 @@ def load_user(id):
 # register routes
 from blueprints.concepts import concepts_template
 from blueprints.users import users_template
+from blueprints.studyplans import studyplans_template
 
 app.register_blueprint(concepts_template)
 app.register_blueprint(users_template)
+app.register_blueprint(studyplans_template)
 
 # _____ TEMP ______
 @app.route('/')

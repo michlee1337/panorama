@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/studyplans/new.css') }}">
+    <script src="{{ url_for('static', filename='js/studyplans/new.js') }}"></script>
+{% endblock %}
+
+{% block app_content %}
+<div id="prereqs-input" data-name="prereqs-input">
+  <!-- <input class="main-input" type="text"> -->
+</div>
+
+<div id="studyplans-creator_wrapper">
+  <div class="studyplans-creator_week">
+    <h4> Week 1 </h4>
+    <div class="studyplans-creator_week_resources card">
+    </div>
+
+  </div>
+</div>
+<button type="button" class="btn btn-secondary" onclick="addWeek()">Add a Week</button>
+{% endblock %}
