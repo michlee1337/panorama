@@ -1,8 +1,31 @@
 {% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/studyplans/view.css') }}">
+    <script src="{{ url_for('static', filename='js/studyplans/view.js') }}"></script>
+{% endblock %}
+
 {% block app_content %}
-  <div class="container">
-    <div class="row">
-      WIP
+  <div class="wrapper">
+    <div class="content">
+
+      <div class="title">
+        <h1> Title: {{studyplan.title}} </h1>
+      </div>
+
+      <div class="studyplans">
+
+        {% for topic in studyplan.topics %}
+          {% with topic = topic %}
+            {% include "studyplans/_card.html" %}
+          {% endwith %}
+        {% endfor %}
+      </div>
     </div>
+    <nav id="studyplan_creator">
+      <h3> Create a Study Plan </h3>
+      {% include "studyplans/_create.html" %}
+    </nav>
   </div>
 {% endblock %}
