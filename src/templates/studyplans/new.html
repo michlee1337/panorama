@@ -7,9 +7,32 @@
 {% endblock %}
 
 {% block app_content %}
-<div id="prereqs-input" data-name="prereqs-input">
-  <!-- <input class="main-input" type="text"> -->
-</div>
+<form>
+  <div class="form-group">
+    <label for="prereqs">Prerequisites</label>
+    </br>
+    <div id="prereqs-input" data-name="prereqs-input">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" placeholder="Title">
+  </div>
+
+  <div class="form-group">
+    <label for="main-concept">About</label>
+    <input type="text" class="form-control" placeholder="Main concept">
+  </div>
+
+  <div class="form-group">
+    <label for="main-concept">Description</label>
+    <input type="text" class="form-control" placeholder="...">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
 
 <div id="studyplans-creator_wrapper">
   <div class="studyplans-creator_week">

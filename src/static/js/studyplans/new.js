@@ -1,5 +1,6 @@
 $( document ).ready(function() {
-  console.log("SEE");
+
+  // ______ PREREQUISITES _____
   var prereqs_input_div = document.getElementById('prereqs-input');
   console.log(prereqs_input_div);
   let hiddenInput = document.createElement('input'),
@@ -76,4 +77,5 @@ $( document ).ready(function() {
   function filterTag (tag) {
           return tag.replace(/[^\w -]/g, '').trim().replace(/\W+/g, '-');
       }
+  // ______ PREREQUISITES END _____
 });

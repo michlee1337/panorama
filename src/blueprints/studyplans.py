@@ -15,9 +15,26 @@ def studyplan(studyplan_id):
     else:
         return render_template('404.html')
 
-@studyplans_template.route('/studyplans/new')
+@studyplans_template.route('/studyplans/new', methods=["GET","POST"])
 def studyplan_new():
-    return render_template('studyplans/new.html')
+    if request.method == 'GET':
+        return render_template('studyplans/new.html')
+    elif request.method == 'POST':
+        # request.form
+        # start transaction
+        # validate that title and all are there
+        # create topics
+
+        # create readings
+
+        # create study plan
+
+        # add relationships
+
+        # jsdata = request.form['javascript_data']
+        # data = json.loads(jsdata)[0]
+        return
+
 # @studyplans_template.route('/studyplans')
 # def get (list)
 # def post (create)
