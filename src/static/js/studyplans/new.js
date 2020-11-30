@@ -8,12 +8,20 @@ let topics = [],
   reading_idx = 0;
 
 $( document ).ready(function() {
-  // ______ PREREQUISITES _____
-  let prereqs_hiddenInput = document.createElement('input'),
-      mainInput = document.createElement('input');
+  // ______ HIDDEN INPUTS ______
+  let hiddenInput_prereqs = document.getElementById('hiddenInput_prereqs'),
+  hiddenInput_topics = document.getElementById('hiddenInput_topics'),
+  hiddenInput_readings_to_topic_idx = document.getElementById('hiddenInput_readings_to_topic_idx'),
+  hiddenInput_reading_names = document.getElementById('hiddenInput_reading_names'),
+  hiddenInput_reading_links = document.getElementById('hiddenInput_reading_links');
+
+  // ______ PREREQUISITES ____
+  // hiddenInput_prereqs = document.createElement('input'),
+
+  let mainInput = document.createElement('input');
   var prereqs_input_div = document.getElementById('prereqs-input');
-  prereqs_hiddenInput.setAttribute('type', 'hidden');
-  prereqs_hiddenInput.setAttribute('name','prerequisites');
+  // hiddenInput_prereqs.setAttribute('type', 'hidden');
+  // hiddenInput_prereqs.setAttribute('name','prerequisites');
 
   mainInput.setAttribute('type', 'text');
   mainInput.classList.add('main-input');
@@ -37,7 +45,7 @@ $( document ).ready(function() {
   });
 
   prereqs_input_div.appendChild(mainInput);
-  prereqs_input_div.appendChild(prereqs_hiddenInput);
+  // prereqs_input_div.appendChild(hiddenInput_prereqs);
 
   addTag('hello!');
 
@@ -76,7 +84,7 @@ $( document ).ready(function() {
       prereqs.forEach(function (t) {
           prereqsList.push(t.text);
       });
-      prereqs_hiddenInput.value = prereqsList.join(',');
+      hiddenInput_prereqs.value = prereqsList.join(',');
   }
 
   function filterTag (prereq) {
@@ -91,31 +99,50 @@ function addTopic() {
   $("#studyplans-creator_wrapper").append(`
     <div class="studyplans-creator_topic card">
       <div class="form-group topic-group">
-        <h4><input type="text" class="form-control" onChange="UpdateTopic(${topic_idx}, this)" placeholder="Topic"></h4>
+        <h4><input type="text" class="form-control" onChange="UpdateTopic(${topic_idx}, this.value)" placeholder="Topic"></h4>
       </div>
       <div id="studyplans-creator_topic_readings${topic_idx}">
       </div>
       <button type="button" class="btn btn-secondary" onclick="addReading(${topic_idx})">Add a Reading</button>
     </div>`);
     topic_idx += 1;
-    topics.append(null);
+    topics.push(null);
+    hiddenInput_topics.value = topics.join(',');
 }
 
 function addReading(topic_idx) {
   $(`#studyplans-creator_topic_readings${topic_idx}`).append(`
     <div class="form-group">
       <label for="reading-name">Name</label>
-      <input type="text" class="form-control" onChange="UpdateReadingName(${reading_idx}, this)" placeholder="ex: Head First Design Patterns">
+      <input type="text" class="form-control" onChange="UpdateReadingName(${reading_idx}, this.value)" placeholder="ex: Head First Design Patterns">
     </div>
     <div class="form-group">
       <label for="reading-link">Link</label>
-      <input type="text" class="form-control" onChange="UpdateReadingLink(${reading_idx}, this)" placeholder="ex: https://www.amazon.com/Head-First-Design-Patterns-Brain-Friendly/dp/0596007124">
+      <input type="text" class="form-control" onChange="UpdateReadingLink(${reading_idx}, this.value)" placeholder="ex: https://www.amazon.com/Head-First-Design-Patterns-Brain-Friendly/dp/0596007124">
     </div>
     `);
   reading_idx += 1;
-  readings_to_topic_idx.append(topic_idx);
-  reading_names.append(null);
-  reading_links.append(null);
+  readings_to_topic_idx.push(topic_idx);
+  reading_names.push(null);
+  reading_links.push(null);
+  hiddenInput_readings_to_topic_idx.value = readings_to_topic_idx.join(',');
+  hiddenInput_reading_names.value = reading_names.join(',');
+  hiddenInput_reading_links.value = reading_links.join(',');
+
 }
 
 // ______ UPDATE HIDDEN FIELDS _____
+function UpdateTopic(topic_idx, topic_name) {
+  topics[topic_idx] = topic_name;
+  hiddenInput_topics.value = topics.join(',');
+}
+
+function UpdateReadingName(reading_idx, reading_name) {
+  reading_names[reading_idx] = reading_name;
+  hiddenInput_reading_names.value = reading_names.join(',');
+}
+
+function UpdateReadingLink(reading_idx, reading_link) {
+  reading_links[reading_idx] = reading_link;
+  hiddenInput_reading_links.value = reading_links.join(',');
+}
