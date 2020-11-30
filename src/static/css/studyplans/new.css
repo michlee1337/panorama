@@ -7,7 +7,7 @@
     display: inline-block;
 }
 
-#prereqs-input .tag {
+#prereqs-input .prereq {
     font-size: 85%;
     padding: 0.5em 0.75em;
     margin: 0.25em 0.1em;
@@ -17,12 +17,12 @@
     cursor: pointer;
 }
 
-#prereqs-input .tag:hover {
+#prereqs-input .prereq:hover {
     background-color: #3af;
     color: white;
 }
 
-#prereqs-input .tag .close::after {
+#prereqs-input .prereq .close::after {
     content: '×';
     font-weight: bold;
     display: inline-block;
@@ -30,7 +30,7 @@
     margin-left: 0.75em;
 }
 
-#prereqs-input .tag .close:hover::after {
+#prereqs-input .prereq .close:hover::after {
     color: red;
 }
 

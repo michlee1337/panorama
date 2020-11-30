@@ -8,6 +8,14 @@
 
 {% block app_content %}
 <form>
+  <!-- HIDDEN INPUTS -->
+  <input id="hiddenInput_prereqs" type="hidden" name="prerequisites" value="hello!">
+  <input id="hiddenInput_topics" type="hidden" name="topics" value="">
+  <input id="hiddenInput_readings_to_topic_idx" type="hidden" name="readings_to_topic_idx" value="">
+  <input id="hiddenInput_reading_names" type="hidden" name="reading_names" value="">
+  <input id="hiddenInput_reading_links" type="hidden" name="reading_links" value="">
+  <!-- HIDDEN INPUTS END -->
+
   <div class="form-group">
     <label for="prereqs">Prerequisites</label>
     </br>
@@ -35,12 +43,12 @@
 
 
 <div id="studyplans-creator_wrapper">
-  <div class="studyplans-creator_week">
+  <!-- <div class="studyplans-creator_week">
     <h4> Week 1 </h4>
     <div class="studyplans-creator_week_resources card">
     </div>
 
-  </div>
+  </div> -->
 </div>
-<button type="button" class="btn btn-secondary" onclick="addWeek()">Add a Week</button>
+<button type="button" class="btn btn-secondary" onclick="addTopic()">Add a Topic</button>
 {% endblock %}

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from src.models import StudyPlan
+from src.models import Studyplan, Concept
 from src import db
 
 studyplans_template = Blueprint('studyplans', __name__, template_folder='../templates')

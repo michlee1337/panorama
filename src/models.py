@@ -9,6 +9,29 @@ from sqlalchemy.ext.associationproxy import association_proxy
 
 from src import app, db, login
 
+# _____ MANY TO MANY ASSOCIATION TABLES ______
+concept_resources = Table(
+    'concept_resources',
+    db.Model.metadata,
+    Column('resource_id', Integer, ForeignKey('resources.id')),
+    Column('concept_id', Integer, ForeignKey('concepts.id'))
+)
+
+nested_concepts = Table(
+    'nested_concepts',
+    db.Model.metadata,
+    Column('ParentId', Integer, ForeignKey('concepts.id')),
+    Column('ChildId', Integer, ForeignKey('concepts.id'))
+)
+
+prerequisites = Table(
+    'prerequisites',
+    db.Model.metadata,
+    Column('studyplan_id', Integer, ForeignKey('studyplans.id')),
+    Column('concept_id', Integer, ForeignKey('concepts.id'))
+)
+
+# _____ MODELS ______
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -54,10 +77,19 @@ class Concept(db.Model):
     resources = db.relationship('Resource', backref='concept')
 
     # relationships
-    resources = relationship("Resource",
-                secondary=lambda: conept_resources,
-                backref="concepts")
+    resources = relationship(
+        "Resource",
+        secondary=lambda: concept_resources,
+        backref="concepts"
+    )
 
+    parents = relationship(
+        'Concept',
+        secondary=nested_concepts,
+        primaryjoin=id == nested_concepts.c.ChildId,
+        secondaryjoin=id == nested_concepts.c.ParentId,
+        backref=backref('children')
+    )
 
 class Reading(db.Model):  # workaround to use ordering_list
     __tablename__ = 'studyplan_resources'
@@ -85,7 +117,7 @@ class Topic(db.Model):
 
 
 
-class StudyPlan(db.Model):
+class Studyplan(db.Model):
     __tablename__ = 'studyplans'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
@@ -99,17 +131,3 @@ class StudyPlan(db.Model):
 
     topics = db.relationship("Topic", order_by=[Topic.position],
                         collection_class=ordering_list('position'))
-
-conept_resources = Table(
-    'conept_resources',
-    db.Model.metadata,
-    Column('resource_id', Integer, ForeignKey('resources.id')),
-    Column('concept_id', Integer, ForeignKey('concepts.id'))
-)
-
-prerequisites = Table(
-    'prerequisites',
-    db.Model.metadata,
-    Column('studyplan_id', Integer, ForeignKey('studyplans.id')),
-    Column('concept_id', Integer, ForeignKey('concepts.id'))
-)

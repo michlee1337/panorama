@@ -1,21 +1,26 @@
+// ______ STUDYPLAN CREATOR INTERNAL STATE ______
+let topics = [],
+  readings_to_topic_idx = [],   // DEV: maybe post-calc this
+  reading_names = [],
+  reading_links = [],
+  prereqs = [],
+  topic_idx = 0,
+  reading_idx = 0;
+
 $( document ).ready(function() {
-
   // ______ PREREQUISITES _____
+  let prereqs_hiddenInput = document.createElement('input'),
+      mainInput = document.createElement('input');
   var prereqs_input_div = document.getElementById('prereqs-input');
-  console.log(prereqs_input_div);
-  let hiddenInput = document.createElement('input'),
-      mainInput = document.createElement('input'),
-      tags = [];
-
-  hiddenInput.setAttribute('type', 'hidden');
-  hiddenInput.setAttribute('name', prereqs_input_div.getAttribute('data-name'));
+  prereqs_hiddenInput.setAttribute('type', 'hidden');
+  prereqs_hiddenInput.setAttribute('name','prerequisites');
 
   mainInput.setAttribute('type', 'text');
   mainInput.classList.add('main-input');
   mainInput.addEventListener('input', function () {
-      let enteredTags = mainInput.value.split(',');
-      if (enteredTags.length > 1) {
-          enteredTags.forEach(function (t) {
+      let enteredPrereqs = mainInput.value.split(',');
+      if (enteredPrereqs.length > 1) {
+          enteredPrereqs.forEach(function (t) {
               let filteredTag = filterTag(t);
               if (filteredTag.length > 0)
                   addTag(filteredTag);
@@ -26,56 +31,91 @@ $( document ).ready(function() {
 
   mainInput.addEventListener('keydown', function (e) {
       let keyCode = e.which || e.keyCode;
-      if (keyCode === 8 && mainInput.value.length === 0 && tags.length > 0) {
-          removeTag(tags.length - 1);
+      if (keyCode === 8 && mainInput.value.length === 0 && prereqs.length > 0) {
+          removeTag(prereqs.length - 1);
       }
   });
 
   prereqs_input_div.appendChild(mainInput);
-  prereqs_input_div.appendChild(hiddenInput);
+  prereqs_input_div.appendChild(prereqs_hiddenInput);
 
   addTag('hello!');
 
   function addTag (text) {
-      let tag = {
+      let prereq = {
           text: text,
           element: document.createElement('span'),
       };
 
-      tag.element.classList.add('tag');
-      tag.element.textContent = tag.text;
+      prereq.element.classList.add('prereq');
+      prereq.element.textContent = prereq.text;
 
       let closeBtn = document.createElement('span');
       closeBtn.classList.add('close');
       closeBtn.addEventListener('click', function () {
-          removeTag(tags.indexOf(tag));
+          removeTag(prereqs.indexOf(prereq));
       });
-      tag.element.appendChild(closeBtn);
+      prereq.element.appendChild(closeBtn);
 
-      tags.push(tag);
+      prereqs.push(prereq);
 
-      prereqs_input_div.insertBefore(tag.element, mainInput);
+      prereqs_input_div.insertBefore(prereq.element, mainInput);
 
-      refreshTags();
+      refreshPrereqs();
   }
 
   function removeTag (index) {
-      let tag = tags[index];
-      tags.splice(index, 1);
-      prereqs_input_div.removeChild(tag.element);
-      refreshTags();
+      let prereq = prereqs[index];
+      prereqs.splice(index, 1);
+      prereqs_input_div.removeChild(prereq.element);
+      refreshPrereqs();
   }
 
-  function refreshTags () {
-      let tagsList = [];
-      tags.forEach(function (t) {
-          tagsList.push(t.text);
+  function refreshPrereqs () {
+      let prereqsList = [];
+      prereqs.forEach(function (t) {
+          prereqsList.push(t.text);
       });
-      hiddenInput.value = tagsList.join(',');
+      prereqs_hiddenInput.value = prereqsList.join(',');
   }
 
-  function filterTag (tag) {
-          return tag.replace(/[^\w -]/g, '').trim().replace(/\W+/g, '-');
+  function filterTag (prereq) {
+          return prereq.replace(/[^\w -]/g, '').trim().replace(/\W+/g, '-');
       }
   // ______ PREREQUISITES END _____
 });
+
+
+// ______ UPDATE FORM _____
+function addTopic() {
+  $("#studyplans-creator_wrapper").append(`
+    <div class="studyplans-creator_topic card">
+      <div class="form-group topic-group">
+        <h4><input type="text" class="form-control" onChange="UpdateTopic(${topic_idx}, this)" placeholder="Topic"></h4>
+      </div>
+      <div id="studyplans-creator_topic_readings${topic_idx}">
+      </div>
+      <button type="button" class="btn btn-secondary" onclick="addReading(${topic_idx})">Add a Reading</button>
+    </div>`);
+    topic_idx += 1;
+    topics.append(null);
+}
+
+function addReading(topic_idx) {
+  $(`#studyplans-creator_topic_readings${topic_idx}`).append(`
+    <div class="form-group">
+      <label for="reading-name">Name</label>
+      <input type="text" class="form-control" onChange="UpdateReadingName(${reading_idx}, this)" placeholder="ex: Head First Design Patterns">
+    </div>
+    <div class="form-group">
+      <label for="reading-link">Link</label>
+      <input type="text" class="form-control" onChange="UpdateReadingLink(${reading_idx}, this)" placeholder="ex: https://www.amazon.com/Head-First-Design-Patterns-Brain-Friendly/dp/0596007124">
+    </div>
+    `);
+  reading_idx += 1;
+  readings_to_topic_idx.append(topic_idx);
+  reading_names.append(null);
+  reading_links.append(null);
+}
+
+// ______ UPDATE HIDDEN FIELDS _____
