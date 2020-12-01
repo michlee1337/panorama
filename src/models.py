@@ -8,6 +8,7 @@ from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.ext.associationproxy import association_proxy
 
 from src import app, db, login
+from src.helpers import get_or_create
 
 # _____ MANY TO MANY ASSOCIATION TABLES ______
 concept_resources = Table(
@@ -129,3 +130,47 @@ class Studyplan(db.Model):
     concept = relationship("Concept", backref="studyplans")
     topics = relationship("Topic", order_by=[Topic.position],
                         collection_class=ordering_list('position'))
+
+    def create(input_dict):
+        try:
+            if input_dict['title'] == "" or input_dict['about'] == "":
+                raise ValueError
+
+            concept = Concept(title=input_dict['about'])
+            db.session.add(concept)
+
+            studyplan = Studyplan(title=input_dict['title'], description=input_dict['description'], concept=concept)
+            db.session.add(studyplan)
+
+            for prereq in input_dict['prerequisites'].split(','):
+                prereq_concept = get_or_create(db.session, Concept, title=prereq)
+                concept.prerequisites.append(prereq_concept)
+
+            topics = []
+            concepts = []
+
+            for topic_name, topic_description in zip(input_dict['topics'].split(','), input_dict['topic_descriptions'].split(',')):
+                if topic_name != "":
+                    topic_concept = get_or_create(db.session, Concept, title=topic_name)
+                    concept.children.append(topic_concept)
+                    concepts.append(topic_concept)  # for adding resources later
+
+                    topic = Topic(concept=topic_concept, description=topic_description, studyplan=studyplan)
+                    db.session.add(topic)
+                    topics.append(topic)  # for adding readings later
+                    studyplan.topics.append(topic)
+
+            for reading_name, reading_link, reading_description, topic_idx in zip(input_dict['reading_names'].split(','), input_dict['reading_links'].split(','), input_dict['reading_descriptions'].split(','), input_dict['readings_to_topic_idx'].split(',')):
+                if reading_name != "" and reading_link != "":
+                    topic_idx = int(topic_idx)
+
+                    resource = get_or_create(db.session, Resource, name=reading_name, link=reading_link)
+                    resource.concepts.append(concepts[topic_idx])
+
+                    reading = Reading(resource=resource, description=reading_description)  # DEV: add studyplan details later
+                    db.session.add(reading)
+                    topics[topic_idx].readings.append(reading)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise
