@@ -7,13 +7,16 @@
 {% endblock %}
 
 {% block app_content %}
-<form>
+<form action="{{ url_for('studyplans.studyplan_new') }}" method="POST">
   <!-- HIDDEN INPUTS -->
   <input id="hiddenInput_prereqs" type="hidden" name="prerequisites" value="hello!">
   <input id="hiddenInput_topics" type="hidden" name="topics" value="">
+  <input id="hiddenInput_topic_descriptions" type="hidden" name="topic_descriptions" value="">
   <input id="hiddenInput_readings_to_topic_idx" type="hidden" name="readings_to_topic_idx" value="">
   <input id="hiddenInput_reading_names" type="hidden" name="reading_names" value="">
   <input id="hiddenInput_reading_links" type="hidden" name="reading_links" value="">
+  <input id="hiddenInput_reading_description" type="hidden" name="reading_descriptions" value="">
+
   <!-- HIDDEN INPUTS END -->
 
   <div class="form-group">
@@ -23,32 +26,25 @@
     </div>
   </div>
 
-  <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" class="form-control" placeholder="Title">
-  </div>
+  <label>Title</label>
+  <input type="text" name="title" placeholder="Title">
+  </br>
 
-  <div class="form-group">
-    <label for="main-concept">About</label>
-    <input type="text" class="form-control" placeholder="Main concept">
-  </div>
+  <label>About</label>
+  <input type="text" name="about" placeholder="Main concept">
+  </br>
 
-  <div class="form-group">
-    <label for="main-concept">Description</label>
-    <input type="text" class="form-control" placeholder="...">
-  </div>
+  <label>Description</label>
+  <input type="text" name="description" placeholder="...">
+  </br>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <div id="studyplans-creator_wrapper">
+  </div>
+  <button type="button" class="btn btn-secondary" onclick="addTopic()">Add a Topic</button>
+
+
+  <input type="submit" value="Submit">
 </form>
 
 
-<div id="studyplans-creator_wrapper">
-  <!-- <div class="studyplans-creator_week">
-    <h4> Week 1 </h4>
-    <div class="studyplans-creator_week_resources card">
-    </div>
-
-  </div> -->
-</div>
-<button type="button" class="btn btn-secondary" onclick="addTopic()">Add a Topic</button>
 {% endblock %}

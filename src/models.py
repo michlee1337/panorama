@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, DateTime, ForeignKey, Table, MetaData
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table, MetaData
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import LoginManager, UserMixin
@@ -20,24 +20,24 @@ concept_resources = Table(
 nested_concepts = Table(
     'nested_concepts',
     db.Model.metadata,
-    Column('ParentId', Integer, ForeignKey('concepts.id')),
-    Column('ChildId', Integer, ForeignKey('concepts.id'))
+    Column('parent_id', Integer, ForeignKey('concepts.id')),
+    Column('child_id', Integer, ForeignKey('concepts.id'))
 )
 
 prerequisites = Table(
     'prerequisites',
     db.Model.metadata,
-    Column('studyplan_id', Integer, ForeignKey('studyplans.id')),
-    Column('concept_id', Integer, ForeignKey('concepts.id'))
+    Column('before_id', Integer, ForeignKey('concepts.id')),
+    Column('after_id', Integer, ForeignKey('concepts.id'))
 )
 
 # _____ MODELS ______
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200))
-    email = db.Column(db.String(200))
-    password_hash = db.Column(db.String(128))
+    id = Column(db.Integer, primary_key=True)
+    username = Column(String(200))
+    email = Column(String(200))
+    password_hash = Column(String(128))
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -46,37 +46,30 @@ class User(UserMixin, db.Model):
 
 class Resource(db.Model):
     __tablename__ = 'resources'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    link = db.Column(db.String(500))
-    depth = db.Column(db.Integer, nullable=True) # should these be tags?
-    # description = db.Column(db.String)
-    type = db.Column(db.Integer, nullable=True)
-    # concept_id = db.Column(db.Integer, db.ForeignKey('concepts.id'), nullable=False)
-    # est_time = db.Column(db.Integer, nullable=True) # should these be tags?
-    # vote_count = db.Column(db.Integer)
-    # vote_sum = db.Column(db.Integer)
+    id = Column(db.Integer, primary_key=True)
+    name = Column(String(100))
+    link = Column(String(500))
+    depth = Column(db.Integer, nullable=True) # should these be tags?
+    # description = Column(String)
+    type = Column(db.Integer, nullable=True)
+    # concept_id = Column(db.Integer, db.ForeignKey('concepts.id'), nullable=False)
+    # est_time = Column(db.Integer, nullable=True) # should these be tags?
+    # vote_count = Column(db.Integer)
+    # vote_sum = Column(db.Integer)
     # instructions: filler "focus on" << should probably be a separate votable entity
 
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
 
-# relationships = Table(
-#     'relationships',
-#     db.Model.metadata,
-#     db.Column('RelationshipId', db.Integer, primary_key=True),
-#     db.Column('ParentId', db.Integer, ForeignKey('concepts.id')),
-#     db.Column('ChildId', db.Integer, ForeignKey('concepts.id'))
-# )
-
 class Concept(db.Model):
     __tablename__ = 'concepts'
 
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    resources = db.relationship('Resource', backref='concept')
+    id = Column(db.Integer, primary_key=True)
+    title = Column(String(100))
+    resources = relationship('Resource', backref='concept')
 
     # relationships
+    # NOTE: Concepts have _two_ self many-to-many relationships
     resources = relationship(
         "Resource",
         secondary=lambda: concept_resources,
@@ -86,48 +79,53 @@ class Concept(db.Model):
     parents = relationship(
         'Concept',
         secondary=nested_concepts,
-        primaryjoin=id == nested_concepts.c.ChildId,
-        secondaryjoin=id == nested_concepts.c.ParentId,
+        primaryjoin=id == nested_concepts.c.child_id,
+        secondaryjoin=id == nested_concepts.c.parent_id,
         backref=backref('children')
     )
 
+    prerequisites = relationship(
+        'Concept',
+        secondary=prerequisites,
+        primaryjoin=id == prerequisites.c.after_id,
+        secondaryjoin=id == prerequisites.c.before_id,
+        backref=backref('prerequisite_for')  # DEV: Someone help me w names
+    )
+
 class Reading(db.Model):  # workaround to use ordering_list
-    __tablename__ = 'studyplan_resources'
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'readings'
+    id = Column(db.Integer, primary_key=True)
+    description = Column(String(1000))
 
     # relationships
-    topic_id = db.Column(db.Integer, ForeignKey('topics.id'))
-    position = db.Column(db.Integer)
-    resource_id = db.Column(db.Integer, ForeignKey('resources.id'))
-    resource = db.relationship('Resource')
+    topic_id = Column(db.Integer, ForeignKey('topics.id'))
+    position = Column(db.Integer)
+    resource_id = Column(db.Integer, ForeignKey('resources.id'))
+    resource = relationship('Resource')
 
 class Topic(db.Model):
     __tablename__ = 'topics'
     id = Column(db.Integer, primary_key=True)
+    description = Column(String(1000))
 
     # relationships
     concept_id = Column(Integer, ForeignKey('concepts.id'))
     concept = relationship("Concept", backref="topics")
 
-    studyplan_id = db.Column(db.Integer, ForeignKey('studyplans.id'))
-    position = db.Column(db.Integer)
+    studyplan_id = Column(db.Integer, ForeignKey('studyplans.id'))
+    studyplan = relationship('Studyplan')
+    position = Column(db.Integer)
 
-    _readings = db.relationship("Reading", order_by=[Reading.position], collection_class=ordering_list('position'))
-    readings = association_proxy('_readings', 'readings')
-
-
+    readings = relationship("Reading", order_by=[Reading.position], collection_class=ordering_list('position'))
+    # readings = association_proxy('_readings', 'readings')
 
 class Studyplan(db.Model):
     __tablename__ = 'studyplans'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    description = db.Column(db.String(1000))
+    id = Column(db.Integer, primary_key=True)
+    title = Column(String(100))
+    description = Column(String(1000))
     # relationships
-    # concept_id = Column(Integer, ForeignKey('concepts.id'))
-    # concept = relationship("Concept", backref="studyplans")  # NOTE: Studyplan <> Concept has *TWO* relationships
-    prerequisite_concepts = relationship("Concept",
-                secondary=lambda: prerequisites,
-                backref="prereq_for")  # DEV: this needs a better name
-
-    topics = db.relationship("Topic", order_by=[Topic.position],
+    concept_id = Column(Integer, ForeignKey('concepts.id'))
+    concept = relationship("Concept", backref="studyplans")
+    topics = relationship("Topic", order_by=[Topic.position],
                         collection_class=ordering_list('position'))

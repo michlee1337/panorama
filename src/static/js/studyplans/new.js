@@ -1,8 +1,10 @@
 // ______ STUDYPLAN CREATOR INTERNAL STATE ______
 let topics = [],
+topic_descriptions = [],
   readings_to_topic_idx = [],   // DEV: maybe post-calc this
   reading_names = [],
   reading_links = [],
+  reading_descriptions = [],
   prereqs = [],
   topic_idx = 0,
   reading_idx = 0;
@@ -11,9 +13,12 @@ $( document ).ready(function() {
   // ______ HIDDEN INPUTS ______
   let hiddenInput_prereqs = document.getElementById('hiddenInput_prereqs'),
   hiddenInput_topics = document.getElementById('hiddenInput_topics'),
+  hiddenInput_topic_descriptions = document.getElementById('hiddenInput_topic_descriptions'),
   hiddenInput_readings_to_topic_idx = document.getElementById('hiddenInput_readings_to_topic_idx'),
   hiddenInput_reading_names = document.getElementById('hiddenInput_reading_names'),
-  hiddenInput_reading_links = document.getElementById('hiddenInput_reading_links');
+  hiddenInput_reading_links = document.getElementById('hiddenInput_reading_links'),
+  hiddenInput_reading_descriptions = document.getElementById('hiddenInput_reading_descriptions');
+
 
   // ______ PREREQUISITES ____
   // hiddenInput_prereqs = document.createElement('input'),
@@ -99,7 +104,8 @@ function addTopic() {
   $("#studyplans-creator_wrapper").append(`
     <div class="studyplans-creator_topic card">
       <div class="form-group topic-group">
-        <h4><input type="text" class="form-control" onChange="UpdateTopic(${topic_idx}, this.value)" placeholder="Topic"></h4>
+        <h4><input type="text" onChange="UpdateTopic(${topic_idx}, this.value)" placeholder="Topic"></h4>
+        <input type="text" onChange="UpdateTopicDescription(${topic_idx}, this.value)" placeholder="ex: This topic is the study of ... and relates to the the main topic as ...">
       </div>
       <div id="studyplans-creator_topic_readings${topic_idx}">
       </div>
@@ -112,29 +118,38 @@ function addTopic() {
 
 function addReading(topic_idx) {
   $(`#studyplans-creator_topic_readings${topic_idx}`).append(`
-    <div class="form-group">
+    <div class="form-reading">
       <label for="reading-name">Name</label>
-      <input type="text" class="form-control" onChange="UpdateReadingName(${reading_idx}, this.value)" placeholder="ex: Head First Design Patterns">
-    </div>
-    <div class="form-group">
+      <input type="text" onChange="UpdateReadingName(${reading_idx}, this.value)" placeholder="ex: Head First Design Patterns">
+
       <label for="reading-link">Link</label>
-      <input type="text" class="form-control" onChange="UpdateReadingLink(${reading_idx}, this.value)" placeholder="ex: https://www.amazon.com/Head-First-Design-Patterns-Brain-Friendly/dp/0596007124">
+      <input type="text" onChange="UpdateReadingLink(${reading_idx}, this.value)" placeholder="ex: https://www.amazon.com/Head-First-Design-Patterns-Brain-Friendly/dp/0596007124">
+
+      <label for="reading-description">Description</label>
+      <input type="text" onChange="UpdateReadingDescription(${reading_idx}, this.value)" placeholder="ex: Focus on understanding X. Read pages 10-15/ watch from minute 05:03-11:30">
+
     </div>
     `);
   reading_idx += 1;
   readings_to_topic_idx.push(topic_idx);
   reading_names.push(null);
   reading_links.push(null);
+  reading_descriptions.push(null);
   hiddenInput_readings_to_topic_idx.value = readings_to_topic_idx.join(',');
   hiddenInput_reading_names.value = reading_names.join(',');
   hiddenInput_reading_links.value = reading_links.join(',');
-
+  hiddenInput_reading_descriptions.value = reading_descriptions.join(',');
 }
 
 // ______ UPDATE HIDDEN FIELDS _____
 function UpdateTopic(topic_idx, topic_name) {
   topics[topic_idx] = topic_name;
   hiddenInput_topics.value = topics.join(',');
+}
+
+function UpdateTopicDescription(topic_idx, topic_description) {
+  topic_descriptions[topic_idx] = topic_description;
+  hiddenInput_topic_descriptions.value = topic_descriptions.join(',');
 }
 
 function UpdateReadingName(reading_idx, reading_name) {
@@ -145,4 +160,9 @@ function UpdateReadingName(reading_idx, reading_name) {
 function UpdateReadingLink(reading_idx, reading_link) {
   reading_links[reading_idx] = reading_link;
   hiddenInput_reading_links.value = reading_links.join(',');
+}
+
+function UpdateReadingDescription(reading_idx, reading_description) {
+  reading_descriptions[reading_idx] = reading_description;
+  hiddenInput_reading_descriptions.value = reading_descriptions.join(',');
 }
