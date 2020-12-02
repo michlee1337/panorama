@@ -2,6 +2,7 @@
   <div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">{{topic.concept.title}}</h5>
+      <p>{{topic.description}}</p>
       {% for reading in topic.readings %}
           <a href="{{reading.resource.link}}" class="btn btn-primary" target="_blank"">{{reading.resource.name}}</a>
       {% endfor %}

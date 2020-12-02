@@ -1,0 +1,13 @@
+<a href="{{url_for('studyplans.view', studyplan_id=studyplan.id)}}">
+<div class="studyplan_card card">
+  <div class="card-body">
+    <h5 class="card-title"><b>{{studyplan.title}}</b>  <span class="badge badge-pill badge-primary">{{studyplan.concept.title}}</span></h5>
+    <p>
+      Topics:
+      {% for topic in studyplan.topics %}
+        <span class="badge badge-pill badge-secondary">{{topic.concept.title}}</span>
+      {% endfor %}
+    </p>
+  </div>
+</div>
+</a>

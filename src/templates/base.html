@@ -15,16 +15,24 @@
 <!-- Topbar -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
   <!-- Topbar Search -->
-      <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-          <input type="text" class="form-control bg-light border-0 small" placeholder="im not working" aria-label="Search" aria-describedby="basic-addon2">
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="button">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
-        </div>
-      </form>
+  <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+    <div class="input-group">
+      <input type="text" class="form-control bg-light border-0 small" placeholder="im not working" aria-label="Search" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+  <ul class="navbar-nav">
+    {% if current_user.is_authenticated %}
+      <li class="nav-item"><a class="nav-link" href="{{url_for('users.logout')}}">Logout</a></li>
+    {% else %}
+      <li class="nav-item"><a class="nav-link" href="{{url_for('users.login')}}">Login</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url_for('users.register')}}">Register</a></li>
+    {% endif %}
+  </ul>
 </nav>
 {% endblock %}
 
