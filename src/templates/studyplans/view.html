@@ -7,25 +7,24 @@
 {% endblock %}
 
 {% block app_content %}
-  <div class="wrapper">
-    <div class="content">
+<div class="container">
+  <div class="content">
 
-      <div class="title">
-        <h1> Title: {{studyplan.title}} </h1>
-      </div>
-
-      <div class="studyplans">
-
-        {% for topic in studyplan.topics %}
-          {% with topic = topic %}
-            {% include "studyplans/_card.html" %}
-          {% endwith %}
-        {% endfor %}
-      </div>
+    <div class="title">
+      <h1> Title: {{studyplan.title}} </h1>
     </div>
-    <nav id="studyplan_creator">
-      <h3> Create a Study Plan </h3>
-      {% include "studyplans/_create.html" %}
-    </nav>
+
+    <div class="studyplans">
+      {% for topic in studyplan.topics %}
+        {% with topic = topic %}
+          {% include "studyplans/_card.html" %}
+        {% endwith %}
+      {% endfor %}
+    </div>
   </div>
+  <nav id="studyplan_creator">
+    <h3> Create a Study Plan </h3>
+    {% include "studyplans/_create.html" %}
+  </nav>
+</div>
 {% endblock %}
