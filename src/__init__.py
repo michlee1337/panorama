@@ -64,33 +64,37 @@ def load_user(id):
 
 
 # register routes
-from blueprints.concepts import concepts_template
+# from blueprints.concepts import concepts_template
 from blueprints.users import users_template
+from blueprints.studyplans import studyplans_template
+from blueprints.pages import pages_template
 
-app.register_blueprint(concepts_template)
+# app.register_blueprint(concepts_template)
 app.register_blueprint(users_template)
+app.register_blueprint(studyplans_template)
+app.register_blueprint(pages_template)
 
 # _____ TEMP ______
-@app.route('/')
-def hello():
-    return "Hello World! View <a href='concepts/1'>demo page </a>"
-
-@app.route('/concept_test')
-def concept_test():
-
-    cs = Concept.query.all()
-    print([str(c) for c in cs])
-    ctitle = [c.title for c in cs]
-    return str(ctitle)
-
-@app.route('/resource_test')
-def resource_test():
-
-    cs = Resource.query.all()
-    print([str(c) for c in cs])
-    ctitle = [c.name for c in cs]
-    return str(ctitle)
-
+# @app.route('/')
+# def hello():
+#     return "Hello World! View <a href='concepts/1'>demo page </a>"
+#
+# @app.route('/concept_test')
+# def concept_test():
+#
+#     cs = Concept.query.all()
+#     print([str(c) for c in cs])
+#     ctitle = [c.title for c in cs]
+#     return str(ctitle)
+#
+# @app.route('/resource_test')
+# def resource_test():
+#
+#     cs = Resource.query.all()
+#     print([str(c) for c in cs])
+#     ctitle = [c.name for c in cs]
+#     return str(ctitle)
+#
 # _____ END TEMP ______
 
 # _____ MAIN ______

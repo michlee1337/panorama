@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/studyplans/new.css') }}">
+    <script src="{{ url_for('static', filename='js/studyplans/new.js') }}"></script>
+{% endblock %}
+
+{% block app_content %}
+<div class="container">
+  <form action="{{ url_for('studyplans.studyplan_new') }}" method="POST">
+    <!-- HIDDEN INPUTS -->
+    <input id="hiddenInput_prereqs" type="hidden" name="prerequisites" value="hello!">
+    <input id="hiddenInput_topics" type="hidden" name="topics" value="">
+    <input id="hiddenInput_topic_descriptions" type="hidden" name="topic_descriptions" value="">
+    <input id="hiddenInput_readings_to_topic_idx" type="hidden" name="readings_to_topic_idx" value="">
+    <input id="hiddenInput_reading_names" type="hidden" name="reading_names" value="">
+    <input id="hiddenInput_reading_links" type="hidden" name="reading_links" value="">
+    <input id="hiddenInput_reading_description" type="hidden" name="reading_descriptions" value="">
+
+    <!-- HIDDEN INPUTS END -->
+
+    <div class="form-group">
+      <label for="prereqs">Prerequisites</label>
+      </br>
+      <div id="prereqs-input" data-name="prereqs-input">
+      </div>
+    </div>
+
+    <label>Title</label>
+    <input type="text" name="title" placeholder="Title">
+    </br>
+
+    <label>About</label>
+    <input type="text" name="about" placeholder="Main concept">
+    </br>
+
+    <label>Description</label>
+    <input type="text" name="description" placeholder="...">
+    </br>
+
+    <div id="studyplans-creator_wrapper">
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="addTopic()">Add a Topic</button>
+
+
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
+{% endblock %}
