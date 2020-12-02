@@ -5,12 +5,12 @@ from src import db
 studyplans_template = Blueprint('studyplans', __name__, template_folder='../templates')
 
 @studyplans_template.route('/studyplans/<studyplan_id>', methods=["GET"])
-def studyplan(studyplan_id):
+def view(studyplan_id):
     '''
     View for studyplan
     '''
     if request.method == 'GET':
-        studyplan = Concept.query.get(studyplan_id)
+        studyplan = Studyplan.query.get(studyplan_id)
         return render_template('studyplans/view.html', studyplan=studyplan)
     else:
         return render_template('404.html')
