@@ -2,26 +2,45 @@
 
 {% block head %}
     {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/studyplans/view.css') }}">
+    <script src="{{ url_for('static', filename='js/studyplans/view.js') }}"></script>
 {% endblock %}
 
 {% block app_content %}
-<div class="container">
-  <div class="title">
-    <h1> Title: {{studyplan.title}} </h1>
-  </div>
-  <h4>
-    Prerequsites:
-    {% for prerequisite in studyplan.concept.prerequisites %}
-      <span class="badge badge-pill badge-secondary">{{prerequisite.title}}</span>
-    {% endfor %}
-  </h4>
+<div class="wrapper">
+  <div class="container content">
+    <button type="button" id="sidebarCollapse" class="btn btn-info">
+      <i class="fa fa-rocket" aria-hidden="true"></i>
+    </button>
 
-  <div class="topics">
-    {% for topic in studyplan.topics %}
-      {% with topic = topic %}
-        {% include "studyplans/_topic.html" %}
-      {% endwith %}
-    {% endfor %}
+    <div class="title">
+      <h1> Title: {{studyplan.title}} </h1>
+    </div>
+    <h4>
+      Prerequsites:
+      {% for prerequisite in studyplan.concept.prerequisites %}
+        <span class="badge badge-pill badge-secondary">{{prerequisite.title}}</span>
+      {% endfor %}
+    </h4>
+
+    <div class="topics">
+      {% for topic in studyplan.topics %}
+        {% with topic = topic %}
+          {% include "studyplans/_topic.html" %}
+        {% endwith %}
+      {% endfor %}
+    </div>
+  </div>
+  <div id="search-sidebar">
+    <h3>Related information</h3>
+    <p>from other studyplans</p>
+    <div class="search-selection">
+      <span id="search-studyplan" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-info">Studyplans</span>
+      <span id="search-resource" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Resources</span>
+      <span id="search-relationships" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Bigger picture</span>
+    </div>
+    <div id="search-sidebar-content">
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -67,14 +67,14 @@ class Concept(db.Model):
 
     id = Column(db.Integer, primary_key=True)
     title = Column(String(100))
-    resources = relationship('Resource', backref='concept')
 
     # relationships
     # NOTE: Concepts have _two_ self many-to-many relationships
     resources = relationship(
         "Resource",
         secondary=lambda: concept_resources,
-        backref="concepts"
+        backref=backref("concepts", lazy="dynamic"),
+        lazy="dynamic"
     )
 
     parents = relationship(
@@ -82,7 +82,8 @@ class Concept(db.Model):
         secondary=nested_concepts,
         primaryjoin=id == nested_concepts.c.child_id,
         secondaryjoin=id == nested_concepts.c.parent_id,
-        backref=backref('children')
+        backref=backref('children', lazy="dynamic"),
+        lazy="dynamic"
     )
 
     prerequisites = relationship(
@@ -90,7 +91,8 @@ class Concept(db.Model):
         secondary=prerequisites,
         primaryjoin=id == prerequisites.c.after_id,
         secondaryjoin=id == prerequisites.c.before_id,
-        backref=backref('prerequisite_for')  # DEV: Someone help me w names
+        backref=backref('prerequisite_for', lazy="dynamic"),  # DEV: Someone help me w names
+        lazy="dynamic"
     )
 
 class Reading(db.Model):  # workaround to use ordering_list
@@ -117,7 +119,7 @@ class Topic(db.Model):
     studyplan = relationship('Studyplan')
     position = Column(db.Integer)
 
-    readings = relationship("Reading", order_by=[Reading.position], collection_class=ordering_list('position'))
+    readings = relationship("Reading", order_by=[Reading.position], collection_class=ordering_list('position'), lazy="dynamic")
     # readings = association_proxy('_readings', 'readings')
 
 class Studyplan(db.Model):
