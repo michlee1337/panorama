@@ -29,8 +29,8 @@ def studyplan_new():
             flash('Error creating studyplan... sorry!')
             return render_template('studyplans/new.html')
 
-@studyplans_template.route('/studyplans')
-def studyplans_about_concept():
+@studyplans_template.route('/studyplans_by_concept')
+def studyplans_by_concept():
     '''
     Returns JSON of studyplans that have the relevant concept
     '''
@@ -38,7 +38,6 @@ def studyplans_about_concept():
     concept = Concept.query.get(concept_id)
     studyplans = []
     for studyplan in concept.studyplans:
-        print("HELLO")
         studyplan = {
             'id': studyplan.id,
             'title': studyplan.title,

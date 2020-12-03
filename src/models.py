@@ -69,13 +69,16 @@ class Concept(db.Model):
     title = Column(String(100))
 
     # relationships
-    # NOTE: Concepts have _two_ self many-to-many relationships
     resources = relationship(
         "Resource",
         secondary=lambda: concept_resources,
         backref=backref("concepts", lazy="dynamic"),
         lazy="dynamic"
     )
+
+    # NOTE: Concepts have **two** **self** many-to-many relationships
+    ## parents <> children denotes specialization
+    ## prerequisites <> prerequisite_for denotes background knowledge required
 
     parents = relationship(
         'Concept',
@@ -134,23 +137,35 @@ class Studyplan(db.Model):
                         collection_class=ordering_list('position'))
 
     def create(input_dict):
+        '''
+        Creates a new studyplan from a dictionary of relevant information.
+        Will find or create relevant concepts/ resources,
+        and create all newly implied relationships.
+
+        All studyplans and topics have an associated concept.
+
+        A studyplan<>topic implies a parent<>child concept relationship.
+        A studyplan<>prerequisite implies a prerequisite_for<>prerequisite concept relationship.
+        '''
         try:
+            # check required data
             if input_dict['title'] == "" or input_dict['about'] == "":
                 raise ValueError
 
-            concept = Concept(title=input_dict['about'])
-            db.session.add(concept)
-
+            # create studyplan with relationship to about concept
+            concept = get_or_create(db.session, Concept, title=input_dict['about'])
             studyplan = Studyplan(title=input_dict['title'], description=input_dict['description'], concept=concept)
             db.session.add(studyplan)
 
+            # create prerequisite concepts and add relationships
             for prereq in input_dict['prerequisites'].split(','):
                 prereq_concept = get_or_create(db.session, Concept, title=prereq)
                 concept.prerequisites.append(prereq_concept)
 
+            # create topics with relationship to relevant concept
+            ## remember ordered topics/ concepts for adding relationships to readings/ resources
             topics = []
             concepts = []
-
             for topic_name, topic_description in zip(input_dict['topics'].split(','), input_dict['topic_descriptions'].split(',')):
                 if topic_name != "":
                     topic_concept = get_or_create(db.session, Concept, title=topic_name)
@@ -162,6 +177,7 @@ class Studyplan(db.Model):
                     topics.append(topic)  # for adding readings later
                     studyplan.topics.append(topic)
 
+            # create readings with relationship to relevant resource
             for reading_name, reading_link, reading_description, topic_idx in zip(input_dict['reading_names'].split(','), input_dict['reading_links'].split(','), input_dict['reading_descriptions'].split(','), input_dict['readings_to_topic_idx'].split(',')):
                 if reading_name != "" and reading_link != "":
                     topic_idx = int(topic_idx)
