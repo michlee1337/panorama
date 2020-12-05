@@ -38,15 +38,38 @@ function renderStudyplanSearch(topic_idx) {
     },
     dataType: "json",
     success: function(data){
-               console.log(data);
-               // exclude current studyplan id
-               // render other studyplans
+               if (data.studyplans === undefined || data.studyplans.length == 0) {
+                 renderNoResults()
+               }
+               else {
+                 for (var i = 0; i < data.studyplans.length; i++) {
+                   renderStudyplanCard(data.studyplans[i]);
+                 }
+               }
              }
   });
 }
 
-function queryStudyplanById(topic_idx) {}
+// function queryStudyplanById(topic_idx) {}
 
+function renderNoResults() {
+  $("#search-sidebar-content").empty().append(`
+    <div class="card">
+      <h5 class="card-title">No results found :(</h5>
+    </div>
+  `);
+}
+
+function renderStudyplanCard(studyplan) {
+  $("#search-sidebar-content").html(`
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">${studyplan.title}</h5>
+        <p>${studyplan.description}</p>
+      </div>
+    </div>
+  `);
+}
 // var week = 2;
 // // append child for a week
 // function addWeek() {
