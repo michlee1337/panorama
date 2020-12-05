@@ -11,7 +11,8 @@ def view(studyplan_id):
     '''
     if request.method == 'GET':
         studyplan = Studyplan.query.get(studyplan_id)
-        return render_template('studyplans/view.html', studyplan=studyplan)
+        concept_ids = [t.concept.id for t in studyplan.topics]
+        return render_template('studyplans/view.html', studyplan=studyplan, concept_ids=concept_ids)
     else:
         return render_template('404.html')
 
@@ -34,18 +35,21 @@ def studyplans_by_concept():
     '''
     Returns JSON of studyplans that have the relevant concept
     '''
-    concept_id = request.args.get('concept_id')
+    concept_id = int(request.args.get('concept_id'))
+    cur_studyplan_id = int(request.args.get('cur_studyplan_id'))
+
     concept = Concept.query.get(concept_id)
     studyplans = []
     for studyplan in concept.studyplans:
-        studyplan = {
-            'id': studyplan.id,
-            'title': studyplan.title,
-            'prerequisites': [p.title for p in studyplan.concept.prerequisites],
-            'description': studyplan.description,
-            'topics': [t.concept.title for t in studyplan.topics]
-        }
-        studyplans.append(studyplan)
+        if studyplan.id != cur_studyplan_id:
+            studyplan_info = {
+                'id': studyplan.id,
+                'title': studyplan.title,
+                'prerequisites': [p.title for p in studyplan.concept.prerequisites],
+                'description': studyplan.description,
+                'topics': [t.concept.title for t in studyplan.topics]
+            }
+            studyplans.append(studyplan_info)
     return jsonify(studyplans=studyplans)
 # @studyplans_template.route('/studyplans')
 # def get (list)

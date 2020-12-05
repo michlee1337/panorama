@@ -4,6 +4,11 @@
     {{ super() }}
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/studyplans/view.css') }}">
     <script src="{{ url_for('static', filename='js/studyplans/view.js') }}"></script>
+    <!-- For search queries -->
+    <script>
+      var studyplan_id = {{ studyplan.id|safe }};
+      var concept_ids = {{ concept_ids|safe }};
+    </script>
 {% endblock %}
 
 {% block app_content %}

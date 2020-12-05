@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $('#sidebarCollapse').on('click', function () {
         $('#search-sidebar').toggleClass('active');
+        renderStudyplanSearch(0);
     });
 
 });
@@ -13,7 +14,8 @@ function updateSearchSidebar(search_type) {
   }
   switch (search_type_lookup[search_type]) {
     case 1:
-      console.log("studyplan");
+      console.log("studyplan", concept_ids );
+      //renderStudyplanSearch();
       break;
     case 2:
       console.log("resource");
@@ -26,18 +28,24 @@ function updateSearchSidebar(search_type) {
   }
 }
 
-function renderStudyplanSearch() {
-  // $.ajax({
-  //   type: 'POST',
-  //   url: "/_delete_student",
-  //   data: {student_id: 1},
-  //   dataType: "text",
-  //   success: function(data){
-  //              alert("Deleted Student ID "+ student_id.toString());
-  //            }
-  // });
-
+function renderStudyplanSearch(topic_idx) {
+  $.ajax({
+    type: 'GET',
+    url: "/studyplans_by_concept",
+    data: {
+      concept_id: concept_ids[topic_idx],
+      cur_studyplan_id: studyplan_id
+    },
+    dataType: "json",
+    success: function(data){
+               console.log(data);
+               // exclude current studyplan id
+               // render other studyplans
+             }
+  });
 }
+
+function queryStudyplanById(topic_idx) {}
 
 // var week = 2;
 // // append child for a week
