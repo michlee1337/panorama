@@ -60,12 +60,14 @@ function renderNoResults() {
 
 function renderStudyplanCard(studyplan) {
   $("#search-sidebar-content").html(`
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">${studyplan.title}</h5>
-        <p>${studyplan.description}</p>
+    <a href="/studyplans/${studyplan.id}">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">${studyplan.title}</h5>
+          <p>${studyplan.description}</p>
+        </div>
       </div>
-    </div>
+    </a>
   `);
 }
 // var week = 2;

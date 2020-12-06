@@ -79,7 +79,6 @@ class Concept(db.Model):
     # NOTE: Concepts have **two** **self** many-to-many relationships
     ## parents <> children denotes specialization
     ## prerequisites <> prerequisite_for denotes background knowledge required
-
     parents = relationship(
         'Concept',
         secondary=nested_concepts,
