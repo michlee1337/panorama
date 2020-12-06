@@ -6,8 +6,8 @@
     <script src="{{ url_for('static', filename='js/studyplans/view.js') }}"></script>
     <!-- For search queries -->
     <script>
+      var studyplan_concept_id = {{ studyplan.concept.id|safe }};
       var studyplan_id = {{ studyplan.id|safe }};
-      var concept_ids = {{ concept_ids|safe }};
     </script>
 {% endblock %}
 
@@ -44,7 +44,19 @@
       <span id="search-resource" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Resources</span>
       <span id="search-relationships" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Bigger picture</span>
     </div>
+    <p>
+      Studyplans on
+      <select name="concept" id="search_studyplan_concept" onchange="renderStudyplanSearch(this.value)">
+        <option value="{{studyplan.concept.id}}" selected>{{studyplan.concept.title}}</option>
+        {% for topic in studyplan.topics %}
+          <option value="{{topic.concept.id}}">{{topic.concept.title}}</option>
+        {% endfor %}
+      </select>
+    </p>
     <div id="search-sidebar-content">
+      <div class="card">
+        <h5 class="card-title">No results found :(</h5>
+      </div>
     </div>
   </div>
 </div>

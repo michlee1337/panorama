@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('#sidebarCollapse').on('click', function () {
         $('#search-sidebar').toggleClass('active');
-        renderStudyplanSearch(0);
+        renderStudyplanSearch(studyplan_concept_id);
     });
 
 });
@@ -28,12 +28,12 @@ function updateSearchSidebar(search_type) {
   }
 }
 
-function renderStudyplanSearch(topic_idx) {
+function renderStudyplanSearch(concept_id) {
   $.ajax({
     type: 'GET',
     url: "/studyplans_by_concept",
     data: {
-      concept_id: concept_ids[topic_idx],
+      concept_id: concept_id,
       cur_studyplan_id: studyplan_id
     },
     dataType: "json",
@@ -49,8 +49,6 @@ function renderStudyplanSearch(topic_idx) {
              }
   });
 }
-
-// function queryStudyplanById(topic_idx) {}
 
 function renderNoResults() {
   $("#search-sidebar-content").empty().append(`
