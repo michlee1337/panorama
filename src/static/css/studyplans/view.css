@@ -1,0 +1,38 @@
+.wrapper {
+    display: flex;
+    /* width: 100%; */
+    align-items: stretch;
+}
+
+.content {
+  flex: 1;
+  padding: 3%;
+}
+
+#sidebarCollapse {
+  position: absolute;
+  right: 3%;
+  border-radius: 50%;
+  font-size: 40px;
+  height: 70px;
+  width: 70px;
+}
+/* SEARCH SIDEBAR */
+#search-sidebar {
+    flex: 0;
+    display: None;
+    padding: 3%;
+    height: 100vh;
+    background: #dfdfdf;
+    transition: all 0.3s;
+}
+
+#search-sidebar.active {
+    flex: 1;
+    display: block;
+    transition: all 0.3s;
+}
+
+.clickable {
+  cursor: pointer;
+}

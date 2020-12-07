@@ -1,6 +1,6 @@
 // ______ STUDYPLAN CREATOR INTERNAL STATE ______
 let topics = [],
-topic_descriptions = [],
+  topic_descriptions = [],
   readings_to_topic_idx = [],   // DEV: maybe post-calc this
   reading_names = [],
   reading_links = [],

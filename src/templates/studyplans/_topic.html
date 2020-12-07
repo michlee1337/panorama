@@ -1,10 +1,12 @@
-<div class="topic_card">
+<div class="topic_card clickable" onclick="searchRelated({{topic.concept.id}}, {{topic.concept.title}})">
   <div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">{{topic.concept.title}}</h5>
       <p>{{topic.description}}</p>
       {% for reading in topic.readings %}
-          <a href="{{reading.resource.link}}" class="btn btn-primary" target="_blank"">{{reading.resource.name}}</a>
+          {% with reading = reading %}
+            {% include "studyplans/_reading.html" %}
+          {% endwith %}
       {% endfor %}
     </div>
   </div>

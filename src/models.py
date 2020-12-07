@@ -35,7 +35,7 @@ prerequisites = Table(
 # _____ MODELS ______
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     username = Column(String(200))
     email = Column(String(200))
     password_hash = Column(String(128))
@@ -45,19 +45,31 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+class Source(db.Model):
+    __tablename__ = 'sources'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(200))
+    link = Column(String(200))
+
+    # relationships
+    resources = relationship("Resource", backref="source")
+    studyplans = relationship("Studyplan", backref="source")
+
 class Resource(db.Model):
     __tablename__ = 'resources'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String(100))
     link = Column(String(500))
-    depth = Column(db.Integer, nullable=True) # should these be tags?
-    # description = Column(String)
-    type = Column(db.Integer, nullable=True)
-    # concept_id = Column(db.Integer, db.ForeignKey('concepts.id'), nullable=False)
-    # est_time = Column(db.Integer, nullable=True) # should these be tags?
-    # vote_count = Column(db.Integer)
-    # vote_sum = Column(db.Integer)
+    depth = Column(Integer, nullable=True)
+    type = Column(Integer, nullable=True)
+    est_time = Column(Integer, nullable=True)
+    vote_count = Column(Integer, default=0)
+    vote_sum = Column(Integer, default=0)
     # instructions: filler "focus on" << should probably be a separate votable entity
+
+    # relationships
+    source_id = Column(Integer, ForeignKey('sources.id'))
+    readings = relationship("Reading", backref="resource")
 
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
@@ -65,24 +77,27 @@ class Resource(db.Model):
 class Concept(db.Model):
     __tablename__ = 'concepts'
 
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     title = Column(String(100))
-    resources = relationship('Resource', backref='concept')
 
     # relationships
-    # NOTE: Concepts have _two_ self many-to-many relationships
     resources = relationship(
         "Resource",
         secondary=lambda: concept_resources,
-        backref="concepts"
+        backref=backref("concepts", lazy="dynamic"),
+        lazy="dynamic"
     )
 
+    # NOTE: Concepts have **two** **self** many-to-many relationships
+    ## parents <> children denotes specialization
+    ## prerequisites <> prerequisite_for denotes background knowledge required
     parents = relationship(
         'Concept',
         secondary=nested_concepts,
         primaryjoin=id == nested_concepts.c.child_id,
         secondaryjoin=id == nested_concepts.c.parent_id,
-        backref=backref('children')
+        backref=backref('children', lazy="dynamic"),
+        lazy="dynamic"
     )
 
     prerequisites = relationship(
@@ -90,65 +105,78 @@ class Concept(db.Model):
         secondary=prerequisites,
         primaryjoin=id == prerequisites.c.after_id,
         secondaryjoin=id == prerequisites.c.before_id,
-        backref=backref('prerequisite_for')  # DEV: Someone help me w names
+        backref=backref('prerequisite_for', lazy="dynamic"),  # DEV: Someone help me w names
+        lazy="dynamic"
     )
 
 class Reading(db.Model):  # workaround to use ordering_list
     __tablename__ = 'readings'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     description = Column(String(1000))
 
     # relationships
-    topic_id = Column(db.Integer, ForeignKey('topics.id'))
-    position = Column(db.Integer)
     resource_id = Column(db.Integer, ForeignKey('resources.id'))
-    resource = relationship('Resource')
+    topic_id = Column(Integer, ForeignKey('topics.id'))
+    position = Column(Integer)
 
 class Topic(db.Model):
     __tablename__ = 'topics'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     description = Column(String(1000))
 
     # relationships
     concept_id = Column(Integer, ForeignKey('concepts.id'))
     concept = relationship("Concept", backref="topics")
 
-    studyplan_id = Column(db.Integer, ForeignKey('studyplans.id'))
+    studyplan_id = Column(Integer, ForeignKey('studyplans.id'))
     studyplan = relationship('Studyplan')
-    position = Column(db.Integer)
+    position = Column(Integer)
 
-    readings = relationship("Reading", order_by=[Reading.position], collection_class=ordering_list('position'))
+    readings = relationship("Reading", order_by=[Reading.position], collection_class=ordering_list('position'), lazy="dynamic")
     # readings = association_proxy('_readings', 'readings')
 
 class Studyplan(db.Model):
     __tablename__ = 'studyplans'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     title = Column(String(100))
     description = Column(String(1000))
     # relationships
+    source_id = Column(Integer, ForeignKey('sources.id'))
     concept_id = Column(Integer, ForeignKey('concepts.id'))
     concept = relationship("Concept", backref="studyplans")
     topics = relationship("Topic", order_by=[Topic.position],
                         collection_class=ordering_list('position'))
 
     def create(input_dict):
+        '''
+        Creates a new studyplan from a dictionary of relevant information.
+        Will find or create relevant concepts/ resources,
+        and create all newly implied relationships.
+
+        All studyplans and topics have an associated concept.
+
+        A studyplan<>topic implies a parent<>child concept relationship.
+        A studyplan<>prerequisite implies a prerequisite_for<>prerequisite concept relationship.
+        '''
         try:
+            # check required data
             if input_dict['title'] == "" or input_dict['about'] == "":
                 raise ValueError
 
-            concept = Concept(title=input_dict['about'])
-            db.session.add(concept)
-
+            # create studyplan with relationship to about concept
+            concept = get_or_create(db.session, Concept, title=input_dict['about'])
             studyplan = Studyplan(title=input_dict['title'], description=input_dict['description'], concept=concept)
             db.session.add(studyplan)
 
+            # create prerequisite concepts and add relationships
             for prereq in input_dict['prerequisites'].split(','):
                 prereq_concept = get_or_create(db.session, Concept, title=prereq)
                 concept.prerequisites.append(prereq_concept)
 
+            # create topics with relationship to relevant concept
+            ## remember ordered topics/ concepts for adding relationships to readings/ resources
             topics = []
             concepts = []
-
             for topic_name, topic_description in zip(input_dict['topics'].split(','), input_dict['topic_descriptions'].split(',')):
                 if topic_name != "":
                     topic_concept = get_or_create(db.session, Concept, title=topic_name)
@@ -160,6 +188,7 @@ class Studyplan(db.Model):
                     topics.append(topic)  # for adding readings later
                     studyplan.topics.append(topic)
 
+            # create readings with relationship to relevant resource
             for reading_name, reading_link, reading_description, topic_idx in zip(input_dict['reading_names'].split(','), input_dict['reading_links'].split(','), input_dict['reading_descriptions'].split(','), input_dict['readings_to_topic_idx'].split(',')):
                 if reading_name != "" and reading_link != "":
                     topic_idx = int(topic_idx)
