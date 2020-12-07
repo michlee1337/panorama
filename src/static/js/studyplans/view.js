@@ -5,29 +5,6 @@ $(document).ready(function () {
 
 });
 
-// function updateSearchSidebar(search_type) {
-//   var search_type_lookup = {
-//     "search-studyplan": 1,
-//     "search-resource": 2,
-//     "search-relationships": 3
-//   }
-//   switch (search_type_lookup[search_type]) {
-//     case 1:
-//       console.log("studyplan", concept_ids );
-//       //renderStudyplanSearch();
-//       break;
-//     case 2:
-//       console.log("resource");
-//       break;
-//     case 3:
-//       console.log("rel");
-//       break;
-//     default:
-//       console.log("error");
-//   }
-// }
-
-
 // _____ RENDER SEARCH SIDEBAR_____
 
 function searchRelated(concept_id, concept_title) {
@@ -61,7 +38,7 @@ function renderStudyplans(concept_id) {
   // query for studyplans and call appropriate render
   $.ajax({
     type: 'GET',
-    url: "/studyplans_by_concept",
+    url: "/studyplans/concept",
     data: {
       concept_id: concept_id,
       cur_studyplan_id: studyplan_id
@@ -88,7 +65,7 @@ function renderReadings(concept_id) {
   console.log("rendering")
   $.ajax({
     type: 'GET',
-    url: "/readings_by_concept",
+    url: "/readings/concept",
     data: {
       concept_id: concept_id,
     },
