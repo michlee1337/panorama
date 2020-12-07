@@ -24,7 +24,7 @@
     <h4>
       Prerequsites:
       {% for prerequisite in studyplan.concept.prerequisites %}
-        <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}})">{{prerequisite.title}}</span>
+        <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}}, {{prerequisite.title}})">{{prerequisite.title}}</span>
       {% endfor %}
     </h4>
 
@@ -37,20 +37,15 @@
     </div>
   </div>
   <div id="search-sidebar">
-    <h3>Related information</h3>
-    <p>from other studyplans</p>
+    <h3 id="search-sidebar-title">Find Related</h3>
+    <p>Click something in the studyplan to find related information from other studyplans.</p>
+    <p>You can click the title of the studyplan itself, a topic, or a reading.</p>
     <!-- <div class="search-selection">
       <span id="search-studyplan" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Studyplans</span>
       <span id="search-resource" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Resources</span>
       <span id="search-relationships" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Bigger picture</span>
     </div> -->
     <div id="search-sidebar-content">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Click something in the studyplan to get more information on it!</h5>
-          <p>You could click a prerequisite, the title of the studyplan itself, a topic, or a reading.</p>
-        </div>
-      </div>
     </div>
   </div>
 </div>

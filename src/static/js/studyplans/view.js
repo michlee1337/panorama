@@ -30,11 +30,14 @@ $(document).ready(function () {
 
 // _____ RENDER SEARCH SIDEBAR_____
 
-function searchRelated(concept_id) {
+function searchRelated(concept_id, concept_title) {
   // open the search sidebar if closed
   if (!$('#search-sidebar.active').length) {
     $('#search-sidebar').toggleClass('active');
   }
+
+  // update introduction
+  $("#search-sidebar-title").html(`Related to ${concept_title}`);
 
   // empty current search contents and add search result divs
   $("#search-sidebar-content").empty();
