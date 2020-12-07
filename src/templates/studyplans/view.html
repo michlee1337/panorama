@@ -24,7 +24,7 @@
     <h4>
       Prerequsites:
       {% for prerequisite in studyplan.concept.prerequisites %}
-        <span class="badge badge-pill badge-secondary">{{prerequisite.title}}</span>
+        <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}})">{{prerequisite.title}}</span>
       {% endfor %}
     </h4>
 
@@ -39,23 +39,17 @@
   <div id="search-sidebar">
     <h3>Related information</h3>
     <p>from other studyplans</p>
-    <div class="search-selection">
-      <span id="search-studyplan" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-info">Studyplans</span>
+    <!-- <div class="search-selection">
+      <span id="search-studyplan" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Studyplans</span>
       <span id="search-resource" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Resources</span>
       <span id="search-relationships" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Bigger picture</span>
-    </div>
-    <p>
-      Studyplans on
-      <select name="concept" id="search_studyplan_concept" onchange="renderStudyplanSearch(this.value)">
-        <option value="{{studyplan.concept.id}}" selected>{{studyplan.concept.title}}</option>
-        {% for topic in studyplan.topics %}
-          <option value="{{topic.concept.id}}">{{topic.concept.title}}</option>
-        {% endfor %}
-      </select>
-    </p>
+    </div> -->
     <div id="search-sidebar-content">
       <div class="card">
-        <h5 class="card-title">No results found :(</h5>
+        <div class="card-body">
+          <h5 class="card-title">Click something in the studyplan to get more information on it!</h5>
+          <p>You could click a prerequisite, the title of the studyplan itself, a topic, or a reading.</p>
+        </div>
       </div>
     </div>
   </div>

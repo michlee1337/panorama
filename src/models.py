@@ -35,7 +35,7 @@ prerequisites = Table(
 # _____ MODELS ______
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     username = Column(String(200))
     email = Column(String(200))
     password_hash = Column(String(128))
@@ -45,19 +45,31 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+class Source(db.Model):
+    __tablename__ = 'sources'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(200))
+    link = Column(String(200))
+
+    # relationships
+    resources = relationship("Resource", backref="source")
+    studyplans = relationship("Studyplan", backref="source")
+
 class Resource(db.Model):
     __tablename__ = 'resources'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String(100))
     link = Column(String(500))
-    depth = Column(db.Integer, nullable=True) # should these be tags?
-    # description = Column(String)
-    type = Column(db.Integer, nullable=True)
-    # concept_id = Column(db.Integer, db.ForeignKey('concepts.id'), nullable=False)
-    # est_time = Column(db.Integer, nullable=True) # should these be tags?
-    # vote_count = Column(db.Integer)
-    # vote_sum = Column(db.Integer)
+    depth = Column(Integer, nullable=True)
+    type = Column(Integer, nullable=True)
+    est_time = Column(Integer, nullable=True)
+    vote_count = Column(Integer, default=0)
+    vote_sum = Column(Integer, default=0)
     # instructions: filler "focus on" << should probably be a separate votable entity
+
+    # relationships
+    source_id = Column(Integer, ForeignKey('sources.id'))
+    readings = relationship("Reading", backref="resource")
 
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
@@ -65,7 +77,7 @@ class Resource(db.Model):
 class Concept(db.Model):
     __tablename__ = 'concepts'
 
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     title = Column(String(100))
 
     # relationships
@@ -99,37 +111,37 @@ class Concept(db.Model):
 
 class Reading(db.Model):  # workaround to use ordering_list
     __tablename__ = 'readings'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     description = Column(String(1000))
 
     # relationships
-    topic_id = Column(db.Integer, ForeignKey('topics.id'))
-    position = Column(db.Integer)
     resource_id = Column(db.Integer, ForeignKey('resources.id'))
-    resource = relationship('Resource')
+    topic_id = Column(Integer, ForeignKey('topics.id'))
+    position = Column(Integer)
 
 class Topic(db.Model):
     __tablename__ = 'topics'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     description = Column(String(1000))
 
     # relationships
     concept_id = Column(Integer, ForeignKey('concepts.id'))
     concept = relationship("Concept", backref="topics")
 
-    studyplan_id = Column(db.Integer, ForeignKey('studyplans.id'))
+    studyplan_id = Column(Integer, ForeignKey('studyplans.id'))
     studyplan = relationship('Studyplan')
-    position = Column(db.Integer)
+    position = Column(Integer)
 
     readings = relationship("Reading", order_by=[Reading.position], collection_class=ordering_list('position'), lazy="dynamic")
     # readings = association_proxy('_readings', 'readings')
 
 class Studyplan(db.Model):
     __tablename__ = 'studyplans'
-    id = Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     title = Column(String(100))
     description = Column(String(1000))
     # relationships
+    source_id = Column(Integer, ForeignKey('sources.id'))
     concept_id = Column(Integer, ForeignKey('concepts.id'))
     concept = relationship("Concept", backref="studyplans")
     topics = relationship("Topic", order_by=[Topic.position],
