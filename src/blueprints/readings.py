@@ -4,7 +4,7 @@ from src import db
 
 readings_template = Blueprint('readings', __name__, template_folder='../templates')
 
-@readings_template.route('/readings_by_concept')
+@readings_template.route('/readings/concept')
 def readings_by_concept():
     '''
     Returns JSON of readings that have the relevant concept

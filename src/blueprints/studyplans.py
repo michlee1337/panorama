@@ -30,7 +30,7 @@ def studyplan_new():
             flash('Error creating studyplan... sorry!')
             return render_template('studyplans/new.html')
 
-@studyplans_template.route('/studyplans_by_concept')
+@studyplans_template.route('/studyplans/concept')
 def studyplans_by_concept():
     '''
     Returns JSON of studyplans that have the relevant concept
@@ -51,9 +51,29 @@ def studyplans_by_concept():
             }
             studyplans.append(studyplan_info)
     return jsonify(studyplans=studyplans)
-# @studyplans_template.route('/studyplans')
-# def get (list)
-# def post (create)
 
+# @studyplans_template.route('/studyplans/title')
+# def studyplans_by_title():
+#     '''
+#     Returns JSON of studyplans that have the relevant term in title
+#
+#     Uses Postgres LIKE query to match anything that contains the search term
+#     '''
+#     term = request.args.get('term')
+#
+#     studyplans = Studyplan.query.filter(Studyplan.title.contains(term)).all()
+#     json_studyplans = []
+#
+#     for studyplan in studyplans:
+#         studyplan_info = {
+#             'id': studyplan.id,
+#             'title': studyplan.title,
+#             'prerequisites': [p.title for p in studyplan.concept.prerequisites],
+#             'description': studyplan.description,
+#             'topics': [t.concept.title for t in studyplan.topics]
+#         }
+#         json_studyplans.append(studyplan_info)
+#     return jsonify(studyplans=json_studyplans)
+#
 #@studyplans_template.route('/studyplans/<id>/ edit')
 # def get (edit)

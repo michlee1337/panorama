@@ -3,9 +3,9 @@
 {% block app_content %}
 
 <div class="container">
-  <div class="studyplan-list">
-    <h2>Studyplans</h2>
-    <p>Take a look at all the studyplans other have created!</p>
+  <h2>Studyplans</h2>
+  <p>Take a look at all the studyplans other have created!</p>
+  <div id="studyplan-list">
     {% for studyplan in studyplans %}
       {% with studyplan = studyplan %}
         {% include "pages/_studyplan_card.html" %}
@@ -13,6 +13,7 @@
       {% endwith %}
     {% endfor %}
   </div>
+</div>
   <!-- DEV: visual graph display later?
   <div class="row">
 
