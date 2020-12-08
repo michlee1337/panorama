@@ -42,12 +42,14 @@ from blueprints.users import users_template
 from blueprints.studyplans import studyplans_template
 from blueprints.pages import pages_template
 from blueprints.readings import readings_template
+from blueprints.search import search_template
 
 # app.register_blueprint(concepts_template)
 app.register_blueprint(users_template)
 app.register_blueprint(studyplans_template)
 app.register_blueprint(pages_template)
 app.register_blueprint(readings_template)
+app.register_blueprint(search_template)
 
 # _____ MAIN ______
 

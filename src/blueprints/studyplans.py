@@ -51,32 +51,3 @@ def studyplans_by_concept():
             }
             studyplans.append(studyplan_info)
     return jsonify(studyplans=studyplans)
-
-# @studyplans_template.route('/studyplans/title')
-# def studyplans_by_title():
-#     '''
-#     Returns JSON of studyplans that have the relevant concept
-#     '''
-#     concept_id = int(request.args.get('concept_id'))
-#     cur_studyplan_id = int(request.args.get('cur_studyplan_id'))
-#
-#     concept = Concept.query.get(concept_id)
-#     studyplans = []
-#     for studyplan in concept.studyplans:
-#         if studyplan.id != cur_studyplan_id:
-#             studyplan_info = {
-#                 'id': studyplan.id,
-#                 'title': studyplan.title,
-#                 'prerequisites': [p.title for p in studyplan.concept.prerequisites],
-#                 'description': studyplan.description,
-#                 'topics': [t.concept.title for t in studyplan.topics]
-#             }
-#             studyplans.append(studyplan_info)
-#     return jsonify(studyplans=studyplans)
-#
-# @studyplans_template.route('/studyplans')
-# def get (list)
-# def post (create)
-
-#@studyplans_template.route('/studyplans/<id>/ edit')
-# def get (edit)
