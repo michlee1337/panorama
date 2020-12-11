@@ -17,7 +17,10 @@ $( document ).ready(function() {
   hiddenInput_readings_to_topic_idx = document.getElementById('hiddenInput_readings_to_topic_idx'),
   hiddenInput_reading_names = document.getElementById('hiddenInput_reading_names'),
   hiddenInput_reading_links = document.getElementById('hiddenInput_reading_links'),
-  hiddenInput_reading_descriptions = document.getElementById('hiddenInput_reading_descriptions');
+  hiddenInput_reading_descriptions = document.getElementById('hiddenInput_reading_descriptions'),
+  hiddenInput_reading_depths = document.getElementById('hiddenInput_reading_depths'),
+  hiddenInput_reading_times = document.getElementById('hiddenInput_reading_times'),
+  hiddenInput_reading_types = document.getElementById('hiddenInput_reading_types');
 
 
   // ______ PREREQUISITES ____
@@ -121,7 +124,20 @@ function addReading(topic_idx) {
     <div class="form-reading">
       <label for="reading-name">Name</label>
       <input type="text" onChange="UpdateReadingName(${reading_idx}, this.value)" placeholder="ex: Head First Design Patterns">
-
+      <div class="form-row">
+        <div class="col-auto">
+          Difficulty:
+          <select name="difficulty">
+            <option value="1">Beginner</option>
+            <option value="2">Intermediate</option>
+            <option value="3">Advanced</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          Time it takes:
+          <input type"number"> mins
+        </div>
+      </div>
       <label for="reading-link">Link</label>
       <input type="text" onChange="UpdateReadingLink(${reading_idx}, this.value)" placeholder="ex: https://www.amazon.com/Head-First-Design-Patterns-Brain-Friendly/dp/0596007124">
 
