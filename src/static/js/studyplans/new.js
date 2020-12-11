@@ -5,6 +5,9 @@ let topics = [],
   reading_names = [],
   reading_links = [],
   reading_descriptions = [],
+  reading_depths = [],
+  reading_times = [],
+  reading_types = [],
   prereqs = [],
   topic_idx = 0,
   reading_idx = 0;
@@ -127,15 +130,24 @@ function addReading(topic_idx) {
       <div class="form-row">
         <div class="col-auto">
           Difficulty:
-          <select name="difficulty">
+          <select name="difficulty" onChange="UpdateReadingDepth(${reading_idx}, this.value)">
             <option value="1">Beginner</option>
             <option value="2">Intermediate</option>
             <option value="3">Advanced</option>
           </select>
         </div>
         <div class="col-auto">
+          Media type:
+          <select name="difficulty" onChange="UpdateReadingType(${reading_idx}, this.value)">
+            <option value="text">Text</option>
+            <option value="video">Video</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="col-auto">
           Time it takes:
-          <input type"number"> mins
+          <input type"number" onChange="UpdateReadingTime(${reading_idx}, this.value)"> mins
         </div>
       </div>
       <label for="reading-link">Link</label>
@@ -151,10 +163,18 @@ function addReading(topic_idx) {
   reading_names.push(null);
   reading_links.push(null);
   reading_descriptions.push(null);
+  reading_depths.push(null);
+  reading_times.push(null);
+  reading_types.push(null);
+
   hiddenInput_readings_to_topic_idx.value = readings_to_topic_idx.join(',');
   hiddenInput_reading_names.value = reading_names.join(',');
   hiddenInput_reading_links.value = reading_links.join(',');
   hiddenInput_reading_descriptions.value = reading_descriptions.join(',');
+  hiddenInput_reading_depths.value = reading_depths.join(',');
+  hiddenInput_reading_times.value = reading_times.join(',');
+  hiddenInput_reading_types.value = reading_types.join(',');
+
 }
 
 // ______ UPDATE HIDDEN FIELDS _____
@@ -181,4 +201,19 @@ function UpdateReadingLink(reading_idx, reading_link) {
 function UpdateReadingDescription(reading_idx, reading_description) {
   reading_descriptions[reading_idx] = reading_description;
   hiddenInput_reading_descriptions.value = reading_descriptions.join(',');
+}
+
+function UpdateReadingDepth(reading_idx, reading_depth) {
+  reading_depths[reading_idx] = reading_depth;
+  hiddenInput_reading_depths.value = reading_depths.join(',');
+}
+
+function UpdateReadingTime(reading_idx, reading_time) {
+  reading_times[reading_idx] = reading_time;
+  hiddenInput_reading_times.value = reading_times.join(',');
+}
+
+function UpdateReadingType(reading_idx, reading_type) {
+  reading_types[reading_idx] = reading_type;
+  hiddenInput_reading_types.value = reading_types.join(',');
 }
