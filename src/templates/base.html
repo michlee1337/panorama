@@ -14,18 +14,22 @@
 {% block navbar %}
 <!-- Topbar -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-  <!-- Topbar Search -->
-  <form action="{{ url_for('pages.search') }}" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-    <div class="input-group">
-      <input name="term" type="text" class="form-control bg-light border-0 small" placeholder="search studyplans" aria-label="Search" aria-describedby="basic-addon2">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="submit" value="Submit">
-          <i class="fas fa-search"></i>
-        </button>
+  <ul class="navbar-nav mr-auto">
+    <!-- SEARCH -->
+    <form action="{{ url_for('pages.search') }}" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+      <div class="input-group">
+        <input name="term" type="text" class="form-control bg-light border-0 small" placeholder="search studyplans" aria-label="Search" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit" value="Submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
       </div>
-    </div>
-  </form>
-  <ul class="navbar-nav">
+    </form>
+    <!-- SEARCH END -->
+    <li class="nav-item"><a class="nav-link" href="{{url_for('studyplans.new')}}">Contribute</a></li>
+  </ul>
+  <ul class="navbar-nav ml-auto">
     {% if current_user.is_authenticated %}
       <li class="nav-item"><a class="nav-link" href="{{url_for('users.logout')}}">Logout</a></li>
     {% else %}

@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
+from flask_login import current_user
 from src.models import Studyplan, Concept, Topic, Resource, Reading
 from src import db
 
@@ -17,9 +18,12 @@ def view(studyplan_id):
         return render_template('404.html')
 
 @studyplans_template.route('/studyplans/new', methods=["GET","POST"])
-def studyplan_new():
+def new():
     if request.method == 'GET':
-        return render_template('studyplans/new.html')
+        if current_user.is_authenticated:
+            return render_template('studyplans/new.html')
+        else:
+            return redirect(url_for('users.login'))
     elif request.method == 'POST':
         try:
             Studyplan.create(request.form)
