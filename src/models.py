@@ -207,7 +207,7 @@ class Studyplan(db.Model):
         try:
             # check required data
             if input_dict['title'] == "" or input_dict['about'] == "":
-                raise ValueError
+                raise ValueError("Title and About is required.")
 
             # create studyplan with relationship to about concept
             concept = get_or_create(db.session, Concept, title=input_dict['about'])

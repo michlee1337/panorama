@@ -7,7 +7,11 @@ readings_template = Blueprint('readings', __name__, template_folder='../template
 @readings_template.route('/readings/concept')
 def readings_by_concept():
     '''
-    Returns JSON of readings that have the relevant concept
+    Responds to queries for readings by concept.
+
+    Only accepts GET requests
+
+    It returns JSON of studyplans that have the relevant concept
     '''
     concept_id = int(request.args.get('concept_id'))
 

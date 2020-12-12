@@ -24,7 +24,7 @@ def search():
 
     Accepts filters
         - search by type (text/ video)
-        - search by title
+        - search by depth (beginner/ intermediate)
     Any search patterns not recognized will be ignored and a warning will flash.
 
     '''
