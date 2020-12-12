@@ -26,13 +26,9 @@ $( document ).ready(function() {
   hiddenInput_reading_types = document.getElementById('hiddenInput_reading_types');
 
 
-  // ______ PREREQUISITES ____
-  // hiddenInput_prereqs = document.createElement('input'),
-
+  // ______ PREREQUISITE DYNAMIC RENDER ____
   let mainInput = document.createElement('input');
   var prereqs_input_div = document.getElementById('prereqs-input');
-  // hiddenInput_prereqs.setAttribute('type', 'hidden');
-  // hiddenInput_prereqs.setAttribute('name','prerequisites');
 
   mainInput.setAttribute('type', 'text');
   mainInput.classList.add('main-input');
@@ -56,7 +52,6 @@ $( document ).ready(function() {
   });
 
   prereqs_input_div.appendChild(mainInput);
-  // prereqs_input_div.appendChild(hiddenInput_prereqs);
 
   addTag('hello!');
 
@@ -101,11 +96,11 @@ $( document ).ready(function() {
   function filterTag (prereq) {
           return prereq.replace(/[^\w -]/g, '').trim().replace(/\W+/g, '-');
       }
-  // ______ PREREQUISITES END _____
+  // ______ PREREQUISITES DYNAMIC RENDER END _____
 });
 
 
-// ______ UPDATE FORM _____
+// ______ UPDATE NESTED FORM _____
 function addTopic() {
   $("#studyplans-creator_wrapper").append(`
     <div class="studyplans-creator_topic card">
@@ -176,7 +171,6 @@ function addReading(topic_idx) {
   hiddenInput_reading_types.value = reading_types.join(',');
 
 }
-
 // ______ UPDATE HIDDEN FIELDS _____
 function UpdateTopic(topic_idx, topic_name) {
   topics[topic_idx] = topic_name;

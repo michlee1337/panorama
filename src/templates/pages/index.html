@@ -3,6 +3,7 @@
 {% block app_content %}
 
 <div class="container">
+  <!-- STUDYPLANS LIST -->
   {% if studyplans is defined %}
     <h2>Studyplans</h2>
     <p>Take a look at all the studyplans other have created!</p>
@@ -15,6 +16,8 @@
       {% endfor %}
     </div>
   {% endif %}
+  <!-- STUDYPLANS LIST END -->
+  <!-- READINGS LIST -->
   {% if readings is defined %}
     <h2>Readings</h2>
     <p>Take a look at all the readings other have created!</p>
@@ -27,20 +30,9 @@
       {% endfor %}
     </div>
   {% endif %}
+  <!-- READINGS LIST END -->
 
 </div>
-  <!-- DEV: visual graph display later?
-  <div class="row">
-
-    <div class="col-md">
-    </div>
-
-    <div class="col-md">
-    </div>
-
-  </div>
-  -->
-
 
 </div>
 {% endblock %}

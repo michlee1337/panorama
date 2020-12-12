@@ -13,6 +13,7 @@
 
 {% block app_content %}
 <div class="wrapper">
+  <!-- MAIN STUDYPLAN INFO -->
   <div class="container content">
     <button type="button" id="sidebarCollapse" class="btn btn-info">
       <i class="fa fa-rocket" aria-hidden="true"></i>
@@ -38,6 +39,9 @@
       {% endfor %}
     </div>
   </div>
+  <!-- MAIN STUDYPLAN INFO END -->
+
+  <!-- RELATED INFORMATION SIDEBAR -->
   <div id="search-sidebar">
     <h3 id="search-sidebar-title">Find Related</h3>
     <p>Click something in the studyplan to find related information from other studyplans.</p>
@@ -50,5 +54,6 @@
     <div id="search-sidebar-content">
     </div>
   </div>
+  <!-- RELATED INFORMATION SIDEBAR END -->
 </div>
 {% endblock %}

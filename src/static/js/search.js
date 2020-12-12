@@ -1,3 +1,4 @@
+// ______ RESOURCE SEARCH TOGGLE _____
 $( document ).ready(function() {
   drowndown_btn = document.getElementById("dropdownMenuButton");
   drowndown_btn.addEventListener ("click", toggleFilter);

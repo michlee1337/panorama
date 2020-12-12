@@ -5,17 +5,17 @@ from src import db
 
 studyplans_template = Blueprint('studyplans', __name__, template_folder='../templates')
 
-@studyplans_template.route('/studyplans/<studyplan_id>', methods=["GET"])
+@studyplans_template.route('/studyplans/<studyplan_id>')
 def view(studyplan_id):
     '''
     View for studyplan
+
+    Only accepts GET requests.
+    It gets the appropriate information and passes it to the View.
     '''
-    if request.method == 'GET':
-        studyplan = Studyplan.query.get(studyplan_id)
-        concept_ids = [t.concept.id for t in studyplan.topics]
-        return render_template('studyplans/view.html', studyplan=studyplan, concept_ids=concept_ids)
-    else:
-        return render_template('404.html')
+    studyplan = Studyplan.query.get(studyplan_id)
+    concept_ids = studyplan.getConcepts()
+    return render_template('studyplans/view.html', studyplan=studyplan, concept_ids=concept_ids)
 
 @studyplans_template.route('/studyplans/new', methods=["GET","POST"])
 def new():

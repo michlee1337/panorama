@@ -32,6 +32,8 @@ prerequisites = Table(
     Column('after_id', Integer, ForeignKey('concepts.id'))
 )
 
+# _____ MANY TO MANY ASSOCIATION TABLES END ______
+
 # _____ MODELS ______
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -255,3 +257,6 @@ class Studyplan(db.Model):
 
     def getMatching(term):
         return Studyplan.query.filter(Studyplan.title.contains(term)).all()
+
+    def getConcepts(self):
+        return [t.concept.id for t in self.topics]
