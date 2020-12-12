@@ -29,7 +29,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
 from . import models
-db.create_all()
+# db.create_all()
 
 @login.user_loader
 def load_user(id):
