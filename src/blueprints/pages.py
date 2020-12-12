@@ -31,7 +31,7 @@ def search():
     # DEV: This is temporary as future refactoring to have a less awkward divison between
     ## Studyplans and Readings will be done that allows for a search on a shared parent model.
 
-    if (request.args.get('type') is not None) or (request.args.get('depth') is not None):
+    if (request.args.get('type') != "") or (request.args.get('depth') != ""):
         return render_template('pages/index.html', readings = Reading.getMatchingReadings(request.args))
     else:
         return render_template('pages/index.html', studyplans = Studyplan.getMatching(request.args.get('term')))
