@@ -189,11 +189,16 @@ class Studyplan(db.Model):
                     studyplan.topics.append(topic)
 
             # create readings with relationship to relevant resource
-            for reading_name, reading_link, reading_description, topic_idx in zip(input_dict['reading_names'].split(','), input_dict['reading_links'].split(','), input_dict['reading_descriptions'].split(','), input_dict['readings_to_topic_idx'].split(',')):
+            for reading_name, reading_link, reading_description, reading_depth, reading_time, reading_type, topic_idx in zip(input_dict['reading_names'].split(','), input_dict['reading_links'].split(','), input_dict['reading_descriptions'].split(','), input_dict['reading_depths'].split(','), input_dict['reading_times'].split(','), input_dict['reading_types'].split(','), input_dict['readings_to_topic_idx'].split(',')):
                 if reading_name != "" and reading_link != "":
                     topic_idx = int(topic_idx)
+                    resource = get_or_create(db.session, Resource,
+                        name=reading_name,
+                        link=reading_link,
+                        depth=int(reading_depth),
+                        est_time=int(reading_time),
+                        type=int(reading_type))
 
-                    resource = get_or_create(db.session, Resource, name=reading_name, link=reading_link)
                     resource.concepts.append(concepts[topic_idx])
 
                     reading = Reading(resource=resource, description=reading_description)  # DEV: add studyplan details later

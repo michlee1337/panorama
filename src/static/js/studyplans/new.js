@@ -139,9 +139,9 @@ function addReading(topic_idx) {
         <div class="col-auto">
           Media type:
           <select name="difficulty" onChange="UpdateReadingType(${reading_idx}, this.value)">
-            <option value="text">Text</option>
-            <option value="video">Video</option>
-            <option value="other">Other</option>
+            <option value="1">Text</option>
+            <option value="2">Video</option>
+            <option value="0">Other</option>
           </select>
         </div>
 
