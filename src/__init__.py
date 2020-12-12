@@ -28,19 +28,19 @@ fa = FontAwesome(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
-from src import models
+from  import models
 db.create_all()
 
-from src.models import User
+from .models import User
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
 # register routes
-from blueprints.users import users_template
-from blueprints.studyplans import studyplans_template
-from blueprints.pages import pages_template
-from blueprints.readings import readings_template
+from .blueprints.users import users_template
+from .blueprints.studyplans import studyplans_template
+from .blueprints.pages import pages_template
+from .blueprints.readings import readings_template
 
 app.register_blueprint(users_template)
 app.register_blueprint(studyplans_template)
