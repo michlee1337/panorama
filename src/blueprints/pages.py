@@ -6,7 +6,8 @@ pages_template = Blueprint('pages', __name__, template_folder='../templates')
 
 @pages_template.route('/')
 def index():
-    return render_template('pages/index.html', studyplans = Studyplan.query.all())
+    # , studyplans = Studyplan.query.all()
+    return render_template('pages/index.html')
 
 @pages_template.route('/search')
 def search():
