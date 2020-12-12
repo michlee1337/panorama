@@ -74,6 +74,22 @@ class Resource(db.Model):
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
 
+    def depth_str(self):
+        lookup = {
+            1: "beginner",
+            2: "intermediate",
+            3: "advanced"
+        }
+        return lookup[self.depth]
+
+    def type_str(self):
+        lookup = {
+            1: "text",
+            2: "video",
+            3: "other"
+        }
+        return lookup[self.type]
+
 class Concept(db.Model):
     __tablename__ = 'concepts'
 

@@ -1,6 +1,9 @@
 <a href="{{reading.resource.link}}" target="_blank"">
   <div class="reading_card">
-    {{reading.resource.name}}
+    <p>{{reading.resource.name}}</p>
+    <p> Depth: {{reading.resource.depth_str()}}</p>
+    <p> Type: {{reading.resource.type_str()}}</p>
+    <p> Estimated Time: {{reading.resource.est_time}} minutes</p>
     <p>{{reading.description}}</p>
   </div>
 </a>
