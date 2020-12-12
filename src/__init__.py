@@ -28,7 +28,7 @@ fa = FontAwesome(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
-from  import models
+from . import models
 db.create_all()
 
 from .models import User
