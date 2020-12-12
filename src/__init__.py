@@ -31,10 +31,9 @@ db = SQLAlchemy(app)
 from . import models
 db.create_all()
 
-from .models import User
 @login.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+    return models.User.query.get(int(id))
 
 # register routes
 from .blueprints.users import users_template
