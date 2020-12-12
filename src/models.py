@@ -74,6 +74,22 @@ class Resource(db.Model):
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
 
+    def depth_str(self):
+        lookup = {
+            1: "beginner",
+            2: "intermediate",
+            3: "advanced"
+        }
+        return lookup[self.depth]
+
+    def type_str(self):
+        lookup = {
+            1: "text",
+            2: "video",
+            3: "other"
+        }
+        return lookup[self.type]
+
 class Concept(db.Model):
     __tablename__ = 'concepts'
 
@@ -118,6 +134,30 @@ class Reading(db.Model):  # workaround to use ordering_list
     resource_id = Column(db.Integer, ForeignKey('resources.id'))
     topic_id = Column(Integer, ForeignKey('topics.id'))
     position = Column(Integer)
+
+    # DEV: This is temporary as future refactoring to have a less awkward divison between
+    ## Studyplans and Readings will be done that allows for a search on a shared parent model.
+    def getMatchingReadings(arg_dict):
+        seen_keys = {}  # ensure no duplicate keys
+        filter_sql = []
+
+        for key, value in arg_dict.items():
+            if key in seen_keys:
+                flash("Search term duplicated. Only first instance considered.")
+            elif key == "term":
+                filter_sql.append("resources.{} LIKE '%%{}%%'".format("name", value))
+            elif key == "depth" or key== "type":
+                filter_sql.append("resources.{}={}".format(key, value))
+        result = db.engine.execute("SELECT * FROM readings, resources WHERE " + " AND ".join(filter_sql))
+        reading, readings = {}, []
+        for row in result:
+            for column, value in row.items():
+                # build up the dictionary
+                reading = {**reading, **{column: value}}
+            readings.append(reading)
+        return readings
+
+
 
 class Topic(db.Model):
     __tablename__ = 'topics'
@@ -189,11 +229,16 @@ class Studyplan(db.Model):
                     studyplan.topics.append(topic)
 
             # create readings with relationship to relevant resource
-            for reading_name, reading_link, reading_description, topic_idx in zip(input_dict['reading_names'].split(','), input_dict['reading_links'].split(','), input_dict['reading_descriptions'].split(','), input_dict['readings_to_topic_idx'].split(',')):
+            for reading_name, reading_link, reading_description, reading_depth, reading_time, reading_type, topic_idx in zip(input_dict['reading_names'].split(','), input_dict['reading_links'].split(','), input_dict['reading_descriptions'].split(','), input_dict['reading_depths'].split(','), input_dict['reading_times'].split(','), input_dict['reading_types'].split(','), input_dict['readings_to_topic_idx'].split(',')):
                 if reading_name != "" and reading_link != "":
                     topic_idx = int(topic_idx)
+                    resource = get_or_create(db.session, Resource,
+                        name=reading_name,
+                        link=reading_link,
+                        depth=int(reading_depth),
+                        est_time=int(reading_time),
+                        type=int(reading_type))
 
-                    resource = get_or_create(db.session, Resource, name=reading_name, link=reading_link)
                     resource.concepts.append(concepts[topic_idx])
 
                     reading = Reading(resource=resource, description=reading_description)  # DEV: add studyplan details later
@@ -203,3 +248,6 @@ class Studyplan(db.Model):
         except Exception as e:
             db.session.rollback()
             raise
+
+    def getMatching(term):
+        return Studyplan.query.filter(Studyplan.title.contains(term)).all()

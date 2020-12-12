@@ -8,7 +8,7 @@
 
 {% block app_content %}
 <div class="container">
-  <form action="{{ url_for('studyplans.studyplan_new') }}" method="POST">
+  <form action="{{ url_for('studyplans.new') }}" method="POST">
     <!-- HIDDEN INPUTS -->
     <input id="hiddenInput_prereqs" type="hidden" name="prerequisites" value="hello!">
     <input id="hiddenInput_topics" type="hidden" name="topics" value="">
@@ -17,6 +17,9 @@
     <input id="hiddenInput_reading_names" type="hidden" name="reading_names" value="">
     <input id="hiddenInput_reading_links" type="hidden" name="reading_links" value="">
     <input id="hiddenInput_reading_descriptions" type="hidden" name="reading_descriptions" value="">
+    <input id="hiddenInput_reading_depths" type="hidden" name="reading_depths" value="">
+    <input id="hiddenInput_reading_times" type="hidden" name="reading_times" value="">
+    <input id="hiddenInput_reading_types" type="hidden" name="reading_types" value="">
 
     <!-- HIDDEN INPUTS END -->
 

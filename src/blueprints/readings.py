@@ -10,14 +10,12 @@ def readings_by_concept():
     Returns JSON of readings that have the relevant concept
     '''
     concept_id = int(request.args.get('concept_id'))
-    print("DEBUG")
 
     concept = Concept.query.get(concept_id)
     readings = []
     for resource in concept.resources:
         # get top reading
         reading = resource.readings[0]
-        print("DEBUG2", resource.readings)
         reading_info = {
             'id': reading.id,
             'name': resource.name,

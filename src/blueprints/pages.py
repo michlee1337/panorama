@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from src.models import Studyplan
+from src.models import Studyplan, Reading
 from src import db
 
 pages_template = Blueprint('pages', __name__, template_folder='../templates')
@@ -11,17 +11,30 @@ def index():
 @pages_template.route('/search')
 def search():
     '''
-    Returns index page with only studyplans that have a title that contains
-    the given search term
+    Returns index page with only results that have a title that match
+    given search parameters
 
-    Uses Postgres LIKE query to match anything that contains the search term
+    If no filters are provided, will return studyplans that contain the search
+    term in their title.
+
+    If filters are provided, will return readings that contain the search term
+    and match provided filters.
+
+    Uses Postgres LIKE query to match search terms.
+
+    Accepts filters
+        - search by type (text/ video)
+        - search by title
+    Any search patterns not recognized will be ignored and a warning will flash.
+
     '''
-    term = request.args.get('term')
+    # DEV: This is temporary as future refactoring to have a less awkward divison between
+    ## Studyplans and Readings will be done that allows for a search on a shared parent model.
 
-    studyplans = Studyplan.query.filter(Studyplan.title.contains(term)).all()
-
-    return render_template('pages/index.html', studyplans = studyplans)
-
+    if (request.args.get('type') is not None) or (request.args.get('depth') is not None):
+        return render_template('pages/index.html', readings = Reading.getMatchingReadings(request.args))
+    else:
+        return render_template('pages/index.html', studyplans = Studyplan.getMatching(request.args.get('term')))
 
 # @pages_template.route('/pages')
 # def get (list)
