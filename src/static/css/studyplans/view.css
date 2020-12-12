@@ -36,3 +36,7 @@
 .clickable {
   cursor: pointer;
 }
+
+a .reading_card {
+  color: black;
+}

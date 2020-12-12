@@ -75,6 +75,8 @@ class Resource(db.Model):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
 
     def depth_str(self):
+        if self.depth is None:
+            return
         lookup = {
             1: "beginner",
             2: "intermediate",
@@ -83,6 +85,8 @@ class Resource(db.Model):
         return lookup[self.depth]
 
     def type_str(self):
+        if self.type is None:
+            return
         lookup = {
             1: "text",
             2: "video",

@@ -1,9 +1,20 @@
 <a href="{{reading.resource.link}}" target="_blank"">
-  <div class="reading_card">
-    <p>{{reading.resource.name}}</p>
-    <p> Depth: {{reading.resource.depth_str()}}</p>
-    <p> Type: {{reading.resource.type_str()}}</p>
-    <p> Estimated Time: {{reading.resource.est_time}} minutes</p>
-    <p>{{reading.description}}</p>
+  <div class="card reading_card">
+    <div class="card-body">
+      <b>{{reading.resource.name}}</b>
+      </br>
+      <div class="text-muted">
+        {% if reading.resource.depth_str() != None %}
+          Depth: {{reading.resource.depth_str()}}  |
+        {% endif %}
+        {% if reading.resource.type_str() != None %}
+          Type: {{reading.resource.type_str()}} |
+        {% endif %}
+        {% if reading.resource.type_str() != None %}
+          Estimated Time: {{reading.resource.est_time}} minutes |
+        {% endif %}
+      </div>
+      <p>{{reading.description}}</p>
+    </div>
   </div>
 </a>
