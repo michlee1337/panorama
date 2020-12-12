@@ -135,6 +135,30 @@ class Reading(db.Model):  # workaround to use ordering_list
     topic_id = Column(Integer, ForeignKey('topics.id'))
     position = Column(Integer)
 
+    # DEV: This is temporary as future refactoring to have a less awkward divison between
+    ## Studyplans and Readings will be done that allows for a search on a shared parent model.
+    def getMatchingReadings(arg_dict):
+        seen_keys = {}  # ensure no duplicate keys
+        filter_sql = []
+
+        for key, value in arg_dict.items():
+            if key in seen_keys:
+                flash("Search term duplicated. Only first instance considered.")
+            elif key == "term":
+                filter_sql.append("resources.{} LIKE '%%{}%%'".format("name", value))
+            elif key == "depth" or key== "type":
+                filter_sql.append("resources.{}={}".format(key, value))
+        result = db.engine.execute("SELECT * FROM readings, resources WHERE " + " AND ".join(filter_sql))
+        reading, readings = {}, []
+        for row in result:
+            for column, value in row.items():
+                # build up the dictionary
+                reading = {**reading, **{column: value}}
+            readings.append(reading)
+        return readings
+
+
+
 class Topic(db.Model):
     __tablename__ = 'topics'
     id = Column(Integer, primary_key=True)
@@ -224,3 +248,6 @@ class Studyplan(db.Model):
         except Exception as e:
             db.session.rollback()
             raise
+
+    def getMatching(term):
+        return Studyplan.query.filter(Studyplan.title.contains(term)).all()

@@ -3,16 +3,31 @@
 {% block app_content %}
 
 <div class="container">
-  <h2>Studyplans</h2>
-  <p>Take a look at all the studyplans other have created!</p>
-  <div id="studyplan-list">
-    {% for studyplan in studyplans %}
-      {% with studyplan = studyplan %}
-        {% include "pages/_studyplan_card.html" %}
-        </br>
-      {% endwith %}
-    {% endfor %}
-  </div>
+  {% if studyplans is defined %}
+    <h2>Studyplans</h2>
+    <p>Take a look at all the studyplans other have created!</p>
+    <div id="studyplan-list">
+      {% for studyplan in studyplans %}
+        {% with studyplan = studyplan %}
+          {% include "pages/_studyplan_card.html" %}
+          </br>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if readings is defined %}
+    <h2>Readings</h2>
+    <p>Take a look at all the readings other have created!</p>
+    <div id="reading-list">
+      {% for reading in readings %}
+        {% with reading = reading %}
+          {% include "pages/_reading_card.html" %}
+          </br>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
 </div>
   <!-- DEV: visual graph display later?
   <div class="row">

@@ -10,6 +10,6 @@ function toggleFilter() {
     $("#search-term-input").attr("placeholder","search studyplans")
   } else {
     search_filter.style.display = "block";
-    $("#search-term-input").attr("placeholder","search resources")
+    $("#search-term-input").attr("placeholder","search readings")
   }
 }
