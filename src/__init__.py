@@ -11,8 +11,7 @@ import os
 from flask_fontawesome import FontAwesome
 
 # Create a flask app
-sys.path.append('.')
-sys.path.append('../src')
+sys.path.append('src')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'bonka'
 login = LoginManager(app)
@@ -27,6 +26,7 @@ fa = FontAwesome(app)
 # create database tables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 from src import models
 db.create_all()
@@ -46,8 +46,3 @@ app.register_blueprint(users_template)
 app.register_blueprint(studyplans_template)
 app.register_blueprint(pages_template)
 app.register_blueprint(readings_template)
-
-# _____ MAIN ______
-
-if __name__ == '__main__':
-    app.run()
