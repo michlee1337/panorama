@@ -10,7 +10,19 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from src import app, db, login
 from src.helpers import get_or_create
 
-# _____ MANY TO MANY ASSOCIATION TABLES ______
+
+# ______ NEO4J ______
+from py2neo import Graph, Node, Relationship
+import os
+
+db_uri = os.environ.get('DATABASE_URL', 'http://localhost:7474')
+db_user = os.environ.get('DATABASE_USER')
+db_password = os.environ.get('DATABASE_PASSWORD')
+graph = Graph(db_uri + "/db/data/", user=db_user, password=db_password)
+
+# ______ NEO4J END ______
+
+"""# _____ MANY TO MANY ASSOCIATION TABLES ______
 concept_resources = Table(
     'concept_resources',
     db.Model.metadata,
@@ -47,6 +59,9 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    # relationships
+    artifacts = relationship("Artifact", backref="author")
+
 class Source(db.Model):
     __tablename__ = 'sources'
     id = Column(Integer, primary_key=True)
@@ -54,8 +69,29 @@ class Source(db.Model):
     link = Column(String(200))
 
     # relationships
-    resources = relationship("Resource", backref="source")
-    studyplans = relationship("Studyplan", backref="source")
+    artifacts = relationship("Artifact", backref="source")
+    # resources = relationship("Resource", backref="source")
+    # studyplans = relationship("Studyplan", backref="source")
+
+class Artifact(db.Model):
+    __tablename__ = 'artifacts'
+    id = Column(Integer, primary_key=True)
+    source_id = Column(Integer, ForeignKey('sources.id'))
+    author_id = Column(Integer, ForeignKey('users.id'))
+    name = Column(String(100))
+
+    '''
+    # search metadata
+    mediatype
+    duration
+    depth
+    vote_count
+    vote_sum
+
+    prerequisite
+        - concept or specific artifact
+        - [optional] instruction
+    '''
 
 class Resource(db.Model):
     __tablename__ = 'resources'
@@ -163,8 +199,6 @@ class Reading(db.Model):  # workaround to use ordering_list
             readings.append(reading)
         return readings
 
-
-
 class Topic(db.Model):
     __tablename__ = 'topics'
     id = Column(Integer, primary_key=True)
@@ -260,3 +294,4 @@ class Studyplan(db.Model):
 
     def getConcepts(self):
         return [t.concept.id for t in self.topics]
+"""
