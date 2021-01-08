@@ -11,12 +11,12 @@ from src import app, db, login
 from src.helpers import get_or_create
 
 # _____ MANY TO MANY ASSOCIATION TABLES ______
-# concept_artifacts = Table(
-#     'concept_artifacts',
-#     db.Model.metadata,
-#     Column('artifact_id', Integer, ForeignKey('artifacts.id')),
-#     Column('concept_id', Integer, ForeignKey('concepts.id'))
-# )
+concept_artifacts = Table(
+    'concept_artifacts',
+    db.Model.metadata,
+    Column('artifact_id', Integer, ForeignKey('artifacts.id')),
+    Column('concept_id', Integer, ForeignKey('concepts.id'))
+)
 
 prerequisites = Table(
     'prerequisites',
@@ -57,8 +57,9 @@ class Concept(db.Model):
 
     # relationships
     # NOTE: self <> self relationships in ConceptRelationship object
-    artifacts = relationship('Artifact', backref='concept',
-                                lazy='dynamic')
+    artifacts = relationship('Artifact', secondary='concept_artifacts',
+        backref='concepts', lazy='dynamic')
+    chunks = relationship('Chunk', backref='concept', lazy='dynamic')
 
 class ConceptRelationship(db.Model):
     __tablename__ = 'concept_relationships'
@@ -80,33 +81,12 @@ class ConceptRelationship(db.Model):
 class Chunk(db.Model):
     __tablename__ = 'chunks'
     id = Column(Integer, primary_key=True)
+    title = Column(String(100))
     content = Column(UnicodeText)  # TODO: support CKeditor
     position = Column(Integer)  # ordered relationship
 
     # relationships
     artifact_id = Column(Integer, ForeignKey('artifacts.id'))
-
-    # DEV: This is temporary as future refactoring to have a less awkward divison between
-    ## Studyplans and Readings will be done that allows for a search on a shared parent model.
-    def getMatchingReadings(arg_dict):
-        seen_keys = {}  # ensure no duplicate keys
-        filter_sql = []
-
-        for key, value in arg_dict.items():
-            if key in seen_keys:
-                flash("Search term duplicated. Only first instance considered.")
-            elif key == "term":
-                filter_sql.append("resources.{} LIKE '%%{}%%'".format("name", value))
-            elif key == "depth" or key== "type":
-                filter_sql.append("resources.{}={}".format(key, value))
-        result = db.engine.execute("SELECT * FROM readings, resources WHERE " + " AND ".join(filter_sql))
-        reading, readings = {}, []
-        for row in result:
-            for column, value in row.items():
-                # build up the dictionary
-                reading = {**reading, **{column: value}}
-            readings.append(reading)
-        return readings
 
 class Artifact(db.Model):
     __tablename__ = 'artifacts'
@@ -124,7 +104,6 @@ class Artifact(db.Model):
     vote_sum = Column(Integer, default=0)
 
     # relationships
-    concept_id = Column(Integer, ForeignKey('concepts.id'))
     prerequisites = relationship(
         'Artifact',
         secondary=prerequisites,
