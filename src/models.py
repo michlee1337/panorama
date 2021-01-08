@@ -112,6 +112,7 @@ class Artifact(db.Model):
         backref='prerequisite_for',  # DEV: Someone help me w names
         lazy="dynamic"
     )
+    
     chunks = relationship("Chunk", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
 
     def __str__(self):
