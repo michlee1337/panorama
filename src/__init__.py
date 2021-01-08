@@ -39,10 +39,10 @@ def load_user(id):
 # # register routes
 from blueprints.pages import pages_template
 from blueprints.users import users_template
-# from blueprints.studyplans import studyplans_template
+# from blueprints.artifacts import artifacts_template
 # from blueprints.readings import readings_template
 #
 app.register_blueprint(pages_template)
 app.register_blueprint(users_template)
-# app.register_blueprint(studyplans_template)
+# app.register_blueprint(artifacts_template)
 # app.register_blueprint(readings_template)

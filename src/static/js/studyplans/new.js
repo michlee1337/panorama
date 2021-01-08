@@ -102,13 +102,13 @@ $( document ).ready(function() {
 
 // ______ UPDATE NESTED FORM _____
 function addChunk() {
-  $("#studyplans-creator_wrapper").append(`
-    <div class="studyplans-creator_chunk card">
+  $("#artifacts-creator_wrapper").append(`
+    <div class="artifacts-creator_chunk card">
       <div class="form-group chunk-group">
         <h4><input type="text" onChange="UpdateChunk(${chunk_idx}, this.value)" placeholder="Chunk"></h4>
         <input type="text" onChange="UpdateChunkDescription(${chunk_idx}, this.value)" placeholder="ex: This chunk is the study of ... and relates to the the main chunk as ...">
       </div>
-      <div id="studyplans-creator_chunk_readings${chunk_idx}">
+      <div id="artifacts-creator_chunk_readings${chunk_idx}">
       </div>
       <button type="button" class="btn btn-secondary" onclick="addReading(${chunk_idx})">Add a Reading</button>
     </div>`);
@@ -118,7 +118,7 @@ function addChunk() {
 }
 
 function addReading(chunk_idx) {
-  $(`#studyplans-creator_chunk_readings${chunk_idx}`).append(`
+  $(`#artifacts-creator_chunk_readings${chunk_idx}`).append(`
     <div class="form-reading">
       <label for="reading-name">Name</label>
       <input type="text" onChange="UpdateReadingName(${reading_idx}, this.value)" placeholder="ex: Head First Design Patterns">

@@ -2,13 +2,13 @@
 
 {% block head %}
     {{ super() }}
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/studyplans/new.css') }}">
-    <script src="{{ url_for('static', filename='js/studyplans/new.js') }}"></script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/new.css') }}">
+    <script src="{{ url_for('static', filename='js/artifacts/new.js') }}"></script>
 {% endblock %}
 
 {% block app_content %}
 <div class="container">
-  <form action="{{ url_for('studyplans.new') }}" method="POST">
+  <form action="{{ url_for('artifacts.new') }}" method="POST">
     <!-- HIDDEN INPUTS -->
     <input id="hiddenInput_prereqs" type="hidden" name="prerequisites" value="hello!">
     <input id="hiddenInput_chunks" type="hidden" name="chunks" value="">
@@ -42,7 +42,7 @@
     <input type="text" name="description" placeholder="...">
     </br>
 
-    <div id="studyplans-creator_wrapper">
+    <div id="artifacts-creator_wrapper">
     </div>
     <button type="button" class="btn btn-secondary" onclick="addChunk()">Add a Chunk</button>
 

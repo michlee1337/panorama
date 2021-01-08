@@ -1,10 +1,10 @@
-<a href="{{url_for('studyplans.view', studyplan_id=studyplan.id)}}">
-<div class="studyplan_card card">
+<a href="{{url_for('artifacts.view', artifact_id=artifact.id)}}">
+<div class="artifact_card card">
   <div class="card-body">
-    <h5 class="card-title"><b>{{studyplan.title}}</b>  <span class="badge badge-pill badge-primary">{{studyplan.concept.title}}</span></h5>
+    <h5 class="card-title"><b>{{artifact.title}}</b>  <span class="badge badge-pill badge-primary">{{artifact.concept.title}}</span></h5>
     <p>
       Chunks:
-      {% for chunk in studyplan.chunks %}
+      {% for chunk in artifact.chunks %}
         <span class="badge badge-pill badge-secondary">{{chunk.concept.title}}</span>
       {% endfor %}
     </p>

@@ -8,7 +8,7 @@ function toggleFilter() {
   search_filter = document.getElementById('search-filter');
   if (search_filter.style.display == "block") {
     search_filter.style.display = "none";
-    $("#search-term-input").attr("placeholder","search studyplans")
+    $("#search-term-input").attr("placeholder","search artifacts")
   } else {
     search_filter.style.display = "block";
     $("#search-term-input").attr("placeholder","search readings")

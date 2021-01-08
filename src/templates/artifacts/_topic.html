@@ -5,7 +5,7 @@
       <p>{{chunk.description}}</p>
       {% for reading in chunk.readings %}
           {% with reading = reading %}
-            {% include "studyplans/_reading.html" %}
+            {% include "artifacts/_reading.html" %}
           {% endwith %}
       {% endfor %}
     </div>
