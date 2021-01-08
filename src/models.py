@@ -107,7 +107,7 @@ class Chunk(db.Model):
                 reading = {**reading, **{column: value}}
             readings.append(reading)
         return readings
-        
+
 class Artifact(db.Model):
     __tablename__ = 'artifacts'
     id = Column(Integer, primary_key=True)
