@@ -31,10 +31,10 @@
       {% endfor %}
     </h4>
 
-    <div class="topics">
-      {% for topic in studyplan.topics %}
-        {% with topic = topic %}
-          {% include "studyplans/_topic.html" %}
+    <div class="chunks">
+      {% for chunk in studyplan.chunks %}
+        {% with chunk = chunk %}
+          {% include "studyplans/_chunk.html" %}
         {% endwith %}
       {% endfor %}
     </div>
@@ -45,7 +45,7 @@
   <div id="search-sidebar">
     <h3 id="search-sidebar-title">Find Related</h3>
     <p>Click something in the studyplan to find related information from other studyplans.</p>
-    <p>You can click the title of the studyplan itself, a topic, or a reading.</p>
+    <p>You can click the title of the studyplan itself, a chunk, or a reading.</p>
     <!-- <div class="search-selection">
       <span id="search-studyplan" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Studyplans</span>
       <span id="search-resource" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Resources</span>

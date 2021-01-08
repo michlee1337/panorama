@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
-from src.models import Studyplan, Concept, Topic, Resource, Reading
+from src.models import Studyplan, Concept, Chunk, Resource, Reading
 from src import db
 
 readings_template = Blueprint('readings', __name__, template_folder='../templates')

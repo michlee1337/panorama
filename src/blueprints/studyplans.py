@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
 from flask_login import current_user
-from src.models import Studyplan, Concept, Topic, Resource, Reading
+from src.models import Studyplan, Concept, Chunk, Resource, Reading
 from src import db
 
 studyplans_template = Blueprint('studyplans', __name__, template_folder='../templates')
@@ -64,7 +64,7 @@ def studyplans_by_concept():
                 'title': studyplan.title,
                 'prerequisites': [p.title for p in studyplan.concept.prerequisites],
                 'description': studyplan.description,
-                'topics': [t.concept.title for t in studyplan.topics]
+                'chunks': [t.concept.title for t in studyplan.chunks]
             }
             studyplans.append(studyplan_info)
     return jsonify(studyplans=studyplans)

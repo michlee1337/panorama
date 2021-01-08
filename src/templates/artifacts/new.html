@@ -11,9 +11,9 @@
   <form action="{{ url_for('studyplans.new') }}" method="POST">
     <!-- HIDDEN INPUTS -->
     <input id="hiddenInput_prereqs" type="hidden" name="prerequisites" value="hello!">
-    <input id="hiddenInput_topics" type="hidden" name="topics" value="">
-    <input id="hiddenInput_topic_descriptions" type="hidden" name="topic_descriptions" value="">
-    <input id="hiddenInput_readings_to_topic_idx" type="hidden" name="readings_to_topic_idx" value="">
+    <input id="hiddenInput_chunks" type="hidden" name="chunks" value="">
+    <input id="hiddenInput_chunk_descriptions" type="hidden" name="chunk_descriptions" value="">
+    <input id="hiddenInput_readings_to_chunk_idx" type="hidden" name="readings_to_chunk_idx" value="">
     <input id="hiddenInput_reading_names" type="hidden" name="reading_names" value="">
     <input id="hiddenInput_reading_links" type="hidden" name="reading_links" value="">
     <input id="hiddenInput_reading_descriptions" type="hidden" name="reading_descriptions" value="">
@@ -44,7 +44,7 @@
 
     <div id="studyplans-creator_wrapper">
     </div>
-    <button type="button" class="btn btn-secondary" onclick="addTopic()">Add a Topic</button>
+    <button type="button" class="btn btn-secondary" onclick="addChunk()">Add a Chunk</button>
 
     <!-- VISIBLE INPUTS END -->
     <input type="submit" value="Submit">

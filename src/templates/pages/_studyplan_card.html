@@ -3,9 +3,9 @@
   <div class="card-body">
     <h5 class="card-title"><b>{{studyplan.title}}</b>  <span class="badge badge-pill badge-primary">{{studyplan.concept.title}}</span></h5>
     <p>
-      Topics:
-      {% for topic in studyplan.topics %}
-        <span class="badge badge-pill badge-secondary">{{topic.concept.title}}</span>
+      Chunks:
+      {% for chunk in studyplan.chunks %}
+        <span class="badge badge-pill badge-secondary">{{chunk.concept.title}}</span>
       {% endfor %}
     </p>
   </div>

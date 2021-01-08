@@ -1,7 +1,7 @@
 // ______ STUDYPLAN CREATOR INTERNAL STATE ______
-let topics = [],
-  topic_descriptions = [],
-  readings_to_topic_idx = [],   // DEV: maybe post-calc this
+let chunks = [],
+  chunk_descriptions = [],
+  readings_to_chunk_idx = [],   // DEV: maybe post-calc this
   reading_names = [],
   reading_links = [],
   reading_descriptions = [],
@@ -9,15 +9,15 @@ let topics = [],
   reading_times = [],
   reading_types = [],
   prereqs = [],
-  topic_idx = 0,
+  chunk_idx = 0,
   reading_idx = 0;
 
 $( document ).ready(function() {
   // ______ HIDDEN INPUTS ______
   let hiddenInput_prereqs = document.getElementById('hiddenInput_prereqs'),
-  hiddenInput_topics = document.getElementById('hiddenInput_topics'),
-  hiddenInput_topic_descriptions = document.getElementById('hiddenInput_topic_descriptions'),
-  hiddenInput_readings_to_topic_idx = document.getElementById('hiddenInput_readings_to_topic_idx'),
+  hiddenInput_chunks = document.getElementById('hiddenInput_chunks'),
+  hiddenInput_chunk_descriptions = document.getElementById('hiddenInput_chunk_descriptions'),
+  hiddenInput_readings_to_chunk_idx = document.getElementById('hiddenInput_readings_to_chunk_idx'),
   hiddenInput_reading_names = document.getElementById('hiddenInput_reading_names'),
   hiddenInput_reading_links = document.getElementById('hiddenInput_reading_links'),
   hiddenInput_reading_descriptions = document.getElementById('hiddenInput_reading_descriptions'),
@@ -101,24 +101,24 @@ $( document ).ready(function() {
 
 
 // ______ UPDATE NESTED FORM _____
-function addTopic() {
+function addChunk() {
   $("#studyplans-creator_wrapper").append(`
-    <div class="studyplans-creator_topic card">
-      <div class="form-group topic-group">
-        <h4><input type="text" onChange="UpdateTopic(${topic_idx}, this.value)" placeholder="Topic"></h4>
-        <input type="text" onChange="UpdateTopicDescription(${topic_idx}, this.value)" placeholder="ex: This topic is the study of ... and relates to the the main topic as ...">
+    <div class="studyplans-creator_chunk card">
+      <div class="form-group chunk-group">
+        <h4><input type="text" onChange="UpdateChunk(${chunk_idx}, this.value)" placeholder="Chunk"></h4>
+        <input type="text" onChange="UpdateChunkDescription(${chunk_idx}, this.value)" placeholder="ex: This chunk is the study of ... and relates to the the main chunk as ...">
       </div>
-      <div id="studyplans-creator_topic_readings${topic_idx}">
+      <div id="studyplans-creator_chunk_readings${chunk_idx}">
       </div>
-      <button type="button" class="btn btn-secondary" onclick="addReading(${topic_idx})">Add a Reading</button>
+      <button type="button" class="btn btn-secondary" onclick="addReading(${chunk_idx})">Add a Reading</button>
     </div>`);
-    topic_idx += 1;
-    topics.push(null);
-    hiddenInput_topics.value = topics.join(',');
+    chunk_idx += 1;
+    chunks.push(null);
+    hiddenInput_chunks.value = chunks.join(',');
 }
 
-function addReading(topic_idx) {
-  $(`#studyplans-creator_topic_readings${topic_idx}`).append(`
+function addReading(chunk_idx) {
+  $(`#studyplans-creator_chunk_readings${chunk_idx}`).append(`
     <div class="form-reading">
       <label for="reading-name">Name</label>
       <input type="text" onChange="UpdateReadingName(${reading_idx}, this.value)" placeholder="ex: Head First Design Patterns">
@@ -154,7 +154,7 @@ function addReading(topic_idx) {
     </div>
     `);
   reading_idx += 1;
-  readings_to_topic_idx.push(topic_idx);
+  readings_to_chunk_idx.push(chunk_idx);
   reading_names.push(null);
   reading_links.push(null);
   reading_descriptions.push(null);
@@ -162,7 +162,7 @@ function addReading(topic_idx) {
   reading_times.push(null);
   reading_types.push(null);
 
-  hiddenInput_readings_to_topic_idx.value = readings_to_topic_idx.join(',');
+  hiddenInput_readings_to_chunk_idx.value = readings_to_chunk_idx.join(',');
   hiddenInput_reading_names.value = reading_names.join(',');
   hiddenInput_reading_links.value = reading_links.join(',');
   hiddenInput_reading_descriptions.value = reading_descriptions.join(',');
@@ -172,14 +172,14 @@ function addReading(topic_idx) {
 
 }
 // ______ UPDATE HIDDEN FIELDS _____
-function UpdateTopic(topic_idx, topic_name) {
-  topics[topic_idx] = topic_name;
-  hiddenInput_topics.value = topics.join(',');
+function UpdateChunk(chunk_idx, chunk_name) {
+  chunks[chunk_idx] = chunk_name;
+  hiddenInput_chunks.value = chunks.join(',');
 }
 
-function UpdateTopicDescription(topic_idx, topic_description) {
-  topic_descriptions[topic_idx] = topic_description;
-  hiddenInput_topic_descriptions.value = topic_descriptions.join(',');
+function UpdateChunkDescription(chunk_idx, chunk_description) {
+  chunk_descriptions[chunk_idx] = chunk_description;
+  hiddenInput_chunk_descriptions.value = chunk_descriptions.join(',');
 }
 
 function UpdateReadingName(reading_idx, reading_name) {
