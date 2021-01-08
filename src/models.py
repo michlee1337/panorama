@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table, MetaData
+from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import LoginManager, UserMixin
@@ -11,25 +11,18 @@ from src import app, db, login
 from src.helpers import get_or_create
 
 # _____ MANY TO MANY ASSOCIATION TABLES ______
-concept_resources = Table(
-    'concept_resources',
-    db.Model.metadata,
-    Column('resource_id', Integer, ForeignKey('resources.id')),
-    Column('concept_id', Integer, ForeignKey('concepts.id'))
-)
-
-nested_concepts = Table(
-    'nested_concepts',
-    db.Model.metadata,
-    Column('parent_id', Integer, ForeignKey('concepts.id')),
-    Column('child_id', Integer, ForeignKey('concepts.id'))
-)
+# concept_artifacts = Table(
+#     'concept_artifacts',
+#     db.Model.metadata,
+#     Column('artifact_id', Integer, ForeignKey('artifacts.id')),
+#     Column('concept_id', Integer, ForeignKey('concepts.id'))
+# )
 
 prerequisites = Table(
     'prerequisites',
     db.Model.metadata,
-    Column('before_id', Integer, ForeignKey('concepts.id')),
-    Column('after_id', Integer, ForeignKey('concepts.id'))
+    Column('before_id', Integer, ForeignKey('artifacts.id')),
+    Column('after_id', Integer, ForeignKey('artifacts.id'))
 )
 
 # _____ MANY TO MANY ASSOCIATION TABLES END ______
@@ -47,31 +40,100 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-class Source(db.Model):
+class Source(db.Model):  # external source
     __tablename__ = 'sources'
     id = Column(Integer, primary_key=True)
     name = Column(String(200))
     link = Column(String(200))
 
     # relationships
-    resources = relationship("Resource", backref="source")
-    studyplans = relationship("Studyplan", backref="source")
+    artifacts = relationship("Artifact", backref="source")
 
-class Resource(db.Model):
-    __tablename__ = 'resources'
+class Concept(db.Model):
+    __tablename__ = 'concepts'
+
     id = Column(Integer, primary_key=True)
-    name = Column(String(100))
-    link = Column(String(500))
-    depth = Column(Integer, nullable=True)
-    type = Column(Integer, nullable=True)
-    est_time = Column(Integer, nullable=True)
-    vote_count = Column(Integer, default=0)
-    vote_sum = Column(Integer, default=0)
-    # instructions: filler "focus on" << should probably be a separate votable entity
+    title = Column(String(100))
 
     # relationships
-    source_id = Column(Integer, ForeignKey('sources.id'))
-    readings = relationship("Reading", backref="resource")
+    # NOTE: self <> self relationships in ConceptRelationship object
+    artifacts = relationship('Artifact', backref='concept',
+                                lazy='dynamic')
+
+class ConceptRelationship(db.Model):
+    __tablename__ = 'concept_relationships'
+    id = Column(Integer, primary_key=True)
+    relationship_type = Column(Integer, default=0)
+
+    # relationships
+    concept_a_id = Column(Integer, ForeignKey('concepts.id'))
+    concept_b_id = Column(Integer, ForeignKey('concepts.id'))
+
+    concept_a = relationship('Concept', backref = 'relationships_out',
+        primaryjoin = "concepts.concept_a_id == concepts.id")
+    concept_b = relationship('Concept', backref = 'relationships_in',
+        primaryjoin = "concepts.concept_b_id == concepts.id")
+
+    # TODO: relationship type set/ get
+    # TODO: methods to set/ get relationship
+
+class Chunk(db.Model):
+    __tablename__ = 'chunks'
+    id = Column(Integer, primary_key=True)
+    content = Column(UnicodeText)  # TODO: support CKeditor
+    position = Column(Integer)  # ordered relationship
+
+    # relationships
+    artifact_id = Column(Integer, ForeignKey('artifacts.id'))
+
+    # DEV: This is temporary as future refactoring to have a less awkward divison between
+    ## Studyplans and Readings will be done that allows for a search on a shared parent model.
+    def getMatchingReadings(arg_dict):
+        seen_keys = {}  # ensure no duplicate keys
+        filter_sql = []
+
+        for key, value in arg_dict.items():
+            if key in seen_keys:
+                flash("Search term duplicated. Only first instance considered.")
+            elif key == "term":
+                filter_sql.append("resources.{} LIKE '%%{}%%'".format("name", value))
+            elif key == "depth" or key== "type":
+                filter_sql.append("resources.{}={}".format(key, value))
+        result = db.engine.execute("SELECT * FROM readings, resources WHERE " + " AND ".join(filter_sql))
+        reading, readings = {}, []
+        for row in result:
+            for column, value in row.items():
+                # build up the dictionary
+                reading = {**reading, **{column: value}}
+            readings.append(reading)
+        return readings
+        
+class Artifact(db.Model):
+    __tablename__ = 'artifacts'
+    id = Column(Integer, primary_key=True)
+    source_id = Column(Integer, ForeignKey('sources.id'), nullable=True)
+    author_id = Column(Integer, ForeignKey('users.id'))
+    name = Column(String(100))
+    introduction = Column(UnicodeText)
+
+    # search metadata
+    mediatype = Column(Integer, nullable=True)
+    depth = Column(Integer, nullable=True)
+    duration = Column(Integer, nullable=True)
+    vote_count = Column(Integer, default=0)
+    vote_sum = Column(Integer, default=0)
+
+    # relationships
+    concept_id = Column(Integer, ForeignKey('concepts.id'))
+    prerequisites = relationship(
+        'Artifact',
+        secondary=prerequisites,
+        primaryjoin=id == prerequisites.c.after_id,
+        secondaryjoin=id == prerequisites.c.before_id,
+        backref='prerequisite_for',  # DEV: Someone help me w names
+        lazy="dynamic"
+    )
+    chunks = relationship("Chunk", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
 
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
@@ -96,42 +158,47 @@ class Resource(db.Model):
         }
         return lookup[self.type]
 
-class Concept(db.Model):
-    __tablename__ = 'concepts'
+# class Resource(db.Model):
+#     __tablename__ = 'resources'
+#     id = Column(Integer, primary_key=True)
+#     name = Column(String(100))
+#     link = Column(String(500))
+#     depth = Column(Integer, nullable=True)
+#     type = Column(Integer, nullable=True)
+#     est_time = Column(Integer, nullable=True)
+#     vote_count = Column(Integer, default=0)
+#     vote_sum = Column(Integer, default=0)
+#     # instructions: filler "focus on" << should probably be a separate votable entity
+#
+#     # relationships
+#     source_id = Column(Integer, ForeignKey('sources.id'))
+#     readings = relationship("Reading", backref="resource")
+#
+#     def __str__(self):
+#         return f"<id={self.id}, name={self.name}, link = {self.link}>"
+#
+#     def depth_str(self):
+#         if self.depth is None:
+#             return
+#         lookup = {
+#             1: "beginner",
+#             2: "intermediate",
+#             3: "advanced"
+#         }
+#         return lookup[self.depth]
+#
+#     def type_str(self):
+#         if self.type is None:
+#             return
+#         lookup = {
+#             1: "text",
+#             2: "video",
+#             3: "other"
+#         }
+#         return lookup[self.type]
+#
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String(100))
-
-    # relationships
-    resources = relationship(
-        "Resource",
-        secondary=lambda: concept_resources,
-        backref=backref("concepts", lazy="dynamic"),
-        lazy="dynamic"
-    )
-
-    # NOTE: Concepts have **two** **self** many-to-many relationships
-    ## parents <> children denotes specialization
-    ## prerequisites <> prerequisite_for denotes background knowledge required
-    parents = relationship(
-        'Concept',
-        secondary=nested_concepts,
-        primaryjoin=id == nested_concepts.c.child_id,
-        secondaryjoin=id == nested_concepts.c.parent_id,
-        backref=backref('children', lazy="dynamic"),
-        lazy="dynamic"
-    )
-
-    prerequisites = relationship(
-        'Concept',
-        secondary=prerequisites,
-        primaryjoin=id == prerequisites.c.after_id,
-        secondaryjoin=id == prerequisites.c.before_id,
-        backref=backref('prerequisite_for', lazy="dynamic"),  # DEV: Someone help me w names
-        lazy="dynamic"
-    )
-
-class Reading(db.Model):  # workaround to use ordering_list
+"""class Reading(db.Model):  # workaround to use ordering_list
     __tablename__ = 'readings'
     id = Column(Integer, primary_key=True)
     description = Column(String(1000))
@@ -260,3 +327,4 @@ class Studyplan(db.Model):
 
     def getConcepts(self):
         return [t.concept.id for t in self.topics]
+"""
