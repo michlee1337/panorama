@@ -110,7 +110,7 @@ class Artifact(db.Model):
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
 
-    def create():
+    def create(self):
         pass
 
     def depth_str(self):
