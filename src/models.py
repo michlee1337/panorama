@@ -21,8 +21,8 @@ concept_artifacts = Table(
 prerequisites = Table(
     'prerequisites',
     db.Model.metadata,
-    Column('before_id', Integer, ForeignKey('artifacts.id')),
-    Column('after_id', Integer, ForeignKey('artifacts.id'))
+    Column('concept_id', Integer, ForeignKey('concepts.id')),
+    Column('artifact_id', Integer, ForeignKey('artifacts.id'))
 )
 
 # _____ MANY TO MANY ASSOCIATION TABLES END ______
@@ -59,6 +59,8 @@ class Concept(db.Model):
     # NOTE: self <> self relationships in ConceptRelationship object
     artifacts = relationship('Artifact', secondary='concept_artifacts',
         backref='concepts', lazy='dynamic')
+    dependencies = relationship('Artifact', secondary='prerequisites',
+        backref='prerequisites', lazy='dynamic')
     chunks = relationship('Chunk', backref='concept', lazy='dynamic')
 
 class ConceptRelationship(db.Model):
@@ -93,8 +95,8 @@ class Artifact(db.Model):
     id = Column(Integer, primary_key=True)
     source_id = Column(Integer, ForeignKey('sources.id'), nullable=True)
     author_id = Column(Integer, ForeignKey('users.id'))
-    name = Column(String(100))
-    introduction = Column(UnicodeText)
+    title = Column(String(100))
+    description = Column(UnicodeText)
 
     # search metadata
     mediatype = Column(Integer, nullable=True)
@@ -103,20 +105,13 @@ class Artifact(db.Model):
     vote_count = Column(Integer, default=0)
     vote_sum = Column(Integer, default=0)
 
-    # relationships
-    prerequisites = relationship(
-        'Artifact',
-        secondary=prerequisites,
-        primaryjoin=id == prerequisites.c.after_id,
-        secondaryjoin=id == prerequisites.c.before_id,
-        backref='prerequisite_for',  # DEV: Someone help me w names
-        lazy="dynamic"
-    )
-    
     chunks = relationship("Chunk", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
 
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
+
+    def create():
+        pass
 
     def depth_str(self):
         if self.depth is None:
