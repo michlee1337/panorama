@@ -11,12 +11,6 @@ from src import app, db, login
 from src.helpers import get_or_create
 
 # _____ MANY TO MANY ASSOCIATION TABLES ______
-concept_artifacts = Table(
-    'concept_artifacts',
-    db.Model.metadata,
-    Column('artifact_id', Integer, ForeignKey('artifacts.id')),
-    Column('concept_id', Integer, ForeignKey('concepts.id'))
-)
 
 prerequisites = Table(
     'prerequisites',
@@ -40,15 +34,6 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-class Source(db.Model):  # external source
-    __tablename__ = 'sources'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(200))
-    link = Column(String(200))
-
-    # relationships
-    artifacts = relationship("Artifact", backref="source")
-
 class Concept(db.Model):
     __tablename__ = 'concepts'
 
@@ -57,8 +42,7 @@ class Concept(db.Model):
 
     # relationships
     # NOTE: self <> self relationships in ConceptRelationship object
-    artifacts = relationship('Artifact', secondary='concept_artifacts',
-        backref='concepts', lazy='dynamic')
+    artifacts = relationship('Artifact', backref='concept', lazy='dynamic')
     dependencies = relationship('Artifact', secondary='prerequisites',
         backref='prerequisites', lazy='dynamic')
     chunks = relationship('Chunk', backref='concept', lazy='dynamic')
@@ -72,10 +56,8 @@ class ConceptRelationship(db.Model):
     concept_a_id = Column(Integer, ForeignKey('concepts.id'))
     concept_b_id = Column(Integer, ForeignKey('concepts.id'))
 
-    concept_a = relationship('Concept', backref = 'relationships_out',
-        primaryjoin = "concepts.concept_a_id == concepts.id")
-    concept_b = relationship('Concept', backref = 'relationships_in',
-        primaryjoin = "concepts.concept_b_id == concepts.id")
+    concept_a = relationship("Concept", foreign_keys=[concept_a_id], backref=backref("relationships_out", uselist=False))
+    concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in", uselist=False))
 
     # TODO: relationship type set/ get
     # TODO: methods to set/ get relationship
@@ -89,12 +71,11 @@ class Chunk(db.Model):
 
     # relationships
     artifact_id = Column(Integer, ForeignKey('artifacts.id'))
+    concept_id = Column(Integer, ForeignKey('concepts.id'))
 
 class Artifact(db.Model):
     __tablename__ = 'artifacts'
     id = Column(Integer, primary_key=True)
-    source_id = Column(Integer, ForeignKey('sources.id'), nullable=True)
-    author_id = Column(Integer, ForeignKey('users.id'))
     title = Column(String(100))
     description = Column(UnicodeText)
 
@@ -105,13 +86,14 @@ class Artifact(db.Model):
     vote_count = Column(Integer, default=0)
     vote_sum = Column(Integer, default=0)
 
+    # relationships
+    concept_id = Column(Integer, ForeignKey('concepts.id'))
+    source_id = Column(Integer, ForeignKey('sources.id'), nullable=True)
+    author_id = Column(Integer, ForeignKey('users.id'))
     chunks = relationship("Chunk", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
 
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
-
-    def create(self):
-        pass
 
     def depth_str(self):
         if self.depth is None:
@@ -132,3 +114,13 @@ class Artifact(db.Model):
             3: "other"
         }
         return lookup[self.type]
+
+
+class Source(db.Model):  # external source
+    __tablename__ = 'sources'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(200))
+    link = Column(String(200))
+
+    # relationships
+    artifacts = relationship("Artifact", backref="source")
