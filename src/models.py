@@ -81,7 +81,6 @@ class Artifact(db.Model):
 
     # search metadata
     mediatype = Column(Integer, nullable=True)
-    depth = Column(Integer, nullable=True)
     duration = Column(Integer, nullable=True)
     vote_count = Column(Integer, default=0)
     vote_sum = Column(Integer, default=0)
@@ -95,17 +94,7 @@ class Artifact(db.Model):
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
 
-    def depth_str(self):
-        if self.depth is None:
-            return
-        lookup = {
-            1: "beginner",
-            2: "intermediate",
-            3: "advanced"
-        }
-        return lookup[self.depth]
-
-    def type_str(self):
+    def mediatype_str(self):
         if self.type is None:
             return
         lookup = {
@@ -114,7 +103,6 @@ class Artifact(db.Model):
             3: "other"
         }
         return lookup[self.type]
-
 
 class Source(db.Model):  # external source
     __tablename__ = 'sources'
