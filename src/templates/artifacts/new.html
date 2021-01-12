@@ -11,15 +11,9 @@
   <form action="{{ url_for('artifacts.new') }}" method="POST">
     <!-- HIDDEN INPUTS -->
     <input id="hiddenInput_prereqs" type="hidden" name="prerequisites" value="hello!">
-    <input id="hiddenInput_chunks" type="hidden" name="chunks" value="">
+    <input id="hiddenInput_chunk_names" type="hidden" name="chunk_names" value="">
     <input id="hiddenInput_chunk_descriptions" type="hidden" name="chunk_descriptions" value="">
-    <input id="hiddenInput_readings_to_chunk_idx" type="hidden" name="readings_to_chunk_idx" value="">
-    <input id="hiddenInput_reading_names" type="hidden" name="reading_names" value="">
-    <input id="hiddenInput_reading_links" type="hidden" name="reading_links" value="">
-    <input id="hiddenInput_reading_descriptions" type="hidden" name="reading_descriptions" value="">
-    <input id="hiddenInput_reading_depths" type="hidden" name="reading_depths" value="">
-    <input id="hiddenInput_reading_times" type="hidden" name="reading_times" value="">
-    <input id="hiddenInput_reading_types" type="hidden" name="reading_types" value="">
+    <input id="hiddenInput_chunk_contents" type="hidden" name="chunk_contents" value="">
     <!-- HIDDEN INPUTS END -->
 
     <!-- VISIBLE INPUTS -->
@@ -34,13 +28,33 @@
     <input type="text" name="title" placeholder="Title">
     </br>
 
-    <label>About</label>
-    <input type="text" name="about" placeholder="Main concept">
+    <label>Main Concept</label>
+    <input type="text" name="main_concept" placeholder="Main concept">
+    </br>
+
+    <label>External Source</label>
+    <input type="text" name="source" placeholder="Source that is not me">
     </br>
 
     <label>Description</label>
     <input type="text" name="description" placeholder="...">
     </br>
+
+    <div class="form-row">
+      <div class="col-auto">
+        Media type:
+        <select name="mediatype">
+          <option value="1">Text</option>
+          <option value="2">Video</option>
+          <option value="0">Other</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        Time it takes:
+        <input type"number" name="duration" > mins
+      </div>
+    </div>
+
 
     <div id="artifacts-creator_wrapper">
     </div>
