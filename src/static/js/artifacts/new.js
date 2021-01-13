@@ -7,88 +7,16 @@ let chunk_names = [],
 
 $( document ).ready(function() {
   // ______ HIDDEN INPUTS ______
-  let hiddenInput_prereqs = document.getElementById('hiddenInput_prereqs'),
+  // let hiddenInput_prereqs = document.getElementById('hiddenInput_prereqs'),
   hiddenInput_chunk_names = document.getElementById('hiddenInput_chunk_names'),
   hiddenInput_chunk_descriptions = document.getElementById('hiddenInput_chunk_descriptions'),
   hiddenInput_chunk_contents = document.getElementById('hiddenInput_chunk_contents');
 
-
-  // ______ PREREQUISITE DYNAMIC RENDER ____
-  let mainInput = document.createElement('input');
-  var prereqs_input_div = document.getElementById('prereqs-input');
-
-  mainInput.setAttribute('type', 'text');
-  mainInput.classList.add('main-input');
-  mainInput.addEventListener('input', function () {
-      let enteredPrereqs = mainInput.value.split(',');
-      if (enteredPrereqs.length > 1) {
-          enteredPrereqs.forEach(function (t) {
-              let filteredTag = filterTag(t);
-              if (filteredTag.length > 0)
-                  addTag(filteredTag);
-          });
-          mainInput.value = '';
-      }
+  new Taggle('prereqs-taggle', {
+    tags: ['Try', 'entering', 'one', 'of', 'these', 'tags'],
+    duplicateTagClass: 'bounce'
   });
-
-  mainInput.addEventListener('keydown', function (e) {
-      let keyCode = e.which || e.keyCode;
-      if (keyCode === 8 && mainInput.value.length === 0 && prereqs.length > 0) {
-          removeTag(prereqs.length - 1);
-      }
-  });
-
-  prereqs_input_div.appendChild(mainInput);
-
-  addTag('hello!');
-
-  function addTag (text) {
-      let prereq = {
-          text: text,
-          element: document.createElement('span'),
-      };
-
-      prereq.element.classList.add('prereq');
-      prereq.element.textContent = prereq.text;
-
-      let closeBtn = document.createElement('span');
-      closeBtn.classList.add('close');
-      closeBtn.addEventListener('click', function () {
-          removeTag(prereqs.indexOf(prereq));
-      });
-      prereq.element.appendChild(closeBtn);
-
-      prereqs.push(prereq);
-
-      prereqs_input_div.insertBefore(prereq.element, mainInput);
-
-      refreshPrereqs();
-  }
-
-  function removeTag (index) {
-      let prereq = prereqs[index];
-      prereqs.splice(index, 1);
-      prereqs_input_div.removeChild(prereq.element);
-      refreshPrereqs();
-  }
-
-  function refreshPrereqs () {
-      let prereqsList = [];
-      prereqs.forEach(function (t) {
-          prereqsList.push(t.text);
-      });
-      hiddenInput_prereqs.value = prereqsList.join(',');
-  }
-
-  function filterTag (prereq) {
-          return prereq.replace(/[^\w -]/g, '').trim().replace(/\W+/g, '-');
-      }
-  // ______ PREREQUISITES DYNAMIC RENDER END _____
 });
-
-
-// ______ MULTIPLE TAG INPUT _____
-
 // ______ UPDATE NESTED FORM _____
 
 // DEV: There is probably a better way to template dynamically

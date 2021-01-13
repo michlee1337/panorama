@@ -4,6 +4,7 @@
     {{ super() }}
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/new.css') }}">
     <script src="{{ url_for('static', filename='js/artifacts/new.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/taggle/dist/taggle.min.js') }}"></script>
 {% endblock %}
 
 {% block app_content %}
@@ -20,7 +21,10 @@
     <div class="form-group">
       <label for="prereqs">Prerequisites</label>
       </br>
-      <div id="prereqs-input" data-name="prereqs-input">
+      <!-- <div id="prereqs-input" data-name="prereqs-input">
+        <input type="text" id="prereqs-main-input" class="main-input">
+      </div> -->
+      <div id="prereqs-taggle" class="taggle-textarea">
       </div>
     </div>
 
