@@ -2,6 +2,7 @@
 let chunk_names = [],
   chunk_descriptions = [],
   chunk_contents = [],
+  chunk_concepts = [],
   prereqs = ['enter as tags'],
   chunk_idx = 0;
 
@@ -11,11 +12,14 @@ $( document ).ready(function() {
   hiddenInput_chunk_names = document.getElementById('hiddenInput_chunk_names'),
   hiddenInput_chunk_descriptions = document.getElementById('hiddenInput_chunk_descriptions'),
   hiddenInput_chunk_contents = document.getElementById('hiddenInput_chunk_contents');
+  hiddenInput_chunk_concepts = document.getElementById('hiddenInput_chunk_concepts');
 
   new Taggle('prereqs-taggle', {
     tags: prereqs,
-    duplicateTagClass: 'bounce'
+    duplicateTagClass: 'bounce',
+    hiddenInputName: 'prereqs[]',
   });
+
 });
 // ______ UPDATE NESTED FORM _____
 
@@ -40,10 +44,13 @@ var chunk_card_template = `<div class="artifacts-creator_chunk card">
 
 function addChunk() {
   var chunk_card = chunk_card_template;
-  chunk_card = chunk_card_template.replace(/%CHUNK_IDX%/, chunk_idx);
+  chunk_card = chunk_card_template.replaceAll("%CHUNK_IDX%", chunk_idx);
   $("#artifacts-creator_wrapper").append(chunk_card);
   chunk_idx += 1;
   chunk_names.push(null);
+  chunk_descriptions.push(null);
+  chunk_contents.push(null);
+  console.log(chunk_names, chunk_descriptions, chunk_contents);
 }
 
 // ______ UPDATE HIDDEN FIELDS _____
@@ -51,19 +58,24 @@ function UpdateChunk(chunk_idx, chunk_name) {
   chunk_names[chunk_idx] = chunk_name;
 }
 
+function UpdateChunkConcept(chunk_idx, chunk_concept) {
+  chunk_concepts[chunk_idx] = chunk_concept;
+}
+
+
 function UpdateChunkDescription(chunk_idx, chunk_description) {
   chunk_descriptions[chunk_idx] = chunk_description;
 }
 
 function UpdateChunkContent(chunk_idx, chunk_content) {
-  reading_names[reading_idx] = reading_name;
+  chunk_contents[chunk_idx] = chunk_content;
 }
 
 function SubmitHiddenInputs() {
-  hiddenInput_prereqs.value = prereqs.join(',');
-  hiddenInput_chunk_names.value = chunk_names.join(',');
-  hiddenInput_chunk_names.value = chunk_names.join(',');
-  hiddenInput_chunk_descriptions.value = chunk_descriptions.join(',');
-  hiddenInput_reading_names.value = reading_names.join(',');
-  return True;
+    hiddenInput_prereqs.value = prereqs.join(',');
+    hiddenInput_chunk_names.value = chunk_names.join(',');
+    hiddenInput_chunk_descriptions.value = chunk_descriptions.join(',');
+    hiddenInput_chunk_contents.value = chunk_contents.join(',');
+    hiddenInput_chunk_concepts.value = chunk_concepts.join(',');
+    return True;
 }
