@@ -9,22 +9,10 @@
 
 {% block app_content %}
 <div class="container">
-  <form id="artifact-form" onsubmit="SubmitHiddenInputs()" action="{{ url_for('artifacts.new') }}" method="POST">
-    <!-- HIDDEN INPUTS -->
-    <input id="hiddenInput_prereqs" type="hidden" name="prerequisites" value="hello!">
-    <input id="hiddenInput_chunk_names" type="hidden" name="chunk_names" value="">
-    <input id="hiddenInput_chunk_concepts" type="hidden" name="chunk_concepts" value="">
-    <input id="hiddenInput_chunk_descriptions" type="hidden" name="chunk_descriptions" value="">
-    <input id="hiddenInput_chunk_contents" type="hidden" name="chunk_contents" value="">
-    <!-- HIDDEN INPUTS END -->
+  <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
 
     <!-- VISIBLE INPUTS -->
     <div class="form-group">
-      <label for="prereqs">Prerequisites</label>
-      </br>
-      <!-- <div id="prereqs-input" data-name="prereqs-input">
-        <input type="text" id="prereqs-main-input" class="main-input">
-      </div> -->
       <div id="prereqs-taggle" class="taggle-textarea">
       </div>
     </div>
