@@ -32,6 +32,7 @@ def new():
         if current_user.is_authenticated:
             return render_template('artifacts/new.html')
         else:
+            flash('Login to contribute!')
             return redirect(url_for('users.login'))
     elif request.method == 'POST':
         try:
@@ -39,32 +40,31 @@ def new():
             flash('Artifact created!')
             return redirect('/')
         except Exception as e:
-            print("DEBUG: ", e)
             flash('Error creating artifact... sorry! {}'.format(e))
             return render_template('artifacts/new.html')
-
-@artifacts_template.route('/artifacts/concept')
-def artifacts_by_concept():
-    '''
-    Responds to queries for artifacts by concept.
-
-    Only accepts GET requests
-
-    It returns JSON of artifacts that have the relevant concept
-    '''
-    concept_id = int(request.args.get('concept_id'))
-    cur_artifact_id = int(request.args.get('cur_artifact_id'))
-
-    concept = Concept.query.get(concept_id)
-    artifacts = []
-    for artifact in concept.artifacts:
-        if artifact.id != cur_artifact_id:
-            artifact_info = {
-                'id': artifact.id,
-                'title': artifact.title,
-                'prerequisites': [p.title for p in artifact.concept.prerequisites],
-                'description': artifact.description,
-                'chunks': [t.concept.title for t in artifact.chunks]
-            }
-            artifacts.append(artifact_info)
-    return jsonify(artifacts=artifacts)
+#
+# @artifacts_template.route('/artifacts/concept')
+# def artifacts_by_concept():
+#     '''
+#     Responds to queries for artifacts by concept.
+#
+#     Only accepts GET requests
+#
+#     It returns JSON of artifacts that have the relevant concept
+#     '''
+#     concept_id = int(request.args.get('concept_id'))
+#     cur_artifact_id = int(request.args.get('cur_artifact_id'))
+#
+#     concept = Concept.query.get(concept_id)
+#     artifacts = []
+#     for artifact in concept.artifacts:
+#         if artifact.id != cur_artifact_id:
+#             artifact_info = {
+#                 'id': artifact.id,
+#                 'title': artifact.title,
+#                 'prerequisites': [p.title for p in artifact.concept.prerequisites],
+#                 'description': artifact.description,
+#                 'chunks': [t.concept.title for t in artifact.chunks]
+#             }
+#             artifacts.append(artifact_info)
+#     return jsonify(artifacts=artifacts)

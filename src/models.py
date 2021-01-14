@@ -107,6 +107,81 @@ class Artifact(db.Model):
             3: "other"}
         return lookup[self.type]
 
+    # class methods
+    @classmethod
+    def create(cls, input_dict):
+        '''
+        Creates a new artifact from a dictionary of relevant information.
+        Will find or create relevant concepts and ConceptRelationship.
+        All artifacts and chunks have an associated concept.
+        A artifact<>chunk implies a nested concept relationship.
+        A artifact<>prerequisite implies a related concept relationship.
+        '''
+        try:
+            # check required data
+            if input_dict['title'] == "" or input_dict['main_concept'] == "":
+                raise ValueError("Title and Main Concept is required.")
+
+            if input_dict.get("source_name") != None:  # .get() prevents key not found error
+                source = Source(
+                    name=input_dict["source_name"],
+                    link=input_dict.get("source_link"))
+            else:
+                source = None
+
+            # create main concept and add relationships
+            main_concept = get_or_create(db.session, Concept, title=input_dict['main_concept'])
+            artifact = cls(
+                concept=main_concept,
+                source=source,
+                user=current_user,
+                title=input_dict['title']
+                )
+            if len(input_dict.get("mediatype")) > 0:
+                artifact.mediatype = int(input_dict["mediatype"])
+            if len(input_dict.get("duration")) > 0:
+                artifact.duration = int(input_dict["duration"])
+            db.session.add(artifact)
+
+            # create prerequisite concepts and add relationships
+            for prereq in input_dict.getlist("prereqs[]"):
+                prereq_concept = get_or_create(db.session, Concept, title=prereq)
+                prereq_rltn = get_or_create(db.session, ConceptRelationship,
+                    concept_a_id=prereq_concept.id,
+                    concept_b_id=main_concept.id,
+                    relationship_type=1)  # prerequisite relationship
+                db.session.add(prereq_rltn)
+
+            # create chunks with relationship to relevant artifact and concepts
+            chunk_titles = input_dict.getlist("chunk_titles[]")
+            chunk_concepts = input_dict.getlist("chunk_concepts[]")
+            chunk_contents = input_dict.getlist("chunk_contents[]")
+
+            for idx in range(len(chunk_titles)):
+                if chunk_titles[idx] == "" or chunk_concepts[idx] == "":
+                    break
+
+                chunk_concept = get_or_create(db.session, Concept, title=chunk_concepts[idx])
+                nested_rltn = get_or_create(db.session, ConceptRelationship,
+                    concept_a_id=main_concept.id,
+                    concept_b_id=chunk_concept.id,
+                    relationship_type=2)  # nested relationship     # TODO: make this class method
+                db.session.add(nested_rltn)
+
+                chunk = Chunk(
+                    artifact=artifact,
+                    concept=chunk_concept,
+                    title=chunk_titles[idx],
+                    content=chunk_contents[idx])
+                db.session.add(chunk)
+                artifact.chunks.append(chunk)
+
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise
+        return
+
 class Source(db.Model):  # external source
     __tablename__ = 'sources'
     id = Column(Integer, primary_key=True)
