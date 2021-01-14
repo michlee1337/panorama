@@ -11,7 +11,6 @@
 <div class="container">
   <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
 
-    <!-- VISIBLE INPUTS -->
     <div class="form-group">
       <div id="prereqs-taggle" class="taggle-textarea">
       </div>
@@ -26,7 +25,8 @@
     </br>
 
     <label>External Source</label>
-    <input type="text" name="source" placeholder="Source that is not me">
+    <input type="text" name="source_name" placeholder="Optional: Name of Source">
+    <input type="text" name="source_link" placeholder="Optional: Source link">
     </br>
 
     <label>Description</label>
