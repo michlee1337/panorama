@@ -19,9 +19,6 @@ var chunk_card_template = `<div class="artifacts-creator_chunk card">
       </h3>
     </div>
     <div class="form-group">
-      <input type="textarea" name="chunk_descriptions[]" placeholder="description">
-    </div>
-    <div class="form-group">
       <input type="textarea" rows="15" name="chunk_contents[]" placeholder="Type content here">
     </div>
 
