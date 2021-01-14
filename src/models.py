@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
-from flask_login import LoginManager, UserMixin
+from flask_login import LoginManager, UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -34,6 +34,9 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    # relationships
+    artifacts = relationship('Artifact', backref='user', lazy='dynamic')
+
 class Concept(db.Model):
     __tablename__ = 'concepts'
 
@@ -49,6 +52,7 @@ class Concept(db.Model):
 
 class ConceptRelationship(db.Model):
     __tablename__ = 'concept_relationships'
+
     id = Column(Integer, primary_key=True)
     relationship_type = Column(Integer, default=0)
 
@@ -88,8 +92,8 @@ class Artifact(db.Model):
     # relationships
     concept_id = Column(Integer, ForeignKey('concepts.id'))
     source_id = Column(Integer, ForeignKey('sources.id'), nullable=True)
-    author_id = Column(Integer, ForeignKey('users.id'))
-    chunks = relationship("Chunk", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
+    user_id = Column(Integer, ForeignKey('users.id'))
+    chunks = relationship("Chunk", backref="artifact", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
 
     def __str__(self):
         return f"<id={self.id}, name={self.name}, link = {self.link}>"
@@ -100,8 +104,7 @@ class Artifact(db.Model):
         lookup = {
             1: "text",
             2: "video",
-            3: "other"
-        }
+            3: "other"}
         return lookup[self.type]
 
 class Source(db.Model):  # external source
