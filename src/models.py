@@ -152,9 +152,8 @@ class Artifact(db.Model):
             3: "other"}
         return lookup[self.type]
 
-    # class methods
-    @classmethod
-    def create(cls, input_dict):
+    # custom constructor
+    def __init__(self, input_dict):
         '''
         Creates a new artifact from a dictionary of relevant information.
         Will find or create relevant concepts and ConceptRelationship.
@@ -174,19 +173,16 @@ class Artifact(db.Model):
             else:
                 source = None
 
-            # create main concept and add relationships
+            # create self
             main_concept = get_or_create(db.session, Concept, title=input_dict['main_concept'])
-            artifact = cls(
-                concept=main_concept,
-                source=source,
-                user=current_user,
-                title=input_dict['title']
-                )
+            self.concept = main_concept
+            self.source = source
+            self.user = current_user
+            self.title = input_dict['title']
             if len(input_dict.get("mediatype")) > 0:
-                artifact.mediatype = int(input_dict["mediatype"])
+                self.mediatype = int(input_dict["mediatype"])
             if len(input_dict.get("duration")) > 0:
-                artifact.duration = int(input_dict["duration"])
-            db.session.add(artifact)
+                self.duration = int(input_dict["duration"])
 
             # create prerequisite concepts and add relationships
             for prereq in input_dict.getlist("prereqs[]"):
@@ -211,12 +207,12 @@ class Artifact(db.Model):
                 db.session.add(nested_rltn)
 
                 chunk = Chunk(
-                    artifact=artifact,
+                    artifact=self,
                     concept=chunk_concept,
                     title=chunk_titles[idx],
                     content=chunk_contents[idx])
                 db.session.add(chunk)
-                artifact.chunks.append(chunk)
+                self.chunks.append(chunk)
 
             db.session.commit()
         except Exception as e:

@@ -36,7 +36,7 @@ def new():
             return redirect(url_for('users.login'))
     elif request.method == 'POST':
         try:
-            Artifact.create(request.form)
+            Artifact(request.form)
             flash('Artifact created!')
             return redirect('/')
         except Exception as e:
