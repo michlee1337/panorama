@@ -52,16 +52,61 @@ class Concept(db.Model):
 
 class ConceptRelationship(db.Model):
     __tablename__ = 'concept_relationships'
+    # _____ CLASS ATTRIBUTES _____
+    # DEV: encapsulating conversion
+    TYPE_TO_STR = {
+        0: "undetermined",
+        1: "prerequisite",
+        2: "nested"
+    }
+
+    STR_TO_TYPE = {
+        "undetermined": 0,
+        "prerequisite": 1,
+        "nested": 2
+    }
+
+    # error msgs
+    UNKNOWN_TYPE_ERR = "Type {} is not recognized. Recognized types are {}."
+
+    # _____ TABLE ATTRIBUTES _____
 
     id = Column(Integer, primary_key=True)
     relationship_type = Column(Integer, default=0)
 
-    # relationships
+    # _____ RELATIONSHIPS _____
     concept_a_id = Column(Integer, ForeignKey('concepts.id'))
     concept_b_id = Column(Integer, ForeignKey('concepts.id'))
 
     concept_a = relationship("Concept", foreign_keys=[concept_a_id], backref=backref("relationships_out", uselist=False))
     concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in", uselist=False))
+
+    @classmethod
+    def create(cls, concept_a, concept_b, typestr):
+        try:
+            rltn = get_or_create(db.session, cls,
+                concept_a_id=concept_a.id,
+                concept_b_id=concept_b.id,
+                relationship_type=cls.getType(typestr))
+            return rltn
+        except:
+            raise
+
+    @classmethod
+    def getType(cls, typestr):
+        try:
+            return cls.STR_TO_TYPE[typestr]
+        except:
+            recognized = [k for k in cls.STR_TO_TYPE].join(",")
+            raise ValueError(UNKNOWN_TYPE_ERR.format(typestr, recognized))
+
+    @classmethod
+    def getTypestr(cls, type):
+        try:
+            return cls.TYPE_TO_STR[type]
+        except:
+            recognized = [k for k in cls.TYPE_TO_STR].join(",")
+            raise ValueError(UNKNOWN_TYPE_ERR.format(type, recognized))
 
     # TODO: relationship type set/ get
     # TODO: methods to set/ get relationship
@@ -146,10 +191,7 @@ class Artifact(db.Model):
             # create prerequisite concepts and add relationships
             for prereq in input_dict.getlist("prereqs[]"):
                 prereq_concept = get_or_create(db.session, Concept, title=prereq)
-                prereq_rltn = get_or_create(db.session, ConceptRelationship,
-                    concept_a_id=prereq_concept.id,
-                    concept_b_id=main_concept.id,
-                    relationship_type=1)  # prerequisite relationship
+                prereq_rltn = ConceptRelationship.create(prereq_concept, main_concept, "prerequisite")
                 db.session.add(prereq_rltn)
 
             # create chunks with relationship to relevant artifact and concepts
