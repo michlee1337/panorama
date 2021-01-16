@@ -12,3 +12,5 @@ def get_or_create(session, model, **kwargs):
         instance = model(**kwargs)
         session.add(instance)
         return instance
+
+# TODO: Replace with custom inits
