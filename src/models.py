@@ -66,9 +66,6 @@ class ConceptRelationship(db.Model):
         "nested": 2
     }
 
-    # error msgs
-    UNKNOWN_TYPE_ERR = "Type {} is not recognized. Recognized types are {}."
-
     # _____ TABLE ATTRIBUTES _____
 
     id = Column(Integer, primary_key=True)
@@ -81,35 +78,13 @@ class ConceptRelationship(db.Model):
     concept_a = relationship("Concept", foreign_keys=[concept_a_id], backref=backref("relationships_out", uselist=False))
     concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in", uselist=False))
 
-    @classmethod
-    def create(cls, concept_a, concept_b, typestr):
+    def __init__(self, concept_a, concept_b, typestr):
         try:
-            rltn = get_or_create(db.session, cls,
-                concept_a_id=concept_a.id,
-                concept_b_id=concept_b.id,
-                relationship_type=cls.getType(typestr))
-            return rltn
+            self.concept_a_id = concept_a.id,
+            self.concept_b_id = concept_b.id,
+            self.relationship_type = self.STR_TO_TYPE[typestr]
         except:
             raise
-
-    @classmethod
-    def getType(cls, typestr):
-        try:
-            return cls.STR_TO_TYPE[typestr]
-        except:
-            recognized = [k for k in cls.STR_TO_TYPE].join(",")
-            raise ValueError(UNKNOWN_TYPE_ERR.format(typestr, recognized))
-
-    @classmethod
-    def getTypestr(cls, type):
-        try:
-            return cls.TYPE_TO_STR[type]
-        except:
-            recognized = [k for k in cls.TYPE_TO_STR].join(",")
-            raise ValueError(UNKNOWN_TYPE_ERR.format(type, recognized))
-
-    # TODO: relationship type set/ get
-    # TODO: methods to set/ get relationship
 
 class Chunk(db.Model):
     __tablename__ = 'chunks'
@@ -187,7 +162,12 @@ class Artifact(db.Model):
             # create prerequisite concepts and add relationships
             for prereq in input_dict.getlist("prereqs[]"):
                 prereq_concept = get_or_create(db.session, Concept, title=prereq)
-                prereq_rltn = ConceptRelationship.create(prereq_concept, main_concept, "prerequisite")
+
+                prereq_rltn = ConceptRelationship(
+                    concept_a=prereq_concept,
+                    concept_b=main_concept,
+                    typestr="prerequisite")
+                # # prereq_rltn = ConceptRelationship.create(prereq_concept, main_concept, "prerequisite")
                 db.session.add(prereq_rltn)
 
             # create chunks with relationship to relevant artifact and concepts
@@ -200,10 +180,14 @@ class Artifact(db.Model):
                     break
 
                 chunk_concept = get_or_create(db.session, Concept, title=chunk_concepts[idx])
-                nested_rltn = get_or_create(db.session, ConceptRelationship,
-                    concept_a_id=main_concept.id,
-                    concept_b_id=chunk_concept.id,
-                    relationship_type=2)  # nested relationship     # TODO: make this class method
+                # nested_rltn = get_or_create(db.session, ConceptRelationship,
+                #     concept_a_id=main_concept.id,
+                #     concept_b_id=chunk_concept.id,
+                #     relationship_type=2)  # nested relationship     # TODO: make this class method
+
+                nested_rltn = ConceptRelationship(concept_a=main_concept,
+                    concept_b=chunk_concept,
+                    typestr="nested")
                 db.session.add(nested_rltn)
 
                 chunk = Chunk(
