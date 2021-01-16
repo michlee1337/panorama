@@ -6,8 +6,8 @@ $( document ).ready(function() {
   });
 
 });
-// ______ UPDATE NESTED FORM _____
 
+// ______ UPDATE NESTED FORM _____
 var chunk_card_template = `<div class="artifacts-creator_chunk card">
     <div class="form-group">
       <h4>
