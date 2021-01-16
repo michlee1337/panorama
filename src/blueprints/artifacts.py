@@ -43,8 +43,29 @@ def new():
             flash('Error creating artifact... sorry! {}'.format(e))
             return render_template('artifacts/new.html')
 #
-# @artifacts_template.route('/artifacts/concept')
-# def artifacts_by_concept():
+@artifacts_template.route('/artifacts/search')
+def search():
+    '''
+    Returns index page with only results that have a title that match
+    given search parameters
+
+    If no filters are provided, will return artifacts that contain the search
+    term in their title.
+
+    If filters are provided, will return artifacts that contain the search term
+    and match provided filters.
+
+    Uses Postgres LIKE query to match search terms.
+
+    Accepts filters
+        - search by type (text/ video)
+        - search by depth (beginner/ intermediate)
+
+    Any search patterns not recognized will be ignored and a warning will flash.
+    '''
+    # TODO: FILTERS
+    return render_template('pages/index.html', artifacts = Artifact.search(request.args.get('term')))
+
 #     '''
 #     Responds to queries for artifacts by concept.
 #

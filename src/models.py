@@ -204,6 +204,12 @@ class Artifact(db.Model):
             raise
         return
 
+    @classmethod
+    def search(cls, term):
+        # TODO: filters
+        return Artifact.query.filter(Artifact.title.contains(term)).all()
+
+
 class Source(db.Model):  # external source
     __tablename__ = 'sources'
     id = Column(Integer, primary_key=True)
