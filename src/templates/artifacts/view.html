@@ -2,12 +2,12 @@
 
 {% block head %}
     {{ super() }}
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/studyplans/view.css') }}">
-    <script src="{{ url_for('static', filename='js/studyplans/view.js') }}"></script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/view.css') }}">
+    <script src="{{ url_for('static', filename='js/artifacts/view.js') }}"></script>
     <!-- For search queries -->
     <script>
-      var studyplan_concept_id = {{ studyplan.concept.id|safe }};
-      var studyplan_id = {{ studyplan.id|safe }};
+      var artifact_concept_id = {{ artifact.concept.id|safe }};
+      var artifact_id = {{ artifact.id|safe }};
     </script>
 {% endblock %}
 
@@ -20,21 +20,21 @@
     </button>
 
     <div class="title">
-      <h1> Title: {{studyplan.title}} </h1>
-      <p> {{studyplan.description}} </p>
+      <h1> Title: {{artifact.title}} </h1>
+      <p> {{artifact.description}} </p>
 
     </div>
     <h4>
       Prerequsites:
-      {% for prerequisite in studyplan.concept.prerequisites %}
+      {% for prerequisite in artifact.concept.prerequisites %}
         <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}}, {{prerequisite.title}})">{{prerequisite.title}}</span>
       {% endfor %}
     </h4>
 
-    <div class="topics">
-      {% for topic in studyplan.topics %}
-        {% with topic = topic %}
-          {% include "studyplans/_topic.html" %}
+    <div class="chunks">
+      {% for chunk in artifact.chunks %}
+        {% with chunk = chunk %}
+          {% include "artifacts/_chunk.html" %}
         {% endwith %}
       {% endfor %}
     </div>
@@ -44,10 +44,10 @@
   <!-- RELATED INFORMATION SIDEBAR -->
   <div id="search-sidebar">
     <h3 id="search-sidebar-title">Find Related</h3>
-    <p>Click something in the studyplan to find related information from other studyplans.</p>
-    <p>You can click the title of the studyplan itself, a topic, or a reading.</p>
+    <p>Click something in the artifact to find related information from other artifacts.</p>
+    <p>You can click the title of the artifact itself, a chunk, or a reading.</p>
     <!-- <div class="search-selection">
-      <span id="search-studyplan" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Studyplans</span>
+      <span id="search-artifact" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Artifacts</span>
       <span id="search-resource" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Resources</span>
       <span id="search-relationships" onclick="updateSearchSidebar(this.id)" class="badge clickable badge-secondary">Bigger picture</span>
     </div> -->

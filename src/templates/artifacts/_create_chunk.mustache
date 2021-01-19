@@ -1,0 +1,11 @@
+<script id="chunk-template" type="template">
+  <div class="artifacts-creator_chunk card">
+    <div class="form-group chunk-group">
+      <h4><input type="text" onChange="UpdateChunk({{chunk_idx}}, this.value)" placeholder="Chunk"></h4>
+      <input type="text" onChange="UpdateChunkDescription({{chunk_idx}}, this.value)" placeholder="ex: This chunk is the study of ... and relates to the the main chunk as ...">
+    </div>
+    <div id="artifacts-creator_chunk_readings{{chunk_idx}}">
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="addReading({{chunk_idx}})">Add a Reading</button>
+  </div>
+</script>

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
-from src.models import Studyplan, Concept, Topic, Resource, Reading
+from src.models import Artifact, Concept, Chunk
 from src import db
 
 readings_template = Blueprint('readings', __name__, template_folder='../templates')
@@ -11,7 +11,7 @@ def readings_by_concept():
 
     Only accepts GET requests
 
-    It returns JSON of studyplans that have the relevant concept
+    It returns JSON of artifacts that have the relevant concept
     '''
     concept_id = int(request.args.get('concept_id'))
 

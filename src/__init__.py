@@ -21,8 +21,6 @@ login.login_view = 'login.login'
 bootstrap = Bootstrap(app)
 fa = FontAwesome(app)
 
-# app.static_folder = 'static'
-
 # create database tables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
@@ -37,12 +35,10 @@ def load_user(id):
     return models.User.query.get(int(id))
 
 # register routes
-from blueprints.users import users_template
-from blueprints.studyplans import studyplans_template
 from blueprints.pages import pages_template
-from blueprints.readings import readings_template
+from blueprints.users import users_template
+from blueprints.artifacts import artifacts_template
 
-app.register_blueprint(users_template)
-app.register_blueprint(studyplans_template)
 app.register_blueprint(pages_template)
-app.register_blueprint(readings_template)
+app.register_blueprint(users_template)
+app.register_blueprint(artifacts_template)

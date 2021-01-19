@@ -19,41 +19,41 @@ function searchRelated(concept_id, concept_title) {
   // empty current search contents and add search result divs
   $("#search-sidebar-content").empty();
 
-  search_sidebar_studyplans = document.createElement('div');
-  search_sidebar_studyplans.setAttribute("id", "search-sidebar-studyplans");
-  $("#search-sidebar-content").append(search_sidebar_studyplans);
+  search_sidebar_artifacts = document.createElement('div');
+  search_sidebar_artifacts.setAttribute("id", "search-sidebar-artifacts");
+  $("#search-sidebar-content").append(search_sidebar_artifacts);
 
   search_sidebar_readings = document.createElement('div');
   search_sidebar_readings.setAttribute("id", "search-sidebar-readings");
   $("#search-sidebar-content").append(search_sidebar_readings);
 
-  // render studyplans
-  renderStudyplans(concept_id);
+  // render artifacts
+  renderArtifacts(concept_id);
 
   // render readings
   renderReadings(concept_id);
 }
 
-function renderStudyplans(concept_id) {
-  // query for studyplans and call appropriate render
+function renderArtifacts(concept_id) {
+  // query for artifacts and call appropriate render
   $.ajax({
     type: 'GET',
-    url: "/studyplans/concept",
+    url: "/artifacts/concept",
     data: {
       concept_id: concept_id,
-      cur_studyplan_id: studyplan_id
+      cur_artifact_id: artifact_id
     },
     dataType: "json",
     success: function(data){
-      $("#search-sidebar-studyplans").append(`
-        <h5>Studyplans</h5>
+      $("#search-sidebar-artifacts").append(`
+        <h5>Artifacts</h5>
       `);
-     if (data.studyplans === undefined || data.studyplans.length == 0) {
-       $("#search-sidebar-studyplans").append(noresultsCard());
+     if (data.artifacts === undefined || data.artifacts.length == 0) {
+       $("#search-sidebar-artifacts").append(noresultsCard());
      }
      else {
-       for (var i = 0; i < data.studyplans.length; i++) {
-         renderStudyplanCard(data.studyplans[i]);
+       for (var i = 0; i < data.artifacts.length; i++) {
+         renderArtifactCard(data.artifacts[i]);
        }
      }
    }
@@ -96,13 +96,13 @@ function noresultsCard() {
   `);
 }
 
-function renderStudyplanCard(studyplan) {
-  $("#search-sidebar-studyplans").append(`
-    <a href="/studyplans/${studyplan.id}">
+function renderArtifactCard(artifact) {
+  $("#search-sidebar-artifacts").append(`
+    <a href="/artifacts/${artifact.id}">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">${studyplan.title}</h5>
-          <p>${studyplan.description}</p>
+          <h5 class="card-title">${artifact.title}</h5>
+          <p>${artifact.description}</p>
         </div>
       </div>
     </a>

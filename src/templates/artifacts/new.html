@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/new.css') }}">
+    <script src="{{ url_for('static', filename='js/artifacts/new.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/taggle/dist/taggle.min.js') }}"></script>
+{% endblock %}
+
+{% block app_content %}
+<div class="container">
+  <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
+
+    <div class="form-group">
+      <div id="prereqs-taggle" class="taggle-textarea">
+      </div>
+    </div>
+
+    <label>Title</label>
+    <input type="text" name="title" placeholder="Title">
+    </br>
+
+    <label>Main Concept</label>
+    <input type="text" name="main_concept" placeholder="Main concept">
+    </br>
+
+    <label>External Source</label>
+    <input type="text" name="source_name" placeholder="Optional: Name of Source">
+    <input type="text" name="source_link" placeholder="Optional: Source link">
+    </br>
+
+    <label>Description</label>
+    <input type="text" name="description" placeholder="...">
+    </br>
+
+    <div class="form-row">
+      <div class="col-auto">
+        Media type:
+        <select name="mediatype">
+          <option value="1">Text</option>
+          <option value="2">Video</option>
+          <option value="0">Other</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        Time it takes:
+        <input type"number" name="duration" > mins
+      </div>
+    </div>
+
+
+    <div id="artifacts-creator_wrapper">
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="addChunk()">Add a Chunk</button>
+
+    <!-- VISIBLE INPUTS END -->
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
+{% endblock %}
