@@ -18,8 +18,12 @@ Set up virtual environment
 
 # Dev
 **To Upload a Dropbox Dump Database to Heroku**
-``` heroku pg:backups:restore 'https://dl.dropboxusercontent.com/<random string from dropbox link>/<file name>' DATABASE --app panorama-stage```
+```heroku pg:backups:restore 'https://dl.dropboxusercontent.com/<random string from dropbox link>/<file name>' DATABASE --app panorama-stage```
 
 **To Update Db**
 flask db migrate -m "comment"
 flask db upgrade
+
+# Test
+1. Start virtual env
+2. `python3 -m unittest discover tests`

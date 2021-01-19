@@ -54,3 +54,6 @@ coverage.xml
 docs/_build/
 
 *.DS_Store
+
+# Tests
+src/test.db
