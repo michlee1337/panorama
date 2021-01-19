@@ -1,3 +1,4 @@
+from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
 from sqlalchemy.orm import relationship, backref
@@ -205,10 +206,23 @@ class Artifact(db.Model):
         return
 
     @classmethod
-    def search(cls, term):
-        # TODO: filters
-        return Artifact.query.filter(Artifact.title.contains(term)).all()
+    def search(cls, arg_dict):
+        accepted_keys = {"term", "mediatype", "duration"}
+        filters = {}
 
+        for key, value in arg_dict.items():
+            if len(value) == 0 or key == "term":
+                pass
+            elif key not in accepted_keys:
+                flash("Search term {} not recognized and is ignored".format(key))
+            else:
+                filters[key] = value
+
+        if arg_dict.get("term") != "":
+            artifacts = Artifact.query.filter(Artifact.title.contains(arg_dict["term"])).filter_by(**filters).all()
+        else:
+            artifacts = Artifact.query.filter_by(**filters).all()
+        return artifacts
 
 class Source(db.Model):  # external source
     __tablename__ = 'sources'

@@ -42,7 +42,7 @@ def new():
         except Exception as e:
             flash('Error creating artifact... sorry! {}'.format(e))
             return render_template('artifacts/new.html')
-#
+
 @artifacts_template.route('/artifacts/search')
 def search():
     '''
@@ -59,12 +59,11 @@ def search():
 
     Accepts filters
         - search by type (text/ video)
-        - search by depth (beginner/ intermediate)
+        - search by duration (mins, hours, days, months, ?)
 
     Any search patterns not recognized will be ignored and a warning will flash.
     '''
-    # TODO: FILTERS
-    return render_template('pages/index.html', artifacts = Artifact.search(request.args.get('term')))
+    return render_template('pages/index.html', artifacts = Artifact.search(request.args))
 
 #     '''
 #     Responds to queries for artifacts by concept.
