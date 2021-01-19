@@ -2,7 +2,18 @@
 
 {% block app_content %}
 
-</div>
+<div class="container">
+  {% if artifacts is defined %}
+    <h2>Artifacts</h2>
+    <div id="studyplan-list">
+      {% for artifact in artifacts %}
+        {% with artifact = artifact %}
+          {% include "pages/_artifact_card.html" %}
+          </br>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  {% endif %}
 
 </div>
 {% endblock %}

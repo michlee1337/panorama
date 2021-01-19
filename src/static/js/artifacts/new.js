@@ -6,9 +6,8 @@ $( document ).ready(function() {
   });
 
 });
-// ______ UPDATE NESTED FORM _____
 
-// DEV: There is probably a better way to template dynamically
+// ______ UPDATE NESTED FORM _____
 var chunk_card_template = `<div class="artifacts-creator_chunk card">
     <div class="form-group">
       <h4>

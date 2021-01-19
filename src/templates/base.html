@@ -20,7 +20,7 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
   <ul class="navbar-nav mr-auto">
     <!-- SEARCH -->
-    <form action="#" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+    <form action="{{ url_for('artifacts.search') }}" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
 
       <div class="input-group">
         <input id="search-term-input" name="term" type="text" class="form-control bg-light border-0 small" placeholder="search artifacts" aria-label="Search" aria-describedby="basic-addon2">
@@ -33,20 +33,22 @@
       <!-- filter -->
       <div class="dropdown">
         <div class="btn btn-secondary" id="dropdownMenuButton" onClick="toggleFilter">
-          Search Readings
+          Filter
         </div>
         <div id="search-filter" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <select name="depth">
-            <option value="">Difficulty</option>
-            <option value="1">Beginner</option>
-            <option value="2">Intermediate</option>
-            <option value="3">Advanced</option>
-          </select>
-          <select name="type">
+          <!-- <input type="text" name="concept" placeholder="concept"></input> -->
+          <select name="mediatype">
             <option value="">Media Type</option>
             <option value="1">Text</option>
             <option value="2">Video</option>
             <option value="0">Other</option>
+          </select>
+          <select name="duration">
+            <option value="">Duration</option>
+            <option value="min">Minutes</option>
+            <option value="day">Days</option>
+            <option value="month">Months</option>
+            <option value="long">?!</option>
           </select>
         </div>
       </div>

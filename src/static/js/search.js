@@ -11,6 +11,5 @@ function toggleFilter() {
     $("#search-term-input").attr("placeholder","search artifacts")
   } else {
     search_filter.style.display = "block";
-    $("#search-term-input").attr("placeholder","search readings")
   }
 }
