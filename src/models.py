@@ -117,7 +117,7 @@ class Artifact(db.Model):
     chunks = relationship("Chunk", backref="artifact", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
 
     def __str__(self):
-        return f"<id={self.id}, name={self.name}, link = {self.link}>"
+        return f"<id={self.id}, title={self.title}"
 
     def mediatype_str(self):
         if self.type is None:
@@ -155,16 +155,21 @@ class Artifact(db.Model):
             # create self
             main_concept = get_or_create(db.session, Concept, title=input_dict['main_concept'])
             self.concept = main_concept
+            print("OKcon")
             self.source = source
+            print("source", current_user)
             self.user = current_user
+            print("user")
             self.title = input_dict['title']
             if len(input_dict.get("mediatype")) > 0:
                 self.mediatype = int(input_dict["mediatype"])
             if len(input_dict.get("duration")) > 0:
                 self.duration = int(input_dict["duration"])
+            print("OK")
 
             # create prerequisite concepts and add relationships
             for prereq in input_dict.getlist("prereqs[]"):
+                print("DEBUG", prereq)
                 prereq_concept = get_or_create(db.session, Concept, title=prereq)
 
                 prereq_rltn = ConceptRelationship(
@@ -173,6 +178,7 @@ class Artifact(db.Model):
                     typestr="prerequisite")
                 # # prereq_rltn = ConceptRelationship.create(prereq_concept, main_concept, "prerequisite")
                 db.session.add(prereq_rltn)
+            print("OK")
 
             # create chunks with relationship to relevant artifact and concepts
             chunk_titles = input_dict.getlist("chunk_titles[]")
