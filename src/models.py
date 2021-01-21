@@ -139,7 +139,10 @@ class Artifact(db.Model):
         '''
         try:
             # check required data
-            if input_dict['title'] == "" or input_dict['main_concept'] == "":
+            # DEV: is None check is required for unittesting
+            ## annoyingly, flask unittest has the unexpected behaviour of .get()
+            ## returning None instead of empty str
+            if input_dict.get('title') is None or input_dict.get('title') == "" or input_dict.get('main_concept') is None or input_dict.get('main_concept') == "":
                 raise ValueError("Title and Main Concept is required.")
 
             if input_dict.get("source_name") != None:  # .get() prevents key not found error
