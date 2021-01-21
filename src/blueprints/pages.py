@@ -7,38 +7,3 @@ pages_template = Blueprint('pages', __name__, template_folder='../templates')
 @pages_template.route('/')
 def index():
     return render_template('pages/index.html')
-
-# @pages_template.route('/search')
-# def search():
-#     '''
-#     Returns index page with only results that have a title that match
-#     given search parameters
-#
-#     If no filters are provided, will return artifacts that contain the search
-#     term in their title.
-#
-#     If filters are provided, will return readings that contain the search term
-#     and match provided filters.
-#
-#     Uses Postgres LIKE query to match search terms.
-#
-#     Accepts filters
-#         - search by type (text/ video)
-#         - search by depth (beginner/ intermediate)
-#     Any search patterns not recognized will be ignored and a warning will flash.
-#
-#     '''
-#     # DEV: This is temporary as future refactoring to have a less awkward divison between
-#     ## Artifacts and Readings will be done that allows for a search on a shared parent model.
-#
-#     if (request.args.get('type') != "") or (request.args.get('depth') != ""):
-#         return render_template('pages/index.html', readings = Reading.getMatchingReadings(request.args))
-#     else:
-#         return render_template('pages/index.html', artifacts = Artifact.getMatching(request.args.get('term')))
-
-# @pages_template.route('/pages')
-# def get (list)
-# def post (create)
-
-#@pages_template.route('/pages/<id>/ edit')
-# def get (edit)
