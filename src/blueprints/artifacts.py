@@ -33,7 +33,7 @@ def new():
             return render_template('artifacts/new.html')
         else:
             flash('Login to contribute!')
-            return redirect(url_for('users.login'))
+            return redirect(url_for('pages.login'))
     elif request.method == 'POST':
         try:
             Artifact(request.form)
