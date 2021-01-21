@@ -21,5 +21,16 @@ class TestPageCase(FlaskTestCase):
         response = self.app.get('/logout', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
+    def test_create_redirect(self):
+        response = self.app.get('/artifacts/new', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        assert "Login to contribute" in str(response.data)
+
+    def test_create_loggedin(self):
+        self.app.post('login', data = dict(email="example@gmail.com", username="example", password="111"), follow_redirects=True)
+        response = self.app.get('/artifacts/new', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        assert "id=\"artifact-form\"" in str(response.data)
+
 if __name__ == '__main__':
     unittest.main()
