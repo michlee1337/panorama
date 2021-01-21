@@ -3,7 +3,6 @@ import json
 import unittest
 from tests.base import FlaskTestCase
 
-
 class TestPageCase(FlaskTestCase):
     def test_main_page(self):
         response = self.app.get('/', follow_redirects=True)
