@@ -14,8 +14,7 @@ def view(artifact_id):
     It gets the appropriate information and passes it to the View.
     '''
     artifact = Artifact.query.get(artifact_id)
-    concept_ids = artifact.getConcepts()
-    return render_template('artifacts/view.html', artifact=artifact, concept_ids=concept_ids)
+    return render_template('artifacts/view.html', artifact=artifact)
 
 @artifacts_template.route('/artifacts/new', methods=["GET","POST"])
 def new():
