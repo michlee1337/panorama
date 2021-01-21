@@ -64,26 +64,28 @@ def search():
     '''
     return render_template('pages/index.html', artifacts = Artifact.search(request.args))
 
-#     '''
-#     Responds to queries for artifacts by concept.
-#
-#     Only accepts GET requests
-#
-#     It returns JSON of artifacts that have the relevant concept
-#     '''
-#     concept_id = int(request.args.get('concept_id'))
-#     cur_artifact_id = int(request.args.get('cur_artifact_id'))
-#
-#     concept = Concept.query.get(concept_id)
-#     artifacts = []
-#     for artifact in concept.artifacts:
-#         if artifact.id != cur_artifact_id:
-#             artifact_info = {
-#                 'id': artifact.id,
-#                 'title': artifact.title,
-#                 'prerequisites': [p.title for p in artifact.concept.prerequisites],
-#                 'description': artifact.description,
-#                 'chunks': [t.concept.title for t in artifact.chunks]
-#             }
-#             artifacts.append(artifact_info)
-#     return jsonify(artifacts=artifacts)
+@artifacts_template.route('/artifacts/by_concept')
+def by_concept():
+    '''
+    Responds to queries for artifacts by concept.
+
+    Only accepts GET requests
+
+    It returns JSON of artifacts that have the relevant concept
+    '''
+    concept_id = int(request.args.get('concept_id'))
+    exclude_id = int(request.args.get('exclude_id'))
+
+    concept = Concept.query.get(concept_id)
+    artifacts = []
+    for artifact in concept.artifacts:
+        if artifact.id != exclude_id:
+            artifact_info = {
+                'id': artifact.id,
+                'title': artifact.title,
+                'prerequisites': [p.title for p in artifact.prerequisites],
+                'description': artifact.description,
+                'chunks': [t.concept.title for t in artifact.chunks]
+            }
+            artifacts.append(artifact_info)
+    return jsonify(artifacts=artifacts)
