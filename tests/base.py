@@ -16,6 +16,14 @@ class FlaskTestCase(unittest.TestCase):
         app.config['DEBUG'] = False
 
         db.create_all()
+
+        example_user = models.User(
+            id=1, email="example@gmail.com", username="example")
+        example_user.set_password("111")
+        db.session.merge(example_user)
+
+        db.session.commit()
+
         self.app = app.test_client()
 
     # executed after each test
