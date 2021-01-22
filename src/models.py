@@ -165,7 +165,6 @@ class Artifact(db.Model):
 
             # create prerequisite concepts and add relationships
             for prereq in input_dict.getlist("prereqs[]"):
-                print("DEBUG", prereq)
                 prereq_concept = get_or_create(db.session, Concept, title=prereq)
 
                 prereq_rltn = ConceptRelationship(
