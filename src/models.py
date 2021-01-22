@@ -81,8 +81,8 @@ class ConceptRelationship(db.Model):
 
     def __init__(self, concept_a, concept_b, typestr):
         try:
-            self.concept_a_id = concept_a.id,
-            self.concept_b_id = concept_b.id,
+            self.concept_a_id = concept_a.id
+            self.concept_b_id = concept_b.id
             self.relationship_type = self.STR_TO_TYPE[typestr]
         except:
             raise
