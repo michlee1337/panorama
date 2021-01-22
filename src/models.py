@@ -111,8 +111,8 @@ class Artifact(db.Model):
     description = Column(UnicodeText)
 
     # search metadata
-    mediatype = Column(Integer, nullable=True)
-    duration = Column(Integer, nullable=True)
+    mediatype = Column(Integer)
+    duration = Column(Integer)
     vote_count = Column(Integer, default=0)
     vote_sum = Column(Integer, default=0)
 
