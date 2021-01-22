@@ -119,15 +119,6 @@ class Artifact(db.Model):
     def __str__(self):
         return f"<id={self.id}, title={self.title}"
 
-    def mediatype_str(self):
-        if self.type is None:
-            return
-        lookup = {
-            1: "text",
-            2: "video",
-            3: "other"}
-        return lookup[self.type]
-
     # custom constructor
     def __init__(self, input_dict):
         '''
