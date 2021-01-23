@@ -81,8 +81,8 @@ class ConceptRelationship(db.Model):
 
     def __init__(self, concept_a, concept_b, typestr):
         try:
-            self.concept_a_id = concept_a.id,
-            self.concept_b_id = concept_b.id,
+            self.concept_a_id = concept_a.id
+            self.concept_b_id = concept_b.id
             self.relationship_type = self.STR_TO_TYPE[typestr]
         except:
             raise
@@ -100,13 +100,19 @@ class Chunk(db.Model):
 
 class Artifact(db.Model):
     __tablename__ = 'artifacts'
+    # _____ CLASS ATTRIBUTES _____
+    # DEV: prevents saving unrecognized data into db
+    RECOGNIZED_MEDIATYPES = {0,1,2}
+
+    RECOGNIZED_DURATIONS = {0,1,2,3}
+
     id = Column(Integer, primary_key=True)
     title = Column(String(100))
     description = Column(UnicodeText)
 
     # search metadata
-    mediatype = Column(Integer, nullable=True)
-    duration = Column(Integer, nullable=True)
+    mediatype = Column(Integer)
+    duration = Column(Integer)
     vote_count = Column(Integer, default=0)
     vote_sum = Column(Integer, default=0)
 
@@ -117,16 +123,7 @@ class Artifact(db.Model):
     chunks = relationship("Chunk", backref="artifact", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
 
     def __str__(self):
-        return f"<id={self.id}, name={self.name}, link = {self.link}>"
-
-    def mediatype_str(self):
-        if self.type is None:
-            return
-        lookup = {
-            1: "text",
-            2: "video",
-            3: "other"}
-        return lookup[self.type]
+        return f"<id={self.id}, title={self.title}"
 
     # custom constructor
     def __init__(self, input_dict):
@@ -139,8 +136,17 @@ class Artifact(db.Model):
         '''
         try:
             # check required data
-            if input_dict['title'] == "" or input_dict['main_concept'] == "":
+            # DEV: is None check is required for unittesting
+            ## annoyingly, flask unittest has the unexpected behaviour of .get()
+            ## returning None instead of empty str
+            if input_dict.get('title') is None or input_dict.get('title') == "" or input_dict.get('main_concept') is None or input_dict.get('main_concept') == "":
                 raise ValueError("Title and Main Concept is required.")
+
+            if int(input_dict['mediatype']) not in self.RECOGNIZED_MEDIATYPES:
+                raise AttributeError("Mediatype is not recognized.")
+
+            if int(input_dict['duration']) not in self.RECOGNIZED_DURATIONS:
+                raise AttributeError("Duration is not recognized.")
 
             if input_dict.get("source_name") != None:  # .get() prevents key not found error
                 source = Source(
@@ -155,10 +161,8 @@ class Artifact(db.Model):
             self.source = source
             self.user = current_user
             self.title = input_dict['title']
-            if len(input_dict.get("mediatype")) > 0:
-                self.mediatype = int(input_dict["mediatype"])
-            if len(input_dict.get("duration")) > 0:
-                self.duration = int(input_dict["duration"])
+            self.mediatype = int(input_dict["mediatype"])
+            self.duration = int(input_dict["duration"])
 
             # create prerequisite concepts and add relationships
             for prereq in input_dict.getlist("prereqs[]"):
@@ -168,7 +172,6 @@ class Artifact(db.Model):
                     concept_a=prereq_concept,
                     concept_b=main_concept,
                     typestr="prerequisite")
-                # # prereq_rltn = ConceptRelationship.create(prereq_concept, main_concept, "prerequisite")
                 db.session.add(prereq_rltn)
 
             # create chunks with relationship to relevant artifact and concepts
@@ -176,15 +179,14 @@ class Artifact(db.Model):
             chunk_concepts = input_dict.getlist("chunk_concepts[]")
             chunk_contents = input_dict.getlist("chunk_contents[]")
 
+            if not(len(chunk_titles) == len(chunk_concepts) and len(chunk_titles) == len(chunk_contents)):
+                raise AttributeError("Chunk data is malformed.")
+
             for idx in range(len(chunk_titles)):
                 if chunk_titles[idx] == "" or chunk_concepts[idx] == "":
                     break
 
                 chunk_concept = get_or_create(db.session, Concept, title=chunk_concepts[idx])
-                # nested_rltn = get_or_create(db.session, ConceptRelationship,
-                #     concept_a_id=main_concept.id,
-                #     concept_b_id=chunk_concept.id,
-                #     relationship_type=2)  # nested relationship     # TODO: make this class method
 
                 nested_rltn = ConceptRelationship(concept_a=main_concept,
                     concept_b=chunk_concept,

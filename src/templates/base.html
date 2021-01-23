@@ -58,10 +58,10 @@
   </ul>
   <ul class="navbar-nav ml-auto">
     {% if current_user.is_authenticated %}
-      <li class="nav-item"><a class="nav-link" href="{{url_for('users.logout')}}">Logout</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url_for('pages.logout')}}">Logout</a></li>
     {% else %}
-      <li class="nav-item"><a class="nav-link" href="{{url_for('users.login')}}">Login</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{url_for('users.register')}}">Register</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url_for('pages.login')}}">Login</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{url_for('pages.register')}}">Register</a></li>
     {% endif %}
   </ul>
 </nav>

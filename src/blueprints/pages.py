@@ -1,4 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import current_user, login_user, login_required, logout_user
+from src.models import User
+from src.forms import LoginForm, RegistrationForm
+from src import db
+
 # from src.models import Artifact
 from src import db
 
@@ -8,37 +13,70 @@ pages_template = Blueprint('pages', __name__, template_folder='../templates')
 def index():
     return render_template('pages/index.html')
 
-# @pages_template.route('/search')
-# def search():
-#     '''
-#     Returns index page with only results that have a title that match
-#     given search parameters
-#
-#     If no filters are provided, will return artifacts that contain the search
-#     term in their title.
-#
-#     If filters are provided, will return readings that contain the search term
-#     and match provided filters.
-#
-#     Uses Postgres LIKE query to match search terms.
-#
-#     Accepts filters
-#         - search by type (text/ video)
-#         - search by depth (beginner/ intermediate)
-#     Any search patterns not recognized will be ignored and a warning will flash.
-#
-#     '''
-#     # DEV: This is temporary as future refactoring to have a less awkward divison between
-#     ## Artifacts and Readings will be done that allows for a search on a shared parent model.
-#
-#     if (request.args.get('type') != "") or (request.args.get('depth') != ""):
-#         return render_template('pages/index.html', readings = Reading.getMatchingReadings(request.args))
-#     else:
-#         return render_template('pages/index.html', artifacts = Artifact.getMatching(request.args.get('term')))
+@pages_template.route('/login', methods=['GET', 'POST'])
+def login():
+    """
+    User login
 
-# @pages_template.route('/pages')
-# def get (list)
-# def post (create)
+    A GET request will redirect to the login view.
 
-#@pages_template.route('/pages/<id>/ edit')
-# def get (edit)
+    A POST request will check for valid login data.
+    Valid login data requires existing user instance with
+    matching username, password, and email.
+    Success/ failure will result in redirect to homepage/ login respectively.
+    """
+    form = LoginForm()
+    if request.method == 'GET':
+        if current_user.is_authenticated:
+            return redirect('/')
+        else:
+            return render_template('pages/login.html', form=form)
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            print("VALIDATED")
+            user = User.query.filter_by(email=form.email.data).first()
+            if user is None or not user.check_password(form.password.data):
+                flash('Invalid username or password')
+                return redirect(url_for('pages.login'))
+            login_user(user)
+            flash('Logged in successfully.')
+            return redirect('/')
+        else:
+            flash('Provided login details not recognized.')
+            return render_template('pages/login.html', form=form)
+
+@pages_template.route('/logout')
+def logout():
+    """
+    User logout
+
+    It will attempt to logout user if it exists and redirect to the homepage.
+    """
+    logout_user()
+    return redirect('/')
+
+@pages_template.route('/register', methods=['GET', 'POST'])
+def register():
+    """
+    User registration
+
+    A GET request will redirect to the register view.
+
+    A POST request will check that the user is not currently logged in,
+    afterwards it will create a new user based on provided data and redirect
+    to homepage.
+
+    Any form input validation (ex: must not be empty) is done in the application logic,
+    visible in /src/forms.py
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('pages.login'))
+    return render_template('pages/register.html', title='Register', form=form)

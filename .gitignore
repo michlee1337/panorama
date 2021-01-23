@@ -55,5 +55,5 @@ docs/_build/
 
 *.DS_Store
 
-# Dev tests
-test/
+# Tests
+src/test.db
