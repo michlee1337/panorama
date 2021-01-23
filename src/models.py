@@ -143,10 +143,10 @@ class Artifact(db.Model):
                 raise ValueError("Title and Main Concept is required.")
 
             if int(input_dict['mediatype']) not in self.RECOGNIZED_MEDIATYPES:
-                raise AttributeError("Mediatype is Malformed.")
+                raise AttributeError("Mediatype is not recognized.")
 
             if int(input_dict['duration']) not in self.RECOGNIZED_DURATIONS:
-                raise AttributeError("Duration is Malformed.")
+                raise AttributeError("Duration is not recognized.")
 
             if input_dict.get("source_name") != None:  # .get() prevents key not found error
                 source = Source(
