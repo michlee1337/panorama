@@ -26,6 +26,9 @@ class FlaskTestCase(unittest.TestCase):
 
         self.app = app.test_client()
 
+    def login(self):
+        return self.app.post('login', data = dict(email="example@gmail.com", username="example", password="111"), follow_redirects=True)
+
     # executed after each test
     def tearDown(self):
         db.session.remove()
