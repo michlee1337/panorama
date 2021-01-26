@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
 from flask_login import current_user
 from src.models import Artifact, Concept, Chunk
+from src.forms import ArtifactForm
 from src import db
 
 artifacts_template = Blueprint('artifacts', __name__, template_folder='../templates')
@@ -26,10 +27,10 @@ def new():
     A POST request will attempt to create a artifact with the
     provided information, and will flash the raised error upon any failure.
     '''
-
+    form = ArtifactForm()
     if request.method == 'GET':
         if current_user.is_authenticated:
-            return render_template('artifacts/new.html')
+            return render_template('artifacts/new.html', form=form)
         else:
             flash('Login to contribute!')
             return redirect(url_for('pages.login'))

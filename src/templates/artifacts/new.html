@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block head %}
     {{ super() }}
@@ -10,6 +11,31 @@
 {% block app_content %}
 <div class="container">
   <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
+    {{ form.prerequisites.label }}: {{ form.prerequisites }}
+    <div data-toggle="fieldset" id="chunks-fieldset">
+        {{ form.chunks.label }}
+        <table>
+            <tr>
+                <th>concept</th>
+                <th>title</th>
+                <th>content</th>
+                <th></th>
+            </tr>
+            {% for chunks in form.chunks %}
+              <tr data-toggle="fieldset-entry">
+                  <td>{{ chunks.concept }}</td>
+                  <td>{{ chunks.title }}</td>
+                  <td>{{ chunks.content }}</td>
+                  <td><button type="button" data-toggle="fieldset-remove-row" id="chunks-{{loop.index0}}-remove">-</button></td>
+              </tr>
+            {% endfor %}
+        </table>
+        <button type="button" data-toggle="fieldset-add-row" data-target="#chunks-fieldset">+</button>
+
+    </div>
+    {{ form.submit }}
+  </form>
+  <!-- <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
 
     <label>Prerequisites</label>
     <div id="prereqs-taggle" class="taggle-textarea"></div>
@@ -57,9 +83,8 @@
     </div>
     <button type="button" class="btn btn-secondary" onclick="addChunk()">Add a Chunk</button>
 
-    <!-- VISIBLE INPUTS END -->
     <input type="submit" value="Submit">
-  </form>
+  </form> -->
 </div>
 
 {% endblock %}
