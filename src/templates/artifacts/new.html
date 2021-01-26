@@ -12,9 +12,15 @@
 <div class="container">
   <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
     {{ form.prerequisites.label }}: {{ form.prerequisites }}
+    {{ form.main_concept.label }}: {{ form.main_concept }}
+    {{ form.title.label }}: {{ form.title }}
+    {{ form.source.label }}: {{ form.source }}
+    {{ form.description.label }}: {{ form.description }}
+    {{ form.mediatype.label }}: {{ form.mediatype }}
+    {{ form.duration.label }}: {{ form.duration }}
+
     <div data-toggle="fieldset" id="chunks-fieldset">
-        {{ form.chunks.label }}
-        <table>
+         <table>
             <tr>
                 <th>concept</th>
                 <th>title</th>
