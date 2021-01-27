@@ -27,21 +27,22 @@ def new():
     A POST request will attempt to create a artifact with the
     provided information, and will flash the raised error upon any failure.
     '''
-    form = ArtifactForm()
     if request.method == 'GET':
         if current_user.is_authenticated:
+            form = ArtifactForm()
             return render_template('artifacts/new.html', form=form)
         else:
             flash('Login to contribute!')
             return redirect(url_for('pages.login'))
     elif request.method == 'POST':
+        form = ArtifactForm(request.form)
         try:
-            Artifact(request.form)
+            Artifact(form)
             flash('Artifact created!')
             return redirect('/')
         except Exception as e:
             flash('Error creating artifact... sorry! {}'.format(e))
-            return render_template('artifacts/new.html')
+            return render_template('artifacts/new.html', form=form)
 
 @artifacts_template.route('/artifacts/search')
 def search():
