@@ -11,17 +11,6 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from src import app, db, login
 from src.helpers import get_or_create
 
-# _____ MANY TO MANY ASSOCIATION TABLES ______
-
-prerequisites = Table(
-    'prerequisites',
-    db.Model.metadata,
-    Column('concept_id', Integer, ForeignKey('concepts.id')),
-    Column('artifact_id', Integer, ForeignKey('artifacts.id'))
-)
-
-# _____ MANY TO MANY ASSOCIATION TABLES END ______
-
 # _____ MODELS ______
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
