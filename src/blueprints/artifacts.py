@@ -56,10 +56,7 @@ def edit(artifact_id):
     if artifact is None:
         flash('Artifact not found.')
         return render_template('pages/index.html')
-    print("DEBUG", artifact.source, artifact.source.name)
-    form = ArtifactForm(obj=artifact, source=artifact.source)
-    # form.main_concept.data = str(artifact.concept)
-    # form.source.data = str(artic)
+    form = ArtifactForm(obj=artifact)
     return render_template('artifacts/new.html', form=form)
 
 
