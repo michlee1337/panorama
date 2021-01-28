@@ -38,6 +38,9 @@ class Concept(db.Model):
     artifacts = relationship('Artifact', backref='concept', lazy='dynamic')
     chunks = relationship('Chunk', backref='concept', lazy='dynamic')
 
+    def __str__(self):
+        return self.title
+
 class ConceptRelationship(db.Model):
     __tablename__ = 'concept_relationships'
     # _____ CLASS ATTRIBUTES _____
@@ -137,7 +140,7 @@ class Artifact(db.Model):
                 source = None
 
             # create self
-            main_concept = get_or_create(db.session, Concept, title=form.main_concept.data)
+            main_concept = get_or_create(db.session, Concept, title=form.concept.data)
             self.concept = main_concept
             self.source = source
             self.user = current_user
@@ -204,3 +207,6 @@ class Source(db.Model):  # external source
 
     # relationships
     artifacts = relationship("Artifact", backref="source")
+
+    # def __str__(self):
+    #     return self.name

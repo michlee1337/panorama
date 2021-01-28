@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, SelectField, SubmitField, PasswordField, FieldList, FormField
+from wtforms_alchemy import ModelForm, ModelFieldList
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
-from src.models import User, Chunk
+from src.models import User, Chunk, Artifact, Source
 
 # _____ FIELDS ______
 
@@ -50,21 +51,21 @@ class TagListField(StringField):
 
 # Credit to kageurufu
 ## https://gist.github.com/kageurufu/6813878
-class ModelFieldList(FieldList):
-    def __init__(self, *args, **kwargs):
-        self.model = kwargs.pop("model", None)
-        super(ModelFieldList, self).__init__(*args, **kwargs)
-        if not self.model:
-            raise ValueError("ModelFieldList requires model to be set")
-
-    def populate_obj(self, obj, name):
-        while len(getattr(obj, name)) < len(self.entries):
-            newModel = self.model()
-            db.session.add(newModel)
-            getattr(obj, name).append(newModel)
-        while len(getattr(obj, name)) > len(self.entries):
-            db.session.delete(getattr(obj, name).pop())
-        super(ModelFieldList, self).populate_obj(obj, name)
+# class ModelFieldList(FieldList):
+#     def __init__(self, *args, **kwargs):
+#         self.model = kwargs.pop("model", None)
+#         super(ModelFieldList, self).__init__(*args, **kwargs)
+#         if not self.model:
+#             raise ValueError("ModelFieldList requires model to be set")
+#
+#     def populate_obj(self, obj, name):
+#         while len(getattr(obj, name)) < len(self.entries):
+#             newModel = self.model()
+#             db.session.add(newModel)
+#             getattr(obj, name).append(newModel)
+#         while len(getattr(obj, name)) > len(self.entries):
+#             db.session.delete(getattr(obj, name).pop())
+#         super(ModelFieldList, self).populate_obj(obj, name)
 
 # _____ FORMS _____
 class LoginForm(FlaskForm):
@@ -91,24 +92,36 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
-class ChunkForm(FlaskForm):
+class ChunkForm(ModelForm):
+    class Meta:
+        model = Chunk
     concept = StringField('Concept', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
 
-class ArtifactForm(FlaskForm):
+class SourceForm(ModelForm):
+    class Meta:
+        model = Source
+    name = StringField('Name')
+    link = StringField('Link')
+
+class ArtifactForm(ModelForm):
+    class Meta:
+        model = Artifact
+
     prerequisites = TagListField(
         "Prerequisites",
         separator=","
     )
-    main_concept = StringField('Main Concept', validators=[DataRequired()])
-    source = StringField('Source')
-    source_link = StringField('Source Link')
+    concept = StringField('Main Concept', validators=[DataRequired()])
+    # source = StringField('Source')
+    # source_link = StringField('Source Link')
+    source = FormField(SourceForm)
     title = StringField('Title', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     mediatype = SelectField('Mediatype', choices=[(0, 'Unknown'), (1, 'Text'), (2, 'Video'), (3, 'Other')], validators=[DataRequired()], coerce=int)
     duration = SelectField('Duration', choices=[(0, 'Unknown'), (1, 'Minutes'), (2, 'Days'), (3, 'Days'), (4, 'Months'), (5, 'Long')], validators=[DataRequired()], coerce=int)
     vote_count = IntegerField()
     vote_sum = IntegerField()
-    chunks = ModelFieldList(FormField(ChunkForm), model=Chunk, min_entries=1)
+    chunks = ModelFieldList(FormField(ChunkForm), min_entries=1)
     submit = SubmitField('Register')

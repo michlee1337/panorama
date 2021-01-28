@@ -11,11 +11,14 @@
 {% block app_content %}
 <div class="container">
   <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
-    {{ form.prerequisites.label }}: {{ form.prerequisites }}
-    {{ form.main_concept.label }}: {{ form.main_concept }}
+    {{ form.concept.label }}: {{ form.concept }}
     {{ form.title.label }}: {{ form.title }}
-    {{ form.source.label }}: {{ form.source }}
-    {{ form.source_link.label }}: {{ form.source_link }}
+    </br
+    {{form.source}}
+    <!-- {% print(form.source, form.source.name.label)%}
+    {{ form.source.name.label }}: {{ form.source.name }}
+    {{ form.source.link.label }}: {{ form.source.link }} -->
+    </br>
     {{ form.description.label }}: {{ form.description }}
     {{ form.mediatype.label }}: {{ form.mediatype }}
     {{ form.duration.label }}: {{ form.duration }}
