@@ -44,7 +44,7 @@ def new():
             flash('Error creating artifact... sorry! {}'.format(e))
             return render_template('artifacts/new.html', form=form)
 
-@artifacts_template.route('/artifacts/<artifact_id>/edit')
+@artifacts_template.route('/artifacts/<artifact_id>/edit',  methods=["GET","POST"])
 def edit(artifact_id):
     '''
     edit for artifact
@@ -53,12 +53,20 @@ def edit(artifact_id):
     It gets the appropriate information and passes it to the View.
     '''
     artifact = Artifact.query.get(artifact_id)
-    if artifact is None:
-        flash('Artifact not found.')
-        return render_template('pages/index.html')
-    form = ArtifactForm(obj=artifact)
-    return render_template('artifacts/new.html', form=form)
-
+    if request.method == 'GET':
+        if artifact is None:
+            flash('Artifact not found.')
+            return render_template('pages/index.html')
+        form = ArtifactForm(obj=artifact)
+        return render_template('artifacts/new.html', form=form)
+    elif request.method == 'POST':
+        try:
+            artifact.save_changes(request.form)
+            flash('Changes saved!')
+            return render_template(url_for('artifacts.view', artifact_id=artifact.id))
+        except Exception as e:
+            flash('Error creating artifact... sorry! {}'.format(e))
+            return render_template('artifacts/new.html', form=form)
 
 @artifacts_template.route('/artifacts/search')
 def search():
