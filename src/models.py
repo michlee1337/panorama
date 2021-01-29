@@ -124,7 +124,13 @@ class Artifact(db.Model):
         A artifact<>chunk implies a nested concept relationship.
         A artifact<>prerequisite implies a related concept relationship.
         '''
+        return self.save_changes(form, new=True)
+
+    def save_changes(self, form, new=False):
         try:
+            if new:
+                db.session.add(self)
+
             # check required data
             if form.mediatype.data not in self.RECOGNIZED_MEDIATYPES:
                 raise AttributeError("Mediatype is not recognized.")
@@ -132,13 +138,12 @@ class Artifact(db.Model):
             if form.duration.data not in self.RECOGNIZED_DURATIONS:
                 raise AttributeError("Duration is not recognized.")
 
-            if form.source.data != None:
+            if "name" in form.source.data:
                 source = Source(
-                    name=form.source.data,
-                    link=form.source_link.data)
+                    name=form.source.data["name"],
+                    link=form.source.data["link"])
             else:
                 source = None
-
             # create self
             main_concept = get_or_create(db.session, Concept, title=form.concept.data)
             self.concept = main_concept
