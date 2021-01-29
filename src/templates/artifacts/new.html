@@ -11,6 +11,7 @@
 {% block app_content %}
 <div class="container">
   <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
+    {{ form.prerequisites.label }}: {{ form.prerequisites }}
     {{ form.concept.label }}: {{ form.concept }}
     {{ form.title.label }}: {{ form.title }}
     </br
