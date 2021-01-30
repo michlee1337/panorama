@@ -11,6 +11,15 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from src import app, db, login
 from src.helpers import get_or_create
 
+# _____ MANY TO MANY ASSOCIATION TABLES ______
+
+artifact_prerequisites = Table(
+    'artifact_prerequisites',
+    db.Model.metadata,
+    Column('concept_id', Integer, ForeignKey('concepts.id')),
+    Column('artifact_id', Integer, ForeignKey('artifacts.id'))
+)
+
 # _____ MODELS ______
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -37,8 +46,10 @@ class Concept(db.Model):
     # NOTE: self <> self relationships in ConceptRelationship object
     artifacts = relationship('Artifact', backref='concept', lazy='dynamic')
     chunks = relationship('Chunk', backref='concept', lazy='dynamic')
+    dependant_artifacts = relationship('Artifact', secondary='artifact_prerequisites',
+        backref='prerequisites', lazy='dynamic')
 
-    def __str__(self):
+    def __repr__(self):
         return self.title
 
 class ConceptRelationship(db.Model):
@@ -157,6 +168,10 @@ class Artifact(db.Model):
             for prereq in form.prerequisites.data:
                 prereq_concept = get_or_create(db.session, Concept, title=prereq)
 
+                # add to self
+                self.prerequisites.append(prereq_concept)
+
+                # add concept relationship
                 prereq_rltn = ConceptRelationship(
                     concept_a=prereq_concept,
                     concept_b=main_concept,
