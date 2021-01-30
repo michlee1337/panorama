@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/new.css') }}">
+    <script src="{{ url_for('static', filename='js/artifacts/new.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/taggle/dist/taggle.min.js') }}"></script>
+{% endblock %}
+
+{% block app_content %}
+<div class="container">
+  <form id="artifact-form" action="{{ url_for('artifacts.edit', artifact_id=artifact.id) }}" method="POST">
+    {% include "artifacts/_artifact_form.html" %}
+  </form>
+
+</div>
+
+{% endblock %}

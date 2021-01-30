@@ -8,7 +8,7 @@ from src.models import User, Chunk, Artifact, Source
 
 # Credit to M0r13n
 ## https://gist.github.com/M0r13n/71655c53b2fbf41dc1db8412978bcbf9
-class TagListField(StringField):
+class PrerequisitesField(StringField):
     """Stringfield for a list of separated tags"""
 
     def __init__(self, label='', validators=None, remove_duplicates=True, to_lowercase=True, separator=' ', **kwargs):
@@ -20,15 +20,15 @@ class TagListField(StringField):
         :param to_lowercase: Cast all values to lowercase.
         :param separator: The separator that splits the individual tags.
         """
-        super(TagListField, self).__init__(label, validators, **kwargs)
+        super(PrerequisitesField, self).__init__(label, validators, **kwargs)
         self.remove_duplicates = remove_duplicates
         self.to_lowercase = to_lowercase
         self.separator = separator
         self.data = []
 
     def _value(self):
-        if self.data:
-            return u', '.join(self.data)
+        if len(self.data) != 0:
+            return u', '.join([str(x) for x in self.data])
         else:
             return u''
 
@@ -109,7 +109,7 @@ class ArtifactForm(ModelForm):
     class Meta:
         model = Artifact
 
-    prerequisites = TagListField(
+    prerequisites = PrerequisitesField(
         "Prerequisites",
         separator=","
     )

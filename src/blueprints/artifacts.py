@@ -53,20 +53,21 @@ def edit(artifact_id):
     It gets the appropriate information and passes it to the View.
     '''
     artifact = Artifact.query.get(artifact_id)
+    if artifact is None:
+        flash('Artifact not found.')
+        return render_template('pages/index.html')
+    form = ArtifactForm(obj=artifact)
     if request.method == 'GET':
-        if artifact is None:
-            flash('Artifact not found.')
-            return render_template('pages/index.html')
-        form = ArtifactForm(obj=artifact)
-        return render_template('artifacts/new.html', form=form)
+        return render_template('artifacts/edit.html', form=form, artifact=artifact)
     elif request.method == 'POST':
         try:
+            print("DEBUGO", artifact.id)
             artifact.save_changes(request.form)
             flash('Changes saved!')
             return render_template(url_for('artifacts.view', artifact_id=artifact.id))
         except Exception as e:
             flash('Error creating artifact... sorry! {}'.format(e))
-            return render_template('artifacts/new.html', form=form)
+            return render_template('artifacts/edit.html', form=form, artifact=artifact)
 
 @artifacts_template.route('/artifacts/search')
 def search():

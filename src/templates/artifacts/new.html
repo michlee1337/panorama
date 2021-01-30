@@ -11,37 +11,7 @@
 {% block app_content %}
 <div class="container">
   <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
-    {{ form.prerequisites.label }}: {{ form.prerequisites }}
-    {{ form.concept.label }}: {{ form.concept }}
-    {{ form.title.label }}: {{ form.title }}
-    </br
-    {{form.source}}
-    </br>
-    {{ form.description.label }}: {{ form.description }}
-    {{ form.mediatype.label }}: {{ form.mediatype }}
-    {{ form.duration.label }}: {{ form.duration }}
-
-    <div data-toggle="fieldset" id="chunks-fieldset">
-         <table>
-            <tr>
-                <th>concept</th>
-                <th>title</th>
-                <th>content</th>
-                <th></th>
-            </tr>
-            {% for chunks in form.chunks %}
-              <tr data-toggle="fieldset-entry">
-                  <td>{{ chunks.concept }}</td>
-                  <td>{{ chunks.title }}</td>
-                  <td>{{ chunks.content }}</td>
-                  <td><button type="button" data-toggle="fieldset-remove-row" id="chunks-{{loop.index0}}-remove">-</button></td>
-              </tr>
-            {% endfor %}
-        </table>
-        <button type="button" data-toggle="fieldset-add-row" data-target="#chunks-fieldset">+</button>
-
-    </div>
-    {{ form.submit }}
+    {% include "artifacts/_artifact_form.html" %}
   </form>
   <!-- <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
 
