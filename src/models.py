@@ -160,6 +160,7 @@ class Artifact(db.Model):
             self.concept = main_concept
             self.source = source
             self.user = current_user
+            self.description = form.description.data
             self.title = form.title.data
             self.mediatype = form.mediatype.data
             self.duration = form.duration.data
@@ -198,7 +199,6 @@ class Artifact(db.Model):
         except Exception as e:
             db.session.rollback()
             raise
-        return
 
     @classmethod
     def search(cls, arg_dict):
