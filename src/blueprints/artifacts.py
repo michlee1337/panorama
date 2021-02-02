@@ -56,8 +56,9 @@ def edit(artifact_id):
     if artifact is None:
         flash('Artifact not found.')
         return render_template('pages/index.html')
-    form = ArtifactForm(obj=artifact)
+
     if request.method == 'GET':
+        form = ArtifactForm(obj=artifact)
         return render_template('artifacts/edit.html', form=form, artifact=artifact)
     elif request.method == 'POST':
         try:
