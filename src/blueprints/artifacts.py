@@ -15,6 +15,9 @@ def view(artifact_id):
     It gets the appropriate information and passes it to the View.
     '''
     artifact = Artifact.query.get(artifact_id)
+    if artifact is None:
+        flash('Artifact not found.')
+        return render_template('pages/index.html')
     return render_template('artifacts/view.html', artifact=artifact)
 
 @artifacts_template.route('/artifacts/new', methods=["GET","POST"])
@@ -27,13 +30,19 @@ def new():
     A POST request will attempt to create a artifact with the
     provided information, and will flash the raised error upon any failure.
     '''
+    if not current_user.is_authenticated:
+        flash('Login to contribute!')
+        return redirect(url_for('pages.login'))
+
+    fork_id, artifact = request.args.get('fork_id'), None
+    if fork_id is not None:
+        artifact = Artifact.query.get(fork_id)
+        if artifact is None:
+            flash('Artifact not found.')
+
     if request.method == 'GET':
-        if current_user.is_authenticated:
-            form = ArtifactForm()
-            return render_template('artifacts/new.html', form=form)
-        else:
-            flash('Login to contribute!')
-            return redirect(url_for('pages.login'))
+        form = ArtifactForm(obj=artifact)
+        return render_template('artifacts/new.html', form=form)
     elif request.method == 'POST':
         form = ArtifactForm(request.form)
         try:
