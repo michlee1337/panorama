@@ -61,8 +61,8 @@ def edit(artifact_id):
         return render_template('artifacts/edit.html', form=form, artifact=artifact)
     elif request.method == 'POST':
         try:
-            print("DEBUGO", artifact.id)
-            artifact.save_changes(request.form)
+            form = ArtifactForm(formdata=request.form)
+            artifact.save_changes(form)
             flash('Changes saved!')
             return render_template(url_for('artifacts.view', artifact_id=artifact.id))
         except Exception as e:
