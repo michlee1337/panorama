@@ -1,5 +1,6 @@
 from src.models import db
 from src.models.concepts import Concept
+from src.models.sources import Source
 from src.models.concept_relationships import ConceptRelationship
 
 from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
@@ -57,6 +58,7 @@ class Artifact(db.Model):
     prerequisites = relationship('Concept', secondary='artifact_prerequisites',
         backref='dependant_artifacts', lazy='dynamic')
     source_id = Column(Integer, ForeignKey('sources.id'), nullable=True)
+    source = relationship('Source', backref='artifact', uselist=False)
     user_id = Column(Integer, ForeignKey('users.id'))
     chunks = relationship("Chunk", backref="artifact", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
 
@@ -155,15 +157,3 @@ class Artifact(db.Model):
         else:
             artifacts = Artifact.query.filter_by(**filters).all()
         return artifacts
-
-class Source(db.Model):  # external source
-    __tablename__ = 'sources'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(200))
-    link = Column(String(200))
-
-    # relationships
-    artifacts = relationship("Artifact", backref="source")
-
-    # def __str__(self):
-    #     return self.name
