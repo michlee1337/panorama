@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
 from flask_login import current_user
-from src.models import Artifact, Concept, Chunk
+from src.models.artifacts import Artifact, Chunk
+from src.models.concepts import Concept
 from src.forms import ArtifactForm
-from src import db
 
 artifacts_template = Blueprint('artifacts', __name__, template_folder='../templates')
 
