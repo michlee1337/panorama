@@ -1,5 +1,4 @@
 from src.models import db
-# from src.models.artifacts import Artifact
 
 from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
 from sqlalchemy.orm import relationship, backref
@@ -12,10 +11,7 @@ class Concept(db.Model):
 
     # relationships
     # NOTE: self <> self relationships in ConceptRelationship object
-    # artifacts = relationship('Artifact', backref='concept', lazy='dynamic')
     chunks = relationship('Chunk', backref='concept', lazy='dynamic')
-    # dependant_artifacts = relationship('Artifact', secondary='artifact_prerequisites',
-    #     backref='prerequisites', lazy='dynamic')
 
     def __repr__(self):
         return self.title
