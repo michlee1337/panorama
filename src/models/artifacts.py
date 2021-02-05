@@ -1,4 +1,6 @@
 from src.models import db
+from src.models.concepts import Concept
+from src.models.concept_relationships import ConceptRelationship
 
 from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
 from sqlalchemy.orm import relationship, backref
@@ -19,58 +21,6 @@ artifact_prerequisites = Table(
     Column('concept_id', Integer, ForeignKey('concepts.id')),
     Column('artifact_id', Integer, ForeignKey('artifacts.id'))
 )
-
-class Concept(db.Model):
-    __tablename__ = 'concepts'
-
-    id = Column(Integer, primary_key=True)
-    title = Column(String(100))
-
-    # relationships
-    # NOTE: self <> self relationships in ConceptRelationship object
-    artifacts = relationship('Artifact', backref='concept', lazy='dynamic')
-    chunks = relationship('Chunk', backref='concept', lazy='dynamic')
-    dependant_artifacts = relationship('Artifact', secondary='artifact_prerequisites',
-        backref='prerequisites', lazy='dynamic')
-
-    def __repr__(self):
-        return self.title
-
-class ConceptRelationship(db.Model):
-    __tablename__ = 'concept_relationships'
-    # _____ CLASS ATTRIBUTES _____
-    # DEV: encapsulating conversion
-    TYPE_TO_STR = {
-        0: "undetermined",
-        1: "prerequisite",
-        2: "nested"
-    }
-
-    STR_TO_TYPE = {
-        "undetermined": 0,
-        "prerequisite": 1,
-        "nested": 2
-    }
-
-    # _____ TABLE ATTRIBUTES _____
-
-    id = Column(Integer, primary_key=True)
-    relationship_type = Column(Integer, default=0)
-
-    # _____ RELATIONSHIPS _____
-    concept_a_id = Column(Integer, ForeignKey('concepts.id'))
-    concept_b_id = Column(Integer, ForeignKey('concepts.id'))
-
-    concept_a = relationship("Concept", foreign_keys=[concept_a_id], backref=backref("relationships_out", uselist=False))
-    concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in", uselist=False))
-
-    def __init__(self, concept_a, concept_b, typestr):
-        try:
-            self.concept_a_id = concept_a.id
-            self.concept_b_id = concept_b.id
-            self.relationship_type = self.STR_TO_TYPE[typestr]
-        except:
-            raise
 
 class Chunk(db.Model):
     __tablename__ = 'chunks'
@@ -103,6 +53,9 @@ class Artifact(db.Model):
 
     # relationships
     concept_id = Column(Integer, ForeignKey('concepts.id'))
+    concept = relationship('Concept', backref='artifacts')
+    prerequisites = relationship('Concept', secondary='artifact_prerequisites',
+        backref='dependant_artifacts', lazy='dynamic')
     source_id = Column(Integer, ForeignKey('sources.id'), nullable=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     chunks = relationship("Chunk", backref="artifact", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
