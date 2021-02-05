@@ -1,5 +1,6 @@
 from src.models import db
 from src.models.concepts import Concept
+from src.models.chunks import Chunk
 from src.models.sources import Source
 from src.models.concept_relationships import ConceptRelationship
 
@@ -22,17 +23,6 @@ artifact_prerequisites = Table(
     Column('concept_id', Integer, ForeignKey('concepts.id')),
     Column('artifact_id', Integer, ForeignKey('artifacts.id'))
 )
-
-class Chunk(db.Model):
-    __tablename__ = 'chunks'
-    id = Column(Integer, primary_key=True)
-    title = Column(String(100))
-    content = Column(UnicodeText)  # TODO: support CKeditor
-    position = Column(Integer)  # ordered relationship
-
-    # relationships
-    artifact_id = Column(Integer, ForeignKey('artifacts.id'))
-    concept_id = Column(Integer, ForeignKey('concepts.id'))
 
 class Artifact(db.Model):
     __tablename__ = 'artifacts'
