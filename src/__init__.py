@@ -25,13 +25,13 @@ fa = FontAwesome(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 # NEW
-import models
-models.db.init_app(app)
+from src.models import db
+db.init_app(app)
 
 with app.app_context():
-    models.db.create_all()
+    db.create_all()
 
-migrate = Migrate(app, models.db)
+migrate = Migrate(app, db)
 
 # db = SQLAlchemy(app)
 
