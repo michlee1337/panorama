@@ -1,7 +1,7 @@
 from src.models import db
 from src.models.artifacts import Concept
 
-from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
+from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
 class ConceptRelationship(db.Model):

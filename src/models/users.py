@@ -1,9 +1,9 @@
 from src.models import db
 from src.models.artifacts import Artifact
 
-from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship, backref
-from flask_login import LoginManager, UserMixin, current_user
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin, db.Model):

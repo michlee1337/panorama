@@ -4,14 +4,12 @@ from src.models.chunks import Chunk
 from src.models.sources import Source
 from src.models.concept_relationships import ConceptRelationship
 
-from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
+from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey, Table
 from sqlalchemy.orm import relationship, backref
-from flask_login import LoginManager, UserMixin, current_user
+from flask_login import current_user
 from flask import flash
 
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.orderinglist import ordering_list
-from sqlalchemy.ext.associationproxy import association_proxy
 
 from src.helpers import get_or_create
 

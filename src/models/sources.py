@@ -1,7 +1,6 @@
 from src.models import db
 
-from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, Integer, String
 
 class Source(db.Model):  # external source
     __tablename__ = 'sources'
