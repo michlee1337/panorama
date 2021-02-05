@@ -23,16 +23,25 @@ fa = FontAwesome(app)
 
 # create database tables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
 
-from src import models
-db.create_all()
+# NEW
+import models
+models.db.init_app(app)
 
-# from src.models import User
+with app.app_context():
+    models.db.create_all()
+
+migrate = Migrate(app, models.db)
+
+# db = SQLAlchemy(app)
+
+# from src import models
+# db.create_all()
+
+from src.models.users import User
 @login.user_loader
 def load_user(id):
-    return models.User.query.get(int(id))
+    return User.query.get(int(id))
 
 # register routes
 from blueprints.pages import pages_template

@@ -1,14 +1,14 @@
-from flask import flash
-from flask_sqlalchemy import SQLAlchemy
+from src.models import db
+
 from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.ext.declarative import declarative_base
 from flask_login import LoginManager, UserMixin, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import flash
+
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.ext.associationproxy import association_proxy
 
-from src import app, db, login
 from src.helpers import get_or_create
 
 # _____ MANY TO MANY ASSOCIATION TABLES ______
@@ -19,22 +19,6 @@ artifact_prerequisites = Table(
     Column('concept_id', Integer, ForeignKey('concepts.id')),
     Column('artifact_id', Integer, ForeignKey('artifacts.id'))
 )
-
-# _____ MODELS ______
-class User(UserMixin, db.Model):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(200))
-    email = Column(String(200))
-    password_hash = Column(String(128))
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    # relationships
-    artifacts = relationship('Artifact', backref='user', lazy='dynamic')
 
 class Concept(db.Model):
     __tablename__ = 'concepts'

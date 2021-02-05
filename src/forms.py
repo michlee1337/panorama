@@ -2,7 +2,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, SelectField, SubmitField, PasswordField, FieldList, FormField
 from wtforms_alchemy import ModelForm, ModelFieldList
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
-from src.models import User, Chunk, Artifact, Source
+from src.models.users import User
+# from src.models.chunks import Chunk
+from src.models.artifacts import Artifact, Chunk, Source
+# from src.models.sources import Source
 
 # _____ FIELDS ______
 

@@ -1,11 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
-from src.models import User
+from src.models.users import User
 from src.forms import LoginForm, RegistrationForm
-from src import db
 
 # from src.models import Artifact
-from src import db
+# from src import db
 
 pages_template = Blueprint('pages', __name__, template_folder='../templates')
 
@@ -75,8 +74,8 @@ def register():
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
+        # db.session.add(user)
+        # db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('pages.login'))
     return render_template('pages/register.html', title='Register', form=form)
