@@ -58,7 +58,7 @@ class Artifact(db.Model):
     prerequisites = relationship('Concept', secondary='artifact_prerequisites',
         backref='dependant_artifacts', lazy='dynamic')
     source_id = Column(Integer, ForeignKey('sources.id'), nullable=True)
-    source = relationship('Source', backref='artifact', uselist=False)
+    source = relationship('Source', backref='artifacts')
     user_id = Column(Integer, ForeignKey('users.id'))
     chunks = relationship("Chunk", backref="artifact", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
 
