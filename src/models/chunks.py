@@ -1,6 +1,7 @@
 from src.models import db
+from src.models.concepts import Concept
 
-from sqlalchemy import Column, Integer, String, UnicodeText, DateTime, ForeignKey, Table, MetaData
+from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
 class Chunk(db.Model):
@@ -13,3 +14,4 @@ class Chunk(db.Model):
     # relationships
     artifact_id = Column(Integer, ForeignKey('artifacts.id'))
     concept_id = Column(Integer, ForeignKey('concepts.id'))
+    concept = relationship('Concept', backref='chunks')
