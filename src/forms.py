@@ -30,7 +30,7 @@ class PrerequisitesField(StringField):
         self.data = []
 
     def _value(self):
-        if self.data and len(self.data) != 0:
+        if self.data:
             return u', '.join([str(x) for x in self.data])
         else:
             return u''
