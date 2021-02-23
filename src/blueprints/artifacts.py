@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
 from flask_login import current_user
-from src.models import Artifact, Concept, Chunk
-from src import db
+from src.models.artifacts import Artifact, Chunk
+from src.models.concepts import Concept
+from src.forms import ArtifactForm
 
 artifacts_template = Blueprint('artifacts', __name__, template_folder='../templates')
 
@@ -14,6 +15,9 @@ def view(artifact_id):
     It gets the appropriate information and passes it to the View.
     '''
     artifact = Artifact.query.get(artifact_id)
+    if artifact is None:
+        flash('Artifact not found.')
+        return render_template('pages/index.html')
     return render_template('artifacts/view.html', artifact=artifact)
 
 @artifacts_template.route('/artifacts/new', methods=["GET","POST"])
@@ -26,21 +30,54 @@ def new():
     A POST request will attempt to create a artifact with the
     provided information, and will flash the raised error upon any failure.
     '''
+    if not current_user.is_authenticated:
+        flash('Login to contribute!')
+        return redirect(url_for('pages.login'))
+
+    fork_id, artifact = request.args.get('fork_id'), None
+    if fork_id is not None:
+        artifact = Artifact.query.get(fork_id)
+        if artifact is None:
+            flash('Artifact not found.')
 
     if request.method == 'GET':
-        if current_user.is_authenticated:
-            return render_template('artifacts/new.html')
-        else:
-            flash('Login to contribute!')
-            return redirect(url_for('pages.login'))
+        form = ArtifactForm(obj=artifact)
+        return render_template('artifacts/new.html', form=form)
     elif request.method == 'POST':
+        form = ArtifactForm(request.form)
         try:
-            Artifact(request.form)
+            Artifact(form)
             flash('Artifact created!')
             return redirect('/')
         except Exception as e:
             flash('Error creating artifact... sorry! {}'.format(e))
-            return render_template('artifacts/new.html')
+            return render_template('artifacts/new.html', form=form)
+
+@artifacts_template.route('/artifacts/<artifact_id>/edit',  methods=["GET","POST"])
+def edit(artifact_id):
+    '''
+    edit for artifact
+
+    Only accepts GET requests.
+    It gets the appropriate information and passes it to the View.
+    '''
+    artifact = Artifact.query.get(artifact_id)
+    if artifact is None:
+        flash('Artifact not found.')
+        return render_template('pages/index.html')
+
+    if request.method == 'GET':
+        form = ArtifactForm(obj=artifact)
+        return render_template('artifacts/edit.html', form=form, artifact=artifact)
+    elif request.method == 'POST':
+        try:
+            form = ArtifactForm(formdata=request.form)
+            artifact.save_changes(form)
+            flash('Changes saved!')
+            return render_template(url_for('artifacts.view', artifact_id=artifact.id))
+        except Exception as e:
+            flash('Error creating artifact... sorry! {}'.format(e))
+            return render_template('artifacts/edit.html', form=form, artifact=artifact)
 
 @artifacts_template.route('/artifacts/search')
 def search():

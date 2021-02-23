@@ -1,11 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
-from src.models import User
+from src.models.users import User
 from src.forms import LoginForm, RegistrationForm
-from src import db
 
-# from src.models import Artifact
-from src import db
+from src.models import db
 
 pages_template = Blueprint('pages', __name__, template_folder='../templates')
 

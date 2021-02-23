@@ -6,7 +6,9 @@ import glob
 import unittest
 
 os.environ["DATABASE_URL"] = "sqlite:///test.db"
-from src import app, db, models
+from src import app
+from src.models import db
+from src.models.users import User
 
 class FlaskTestCase(unittest.TestCase):
     # executed prior to each test
@@ -15,14 +17,16 @@ class FlaskTestCase(unittest.TestCase):
         app.config['WTF_CSRF_ENABLED'] = False
         app.config['DEBUG'] = False
 
-        db.create_all()
+        db.init_app(app)
+        with app.app_context():
+            db.create_all()
 
-        example_user = models.User(
-            id=1, email="example@gmail.com", username="example")
-        example_user.set_password("111")
-        db.session.merge(example_user)
+            example_user = User(
+                id=1, email="example@gmail.com", username="example")
+            example_user.set_password("111")
+            db.session.merge(example_user)
 
-        db.session.commit()
+            db.session.commit()
 
         self.app = app.test_client()
 
@@ -31,5 +35,6 @@ class FlaskTestCase(unittest.TestCase):
 
     # executed after each test
     def tearDown(self):
-        db.session.remove()
-        db.drop_all()
+        with app.app_context():
+            db.session.remove()
+            db.drop_all()
