@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/view.css') }}">
+    <script src="{{ url_for('static', filename='js/artifacts/view.js') }}"></script>
+    <!-- For search queries -->
+    <script>
+      var artifact_concept_id = {{ artifact.concept.id|safe }};
+      var artifact_id = {{ artifact.id|safe }};
+    </script>
+{% endblock %}
+
+{% block app_content %}
+<div class="wrapper">
+  {% include "artifacts/view/_overview.html" %}
+  {% include "artifacts/view/_content.html" %}
+</div>
+{% endblock %}

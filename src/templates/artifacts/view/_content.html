@@ -1,0 +1,27 @@
+<div class="container content">
+  <button type="button" id="sidebarCollapse" class="btn btn-info">
+    <i class="fa fa-rocket" aria-hidden="true"></i>
+  </button>
+  <!-- <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas"> -->
+
+
+  <div class="title">
+    <h1> Title: {{artifact.title}} </h1>
+    <p> {{artifact.description}} </p>
+
+  </div>
+  <h4>
+    Prerequsites:
+    {% for prerequisite in artifact.concept.prerequisites %}
+      <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}}, {{prerequisite.title}})">{{prerequisite.title}}</span>
+    {% endfor %}
+  </h4>
+
+  <div class="chunks">
+    {% for chunk in artifact.chunks %}
+      {% with chunk = chunk %}
+        {% include "artifacts/view/_chunk.html" %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+</div>
