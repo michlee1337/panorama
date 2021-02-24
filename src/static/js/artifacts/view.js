@@ -76,16 +76,3 @@ function renderArtifactCard(artifact) {
     </a>
   `);
 }
-
-function renderReadingCard(reading) {
-  $("#search-sidebar-readings").append(`
-    <a href="${reading.link}" target="_blank"">
-      <div class="card reading_card">
-        <div class="card-body">
-          ${reading.name}
-          <p>${reading.description}</p>
-        </div>
-      </div>
-    </a>
-  `);
-}
