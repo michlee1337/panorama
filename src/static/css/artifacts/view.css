@@ -26,7 +26,6 @@
     flex: 0;
     display: None;
     padding: 3%;
-    height: 100vh;
     background: #dfdfdf;
     transition: all 0.3s;
 }
