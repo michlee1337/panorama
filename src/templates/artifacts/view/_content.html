@@ -1,7 +1,7 @@
 <div class="container content">
 
   <div class="title">
-    <h1> Title: {{artifact.title}} </h1>
+    <h1> {{artifact.concept.title}}: {{artifact.title}} </h1>
     <p> {{artifact.description}} </p>
 
   </div>
@@ -11,6 +11,7 @@
       <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}}, {{prerequisite.title}})">{{prerequisite.title}}</span>
     {% endfor %}
   </h4>
+  <p><i>Click on any of the prerequisites to open search for them in a new tab</i></p>
 
   <div class="chunks">
     {% for chunk in artifact.chunks %}

@@ -1,0 +1,26 @@
+<div id="search-sidebar">
+  <div id="search-sidebar-content">
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" role="tabpanel">
+        <h3 id="search-sidebar-title">Related Artifacts</h3>
+        <p>Click one of the tabs by the side to explore related artifacts.</p>
+        <p>If you are missing prerequisite knowledge, check out 'Prerequisites'.</p>
+        <p>If you are want to find another resource on the same topic, check out 'Alternatives'.</p>
+        <p>If you want to explore related topics, check out 'Learn More'.</p>
+      </div>
+      <div class="tab-pane fade" id="prerequisites" role="tabpanel" aria-labelledby="prerequisites-tab">
+        {% include "artifacts/view/_prerequisites.html" %}
+      </div>
+      <div class="tab-pane fade" id="alternative" role="tabpanel" aria-labelledby="alternative-tab">
+        {% include "artifacts/view/_alternatives.html" %}
+      </div>
+      <div class="tab-pane fade" id="explore" role="tabpanel" aria-labelledby="explore-tab">
+        {% include "artifacts/view/_explore.html" %}
+      </div>
+
+      <!-- <div class="tab-pane fade" id="more" role="tabpanel" aria-labelledby="more-tab">
+      </div> -->
+    </div>
+
+  </div>
+</div>
