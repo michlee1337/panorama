@@ -9,6 +9,16 @@
   padding: 3%;
 }
 
+/* Overview */
+
+/* Trigger */
+#sidebarCollapseWrapper {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+
 #sidebarCollapse {
   position: absolute;
   left: 3%;
@@ -17,7 +27,8 @@
   height: 70px;
   width: 70px;
 }
-/* SEARCH SIDEBAR */
+
+/* Sidebar */
 #search-sidebar {
     flex: 0;
     display: None;
