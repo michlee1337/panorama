@@ -3,7 +3,18 @@
 {% block app_content %}
 
 <div class="container">
-  {% if artifacts is defined %}
+  <h1>Panorama</h1>
+  <h2>explore knowledge others have discovered</h2>
+
+  <h2>Discover</h2>
+  <p>whatever resource fits your purpose best based on relevant metadata</p>
+  <p>and continue tuning it, if its not quite right</p>
+
+  <h2>Explore</h2>
+  <p>See the bigger picture of how what you're learning now is connected to much more knowledge</p>
+  <p>And traverse related resources to see what else is interesting around here</p>
+
+  {% if artifacts is defined and artifacts|length%}
     <h2>Artifacts</h2>
     <div id="studyplan-list">
       {% for artifact in artifacts %}
