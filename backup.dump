@@ -1,0 +1,671 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.1
+-- Dumped by pg_dump version 13.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public.alembic_version OWNER TO postgres;
+
+--
+-- Name: artifact_prerequisites; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.artifact_prerequisites (
+    concept_id integer,
+    artifact_id integer
+);
+
+
+ALTER TABLE public.artifact_prerequisites OWNER TO postgres;
+
+--
+-- Name: artifacts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.artifacts (
+    id integer NOT NULL,
+    source_id integer,
+    mediatype integer,
+    duration integer,
+    vote_count integer,
+    vote_sum integer,
+    description text,
+    title character varying(100),
+    concept_id integer,
+    user_id integer
+);
+
+
+ALTER TABLE public.artifacts OWNER TO postgres;
+
+--
+-- Name: artifacts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.artifacts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.artifacts_id_seq OWNER TO postgres;
+
+--
+-- Name: artifacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.artifacts_id_seq OWNED BY public.artifacts.id;
+
+
+--
+-- Name: chunks; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.chunks (
+    id integer NOT NULL,
+    content text,
+    "position" integer,
+    artifact_id integer,
+    title character varying(100),
+    concept_id integer
+);
+
+
+ALTER TABLE public.chunks OWNER TO postgres;
+
+--
+-- Name: chunks_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.chunks_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.chunks_id_seq OWNER TO postgres;
+
+--
+-- Name: chunks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.chunks_id_seq OWNED BY public.chunks.id;
+
+
+--
+-- Name: concept_relationships; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.concept_relationships (
+    id integer NOT NULL,
+    relationship_type integer,
+    concept_a_id integer,
+    concept_b_id integer
+);
+
+
+ALTER TABLE public.concept_relationships OWNER TO postgres;
+
+--
+-- Name: concept_relationships_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.concept_relationships_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.concept_relationships_id_seq OWNER TO postgres;
+
+--
+-- Name: concept_relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.concept_relationships_id_seq OWNED BY public.concept_relationships.id;
+
+
+--
+-- Name: concepts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.concepts (
+    id integer NOT NULL,
+    title character varying(100)
+);
+
+
+ALTER TABLE public.concepts OWNER TO postgres;
+
+--
+-- Name: concepts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.concepts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.concepts_id_seq OWNER TO postgres;
+
+--
+-- Name: concepts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.concepts_id_seq OWNED BY public.concepts.id;
+
+
+--
+-- Name: prerequisites; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.prerequisites (
+    concept_id integer,
+    artifact_id integer
+);
+
+
+ALTER TABLE public.prerequisites OWNER TO postgres;
+
+--
+-- Name: sources; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.sources (
+    id integer NOT NULL,
+    name character varying(200),
+    link character varying(200)
+);
+
+
+ALTER TABLE public.sources OWNER TO postgres;
+
+--
+-- Name: sources_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.sources_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sources_id_seq OWNER TO postgres;
+
+--
+-- Name: sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.sources_id_seq OWNED BY public.sources.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying(200),
+    email character varying(200),
+    password_hash character varying(128)
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: artifacts id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.artifacts ALTER COLUMN id SET DEFAULT nextval('public.artifacts_id_seq'::regclass);
+
+
+--
+-- Name: chunks id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chunks ALTER COLUMN id SET DEFAULT nextval('public.chunks_id_seq'::regclass);
+
+
+--
+-- Name: concept_relationships id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.concept_relationships ALTER COLUMN id SET DEFAULT nextval('public.concept_relationships_id_seq'::regclass);
+
+
+--
+-- Name: concepts id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.concepts ALTER COLUMN id SET DEFAULT nextval('public.concepts_id_seq'::regclass);
+
+
+--
+-- Name: sources id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sources ALTER COLUMN id SET DEFAULT nextval('public.sources_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+7ee14e690b7a
+\.
+
+
+--
+-- Data for Name: artifact_prerequisites; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.artifact_prerequisites (concept_id, artifact_id) FROM stdin;
+72	51
+72	51
+74	52
+76	53
+76	54
+88	55
+88	55
+88	55
+\.
+
+
+--
+-- Data for Name: artifacts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.artifacts (id, source_id, mediatype, duration, vote_count, vote_sum, description, title, concept_id, user_id) FROM stdin;
+51	67	0	0	0	0	t	t	71	2
+52	68	0	0	0	0	ss	ss	74	2
+53	69	0	0	0	0	Notes on introductory algorithms from CTCI.\r\n\r\nI left out Bit Manipulation and Logic Puzzles. Because in my experience, if a company asks you these questions you should probably run away (unless it is somehow relevant to your job, in which case this is probably the wrong set of notes for you).\r\n\r\nAlso, I think you should check out more resources on recursion, dynamic programming, trees, and graphs.	CTCI notes	75	2
+54	70	1	2	0	0	"Those who cannot remember the past are condemned to repeat it"	Recursion and Dynamic Programming Demystified	81	2
+55	73	0	0	0	0	sfdg	sfg	87	1
+\.
+
+
+--
+-- Data for Name: chunks; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.chunks (id, content, "position", artifact_id, title, concept_id) FROM stdin;
+69	t	\N	51	t	71
+70	t	\N	51	t	71
+71	d	\N	51	d	73
+72	ss	\N	52	s	74
+73	In some languages, arrays (often called lists in this case) are automatically resizable. The array or list will grow as you append items. In other languages, like Java, arrays are fixed length. The size is defined when you create the array.\r\nWhen you need an array-like data structure that offers dynamic resizing, you would usually use an Arraylist. An Arraylist is an array that resizes itself as needed while still providing 0(1) access. A typical implementa­ tion is that when the array is full, the array doubles in size. Each doubling takes 0(n) time, but happens so rarely that its amortized insertion time is still O(1). This is an essential data structure for interviews. Be sure you are comfortable with dynamically resizable arrays/lists in whatever language you will be working with. Note that the name of the data structure as well as the "resizing factor" (which is 2 in Java) can vary.\r\n\r\nCore problem patterns are palindromes and permutations.	\N	53	Arrays and Strings	77
+74	A linked list is a data structure that represents a sequence of nodes. In a singly linked list, each node points to the next node in the linked list. A doubly linked list gives each node pointers to both the next node and the previous node. Unlike an array, a linked list does not provide constant time access to a particular "index" within the list. This means that if you'd like to find the Kth element in the list, you will need to iterate through K elements.\r\nThe benefit of a linked list is that you can add and remove items from the beginning of the list in constant time. For specific applications, this can be useful. We access the linked list through a reference to the head Node of the linked list. When you implement the linked list this way, you need to be abitcareful.Whatifmultipleobjectsneedareferencetothelinkedlist,andthentheheadofthelinkedlist changes? Some objects might still be pointing to the old head. Remember that when you're discussing a linked list in an interview, you must understand whether it is a\r\nsingly linked list or a doubly linked list.\r\n\r\nKey problems include deleting a linked list, rearranging to have all even nodes first, or finding a loop.\r\n\r\nSome key techniques are fast and slow pointer, and recursion.	\N	53	Linked Lists	78
+75	The stack data structure is precisely what it sounds like: a stack of data. In certain types of problems, it can be favorable to store data in a stack rather than in an array.\r\nA stack uses LIFO (last-in first-out) ordering. That is, as in a stack of dinner plates, the most recent item added to the stack is the first item to be removed. Unlike an array, a stack does not offer constant-time access to the ith item. However, it does allow constant­ time adds and removes, as it doesn't require shifting elements around.\r\nWe have provided simple sample code to implement a stack. Note that a stack can also be implemented using a linked list, if items were added and removed from the same side. One case where stacks are often useful is in certain recursive algorithms. Sometimes you need to push temporary data onto a stack as you recurse, but then remove them as you backtrack (for example, because the recursive check failed). A stack offers an intuitive way to do this.\r\nA stack can also be used to implement a recursive algorithm iteratively. (This is a good exercise! Take a simple recursive algorithm and implement it iteratively.)\r\n\r\nA queue implements FIFO (first-in first-out) ordering. As in a line or queue at a ticket stand, items are removed from the data structure in the same order that they are added. A queue can also be implemented with a linked list. In fact, they are essentially the same thing, as long as items are added and removed from opposite sides. It is especially easy to mess up the updating of the first and last nodes in a queue. Be sure to double check this.\r\n\r\nOne place where queues are often used is in breadth-first search or in implementing a cache. In breadth-first search, for example, we used a queue to store a list of the nodes that we need to process. Each time we process a node, we add its adjacent nodes to the back of the queue. This allows us to process nodes in the order in which they are viewed.\r\n\r\nSome key problems are turning a stack into a queue, and vice versa.	\N	53	Stacks and Queues	79
+76	Many interviewees find tree and graph problems to be some of the trickiest. Searching a tree is more complicated than searching in a linearly organized data structure such as an array or linked list. Addi­ tionally, the worst case and average case time may vary wildly, and we must evaluate both aspects of any algorithm. Fluency in implementing a tree or graph from scratch will prove essential.\r\nBecause most people are more familiar with trees than graphs (and they're a bit simpler), we'll discuss trees first. This is a bit out of order though, as a tree is actually a type of graph. A nice way to understand a tree is with a recursive explanation. A tree is a data structure composed of nodes.\r\nEach tree has a root node. (Actually, this isn't strictly necessary in graph theory, but it's usually how we use trees in programming, and especially programming interviews.)\r\nThe root node has zero or more child nodes.\r\nEach child node has zero or more child nodes, and so on.\r\nThe tree cannot contain cycles. The nodes may or may not be in a particular order, they could have any data type as values, and they may or may not have links back to their parent nodes.\r\n\r\n v\\\\A binary tree is a tree in which each node has up to two children. Not all trees are binary trees. \r\n\r\nA node is called a"leaf" node if it has no children.\r\n\r\nWhile many trees are balanced, not all are. Ask your interviewer for clarification here. Note that balancing a tree does not mean the left and right subtrees are exactly the same size (like you see under"perfect binary trees" in the following diagram).\r\n\r\nA complete binary tree is a binary tree in which every level of the tree is fully filled, except for perhaps the last level. To the extent that the last level is filled, it is filled left to right.\r\n\r\nA full binary tree is a binary tree in which every node has either zero or two children. That is, no nodes have only one child.\r\n\r\nA perfect binary tree is one that is both full and complete. All leaf nodes will be at the same level, and this level has the maximum number of nodes.\r\n\r\nPrior to your interview, you should be comfortable implementing in-order, post-order, and pre-order\r\ntraversal. The most common of these is in-order traversal.\r\n\r\nA tree is actually a type of graph, but not all graphs are trees. Simply put, a tree is a connected graph without cycles.\r\nA graph is simply a collection of nodes with edges between (some of) them.\r\n• Graphs can be either directed (like the following graph) or undirected. While directed edges are like a\r\n  � Tries (Prefix Trees)\r\n How quickly? A trie can check if a string is a valid prefix in 0(K) time, where K is the length of the string. This is actually the same runtime as a hash table will take. Although we often refer to hash table lookups as being 0(1) time, this isn't entirely true. A hash table must read through all the characters in the input, which takes O(K) time in the case of a word lookup.\r\nCrackingTheCodinglnterview.com / 6th Edition 1 OS\r\n Chapter 4 I Trees and Graphs\r\none-way street, undirected edges are like a two-way street.\r\n• The graph might consist of multiple isolated subgraphs. If there is a path between every pair of vertices, it is called a "connected graph:'\r\nThe graph can also have cycles (or not). An "acyclic graph" is one without cycles.\r\n\r\nAdjency list is the most common way to represent a graph. The most common ways to search a graph are depth-first search and breadth-first search. In depth-first search (DFS), we start at the root (or another arbitrarily selected node) and explore each branch completely before moving on to the next branch. That is, we go deep first (hence the name depth­ first search) before we go wide. In breadth-first search (BFS), we start at the root (or another arbitrarily selected node) and explore each neighbor before going on to any of their children. That is, we go wide (hence breadth-first search) before we go deep.\r\n\r\nBreadth-first search and depth-first search tend to be used in different scenarios. DFS is often preferred if we want to visit every node in the graph. Both will work just fine, but depth-first search is a bit simpler.\r\nHowever, if we want to find the shortest path (or just any path) between two nodes, BFS is generally better. \r\n\r\nNote that pre-order and other forms of tree traversal are a form of DFS. The key difference is that when implementing this algorithm for a graph, we must check if the node has been visited. If we don't, we risk getting stuck in an infinite loop.\r\n\r\nBFS is a bit less intuitive, and many interviewees struggle with the implementation unless they are already familiar with it. The main tripping point is the (false) assumption that BFS is recursive. It's not. Instead, it uses a queue.\r\nIn BFS, node a visits each of a's neighbors before visiting any of their neighbors. You can think of this as searching level by level out from a. An iterative solution involving a queue usually works best. If you are asked to implement BFS, the key thing to remember is the use of the queue. The rest of the algo­rithm flows from this fact.\r\n\r\nMore complex problem patterns inclue Topological Sort (pg 632), Dijkstra's Algorithm (pg 633), AVL Trees (pg 637), Red­ BlackTrees (pg 639).	\N	53	Trees and Graphs	80
+77	While there are a large number of recursive problems, many follow similar patterns. A good hint that a problem is recursive is that it can be built off of subproblems.\r\nWhen you hear a problem beginning with the following statements, it's often (though not always) a good candidate for recursiC!n: "Design an algorithm to compute the nth ..:; "Write code to list the first n ..:; "Imple­ ment a method to compute all..:; and so on. Practice makes perfect! The more problems you do, the easier it will be to recognize recursive problems. Recursive solutions, by definition, are built off of solutions to subproblems. Many times, this will mean simply to compute f ( n) by adding something, removing something, or otherwise changing the solution for f ( n-1). In other cases, you might solve the problem for the first half of the data set, then the second half, and then merge those results.\r\nThere are many ways you might divide a problem into subproblems. Three of the most common approaches to develop an algorithm are bottom-up, top-down, and half-and-half. \r\n\r\nThe bottom-up approach is often the most intuitive. We start with knowing how to solve the problem for a simple case, like a list with only one element. Then we figure out how to solve the problem for two elements, then for three elements, and so on. The key here is to think about how you can build the solution for one case off of the previous case (or multiple previous cases).\r\n\r\nThe top-down approach can be more complex since it's less concrete. But sometimes, it's the best way to think about the problem.\r\nIn these problems, we think about how we can divide the problem for case N into subproblems. Be careful of overlap between the cases.\r\n\r\nIn addition to top-down and bottom-up approaches, it's often effective to divide the data set in half.\r\nFor example, binary search works with a "half-and-half" approach. When we look for an element in a sorted array, we first figure out which half of the array contains the value. Then we recurse and search for it in that half.\r\nMerge sort is also a "half-and-half" approach. We sort each half of the array and then merge together the sorted halves.\r\n\r\nRecursive algorithms can be very space inefficient. Each recursive call adds a new layer to the stack, which meansthatifyouralgorithmrecursestoadepthofn,itusesatleastO(n) memory.\r\nFor this reason, it's often better to implement a recursive algorithm iteratively. All recursive algorithms can be implemented iteratively, although sometimes the code to do so is much more complex. Before diving into recursive code, ask yourself how hard it would be to implement it iteratively, and discuss the tradeoffs with your interviewer.\r\n\r\nAlthough people make a big deal about how scary dynamic programming problems are, there's really no need to be afraid of them. In fact, once you get the hang of them, these can actually be very easy problems.\r\nDynamic programming is mostly just a matter of taking a recursive algorithm and finding the overlapping subproblems (that is, the repeated calls). You then cache those results for future recursive calls.\r\nAlternatively, you can study the pattern of the recursive calls and implement something iterative. You still "cache" previous work. One of the simplest examples of dynamic programming is computing the nth Fibonacci number. A good way to approach such a problem is often to implement it as a normal recursive solution, and then add the caching part. There is also top down or bottom up memoization. Top down basically means you memoize inside a recursive function whereas bottom up means you iteratively solve and memoize (no recursion). Just like with recursion, top down is often more intuitive while bottom up is more effective.	\N	53	Recursion and Dynamic Programming	81
+78	Understanding the common sorting and searching algorithms is incredibly valuable, as many sorting and searching problems are tweaks of the well-known algorithms. A good approach is therefore to run through the different sorting algorithms and see if one applies particularly well.\r\nFor example, suppose you are asked the following question: Given a very large array of Person objects, sort the people in increasing order of age.\r\nWe're given two interesting bits of knowledge here:\r\n1. It'salargearray,soefficiencyisveryimportant.\r\n2. Wearesortingbasedonages,soweknowthevaluesareinasmallrange.\r\nBy scanning through the various sorting algorithms, we might notice that bucket sort (or radix sort) would be a perfect candidate for this algorithm. In fact, we can make the buckets small ( just 1 year each) and get 0 ( n) running time. There are many sorting algorithms you should be familiar with (bubble sort, selection sort, insertion sort, merge sort, quick sort), but you will only ever use merge/ quick sort in a technical problem as they are more effective.\r\n\r\nIn quick sort we pick a random element and partition the array, such that all numbers that are less than the partitioning element come before all elements that are greater than it. The partitioning can be performed efficiently through a series of swaps (see below).\r\nIf we repeatedly partition the array (and its sub-arrays) around an element, the array will eventually become sorted. However, as the partitioned element is not guaranteed to be the median (or anywhere near the median), our sorting could be very slow. This is the reason for the 0(n2) worst case runtime.\r\n\r\nMerge sort divides the array in half, sorts each of those halves, and then merges them back together. Each of those halves has the same sorting algorithm applied to it. Eventually, you are merging just two single­ element arrays. It is the "merge" part that does all the heavy lifting.\r\n\r\nWhen we think of searching algorithms, we generally think of binary search. Indeed, this is a very useful\r\nalgorithm to study.\r\nIn binary search, we look for an element xin a sorted array by first comparing xto the midpoint of the array. If xis less than the midpoint, then we search the left half of the array. If xis greater than the midpoint, then we search the right half of the array. We then repeat this process, treating the left and right halves as subar­ rays. Again, we compare xto the midpoint of this subarray and then search either its left or right side. We repeat this process until we either find x or the subarray has size 0.\r\nNote that although the concept is fairly simple, getting all the details right is far more difficult than you might think. As you study the code below, pay attention to the plus ones and minus ones.	\N	53	Sorting and Searching	82
+79	Maybe you’ve heard about it in preparing for coding interviews. Maybe you’ve struggled through it in an algorithms course. Maybe you’re trying to learn how to code on your own, and were told somewhere along the way that it’s important to understand dynamic programming. Using dynamic programming (DP) to write algorithms is as essential as it is feared.\r\n\r\nAnd who can blame those who shrink away from it? Dynamic programming seems intimidating because it is ill-taught. Many tutorials focus on the outcome — explaining the algorithm, instead of the process — finding the algorithm . This encourages memorization, not understanding.\r\n\r\nDuring my algorithms class this year, I pieced together my own process for solving problems that require dynamic programming. Parts of it come from my algorithms professor (to whom much credit is due!), and parts from my own dissection of dynamic programming algorithms.\r\n\r\nBut before I share my process, let’s start with the basics. What is dynamic programming, anyway?	\N	54	How to construct & code dynamic programming algorithms	83
+80	Dynamic programming amounts to breaking down an optimization problem into simpler sub-problems, and storing the solution to each sub-problem so that each sub-problem is only solved once.\r\n\r\nTo be honest, this definition may not make total sense until you see an example of a sub-problem. That’s okay, it’s coming up in the next section.\r\n\r\nWhat I hope to convey is that DP is a useful technique for optimization problems, those problems that seek the maximum or minimum solution given certain constraints, because it looks through all possible sub-problems and never recomputes the solution to any sub-problem. This guarantees correctness and efficiency, which we cannot say of most techniques used to solve or approximate algorithms. This alone makes DP special.\r\n\r\nIn the next two sections, I’ll explain what a sub-problem is, and then motivate why storing solutions — a technique known as memoization — matters in dynamic programming.\r\n\r\n	\N	54	Dynamic Programming Defined	84
+81	Sub-problems are smaller versions of the original problem. In fact, sub-problems often look like a reworded version of the original problem. If formulated correctly, sub-problems build on each other in order to obtain the solution to the original problem.\r\n\r\nTo give you a better idea of how this works, let’s find the sub-problem in an example dynamic programming problem.\r\n\r\nPretend you’re back in the 1950s working on an IBM-650 computer. You know what this means — punchcards! Your job is to man, or woman, the IBM-650 for a day. You’re given a natural number n punchcards to run. Each punchcard i must be run at some predetermined start time s_i and stop running at some predetermined finish time f_i. Only one punchcard can run on the IBM-650 at once. Each punchcard also has an associated value v_i based on how important it is to your company.\r\n\r\nProblem: As the person in charge of the IBM-650, you must determine the optimal schedule of punchcards that maximizes the total value of all punchcards run.\r\n\r\nBecause I’ll go through this example in great detail throughout this article, I’ll only tease you with its sub-problem for now:\r\n\r\nSub-problem: The maximum value schedule for punchcards i through n such that the punchcards are sorted by start time.\r\n\r\nNotice how the sub-problem breaks down the original problem into components that build up the solution. With the sub-problem, you can find the maximum value schedule for punchcards n-1 through n, and then for punchcards n-2 through n, and so on. By finding the solutions for every single sub-problem, you can then tackle the original problem itself: the maximum value schedule for punchcards 1 through n. Since the sub-problem looks like the original problem, sub-problems can be used to solve the original problem.\r\n\r\nIn dynamic programming, after you solve each sub-problem, you must memoize, or store it. Let’s find out why in the following section.\r\n\r\n	\N	54	Sub-problems on Sub-problems on Sub-problems	85
+82	Brute Force dynamic programming accomplishes its purpose, but at a huge cost. The same subproblem is solved many times. That is repeated and wasted computation!\r\n\r\nIf we memoize, then everytime the same subproblem is called again, we "recall" the pre-computed answer rather than computing it again.\r\n\r\nMemoization means no re-computation, which makes for a more efficient algorithm. Thus, memoization ensures that dynamic programming is efficient, but it is choosing the right sub-problem that guarantees that a dynamic program goes through all possibilities in order to find the best one.\r\n\r\nNow that we’ve addressed memoization and sub-problems, it’s time to learn the dynamic programming process. Buckle in.\r\n\r\n	\N	54	Motivating Memoization with Fibonacci Numbers	86
+83	sfg	\N	55	sfg	88
+84	sfg	\N	55	sfg	88
+85	rr	\N	55	rr	89
+86	sfg	\N	55	sfg	88
+87	rr	\N	55	rr	89
+\.
+
+
+--
+-- Data for Name: concept_relationships; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.concept_relationships (id, relationship_type, concept_a_id, concept_b_id) FROM stdin;
+150	1	\N	71
+151	2	71	71
+153	1	72	71
+154	2	71	71
+155	2	71	\N
+156	1	74	74
+157	2	74	74
+158	1	\N	75
+159	2	75	\N
+160	2	75	\N
+161	2	75	\N
+162	2	75	\N
+163	2	75	\N
+164	2	75	\N
+165	1	76	81
+166	2	81	\N
+167	2	81	\N
+168	2	81	\N
+169	2	81	\N
+170	1	\N	87
+171	2	87	88
+172	1	88	87
+173	2	87	88
+174	2	87	\N
+175	1	88	87
+176	2	87	88
+177	2	87	89
+\.
+
+
+--
+-- Data for Name: concepts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.concepts (id, title) FROM stdin;
+71	t
+72	p1
+73	d
+74	ss
+75	algorithms
+76	
+77	Arrays and Strings
+78	Linked Lists
+79	Stacks and Queues
+80	Trees and Graphs
+81	Recursion and Dynamic Programming
+82	Sorting and Searching
+83	Dynamic Programming Process
+84	Dynamic Programming Defined
+85	Optimal Substructure
+86	Dynamic Programming Motivation
+87	sfg
+88	sfdg
+89	rr
+\.
+
+
+--
+-- Data for Name: prerequisites; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.prerequisites (concept_id, artifact_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: sources; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.sources (id, name, link) FROM stdin;
+65		
+67		
+68		
+69	Cracking the Coding Interview	https://www.crackingthecodinginterview.com/
+70	FreeCodeCamp	https://www.freecodecamp.org/news/demystifying-dynamic-programming-3efafb8d4296/
+71	sfg	sfdg
+72	sfg	sfdg
+73	sfg	sfdg
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, username, email, password_hash) FROM stdin;
+1	acsoc	michlee1337@gmail.com	pbkdf2:sha256:150000$AnIJ9QMJ$0f7e29548693fb1c3fb22a8d1a8faca4233f9c5a10763a789fa19e83769ef2fd
+2	m2	michlee13372@gmail.com	pbkdf2:sha256:150000$Vwiqbw05$e84560745e22728b3aa447777e1e5e678a155fdd2c675fb06f4d5b2ddb2ae222
+\.
+
+
+--
+-- Name: artifacts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.artifacts_id_seq', 55, true);
+
+
+--
+-- Name: chunks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.chunks_id_seq', 87, true);
+
+
+--
+-- Name: concept_relationships_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.concept_relationships_id_seq', 177, true);
+
+
+--
+-- Name: concepts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.concepts_id_seq', 89, true);
+
+
+--
+-- Name: sources_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.sources_id_seq', 73, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 2, true);
+
+
+--
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: artifacts artifacts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.artifacts
+    ADD CONSTRAINT artifacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chunks chunks_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chunks
+    ADD CONSTRAINT chunks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: concept_relationships concept_relationships_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.concept_relationships
+    ADD CONSTRAINT concept_relationships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: concepts concepts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.concepts
+    ADD CONSTRAINT concepts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sources sources_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sources
+    ADD CONSTRAINT sources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: artifact_prerequisites artifact_prerequisites_artifact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.artifact_prerequisites
+    ADD CONSTRAINT artifact_prerequisites_artifact_id_fkey FOREIGN KEY (artifact_id) REFERENCES public.artifacts(id);
+
+
+--
+-- Name: artifact_prerequisites artifact_prerequisites_concept_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.artifact_prerequisites
+    ADD CONSTRAINT artifact_prerequisites_concept_id_fkey FOREIGN KEY (concept_id) REFERENCES public.concepts(id);
+
+
+--
+-- Name: artifacts artifacts_concept_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.artifacts
+    ADD CONSTRAINT artifacts_concept_id_fkey FOREIGN KEY (concept_id) REFERENCES public.concepts(id);
+
+
+--
+-- Name: artifacts artifacts_source_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.artifacts
+    ADD CONSTRAINT artifacts_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.sources(id);
+
+
+--
+-- Name: artifacts artifacts_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.artifacts
+    ADD CONSTRAINT artifacts_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: chunks chunks_artifact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chunks
+    ADD CONSTRAINT chunks_artifact_id_fkey FOREIGN KEY (artifact_id) REFERENCES public.artifacts(id);
+
+
+--
+-- Name: chunks chunks_concept_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chunks
+    ADD CONSTRAINT chunks_concept_id_fkey FOREIGN KEY (concept_id) REFERENCES public.concepts(id);
+
+
+--
+-- Name: concept_relationships concept_relationships_concept_a_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.concept_relationships
+    ADD CONSTRAINT concept_relationships_concept_a_id_fkey FOREIGN KEY (concept_a_id) REFERENCES public.concepts(id);
+
+
+--
+-- Name: concept_relationships concept_relationships_concept_b_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.concept_relationships
+    ADD CONSTRAINT concept_relationships_concept_b_id_fkey FOREIGN KEY (concept_b_id) REFERENCES public.concepts(id);
+
+
+--
+-- Name: prerequisites prerequisites_artifact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prerequisites
+    ADD CONSTRAINT prerequisites_artifact_id_fkey FOREIGN KEY (artifact_id) REFERENCES public.artifacts(id);
+
+
+--
+-- Name: prerequisites prerequisites_concept_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prerequisites
+    ADD CONSTRAINT prerequisites_concept_id_fkey FOREIGN KEY (concept_id) REFERENCES public.concepts(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
