@@ -11,6 +11,10 @@ pages_template = Blueprint('pages', __name__, template_folder='../templates')
 def index():
     return render_template('pages/index.html')
 
+@pages_template.route('/search')
+def search():
+    return render_template('pages/search.html')
+
 @pages_template.route('/login', methods=['GET', 'POST'])
 def login():
     """
