@@ -1,7 +1,13 @@
-<div class="chunk_card clickable" onclick="searchRelated({{chunk.concept.id}}, '{{chunk.concept.title}}')">
+<div class="chunk_card clickable">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">{{chunk.concept.title}}</h5>
+      <h5 class="card-title">
+      {% if chunk.title|length > 0 and chunk.concept.title != chunk.title %}
+        {{chunk.concept.title}}: {{chunk.title}}
+      {% else %}
+        {{chunk.concept.title}}
+      {% endif %}
+      </h5>
       <p>{{chunk.content}}</p>
     </div>
   </div>
