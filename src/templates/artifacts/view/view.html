@@ -61,7 +61,7 @@
     <div class="chunks">
       {% for chunk in artifact.chunks %}
         {% with chunk = chunk %}
-          {% include "artifacts/view/_chunk.html" %}
+          {% include "artifacts/_chunk.html" %}
         {% endwith %}
       {% endfor %}
     </div>
