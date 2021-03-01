@@ -13,14 +13,23 @@
       <div class="tab-pane fade" id="prerequisites" role="tabpanel" aria-labelledby="prerequisites-tab">
         <h3> Prerequisites </h3>
         <p> Strengthen your foundations. </p>
-        
+
         {% with concepts = artifact.prerequisites %}
           {% include "artifacts/view/_by_concept.html" %}
         {% endwith %}
       </div>
 
       <div class="tab-pane fade" id="alternative" role="tabpanel" aria-labelledby="alternative-tab">
-        {% include "artifacts/view/_alternatives.html" %}
+        <h3> Alternatives </h3>
+        <p> If this artifact isn't working for you, find another one on the same concept. </p>
+
+        {% for alt_artifact in artifact.concept.artifacts %}
+          {% if artifact.id != alt_artifact.id %}
+            {% with artifact = alt_artifact %}
+              {% include "_artifact_card.html" %}
+            {% endwith %}
+          {% endif %}
+        {% endfor %}
       </div>
 
       <div class="tab-pane fade" id="explore" role="tabpanel" aria-labelledby="explore-tab">
