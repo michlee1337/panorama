@@ -14,7 +14,58 @@
 {% block app_content %}
 <div class="wrapper">
   {% include "artifacts/view/_sidebar.html" %}
-  {% include "artifacts/view/_menu.html" %}
-  {% include "artifacts/view/_content.html" %}
+  <!-- MENU -->
+  <div id="menu" class="container">
+    <div>
+      <button type="button" id="sidebarCollapse" class="btn btn-info">
+        <i class="fas fa-list-ul"></i>
+      </button>
+    </div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link" id="prerequisites-tab" data-toggle="tab" href="#prerequisites" role="tab" aria-controls="prerequisites" aria-selected="true">
+        <i class="fas fa-seedling"></i>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="alternative-tab" data-toggle="tab" href="#alternative" role="tab" aria-controls="alternative" aria-selected="false">
+        <i class="fa fa-tree" aria-hidden="true"></i>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" id="explore-tab" data-toggle="tab" href="#explore" role="tab" aria-controls="explore" aria-selected="false">
+        <i class="fa fa-rocket" aria-hidden="true"></i>
+      </a>
+    </li>
+
+  </ul>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="container content">
+
+    <div class="title">
+      <h1> {{artifact.concept.title}}: {{artifact.title}} </h1>
+      <p> {{artifact.description}} </p>
+
+    </div>
+    <h4>
+      Prerequsites:
+      {% for prerequisite in artifact.prerequisites %}
+        <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}}, {{prerequisite.title}})">{{prerequisite.title}}</span>
+      {% endfor %}
+    </h4>
+    <p><i>Click on any of the prerequisites to open search for them in a new tab</i></p>
+
+    <div class="chunks">
+      {% for chunk in artifact.chunks %}
+        {% with chunk = chunk %}
+          {% include "artifacts/view/_chunk.html" %}
+        {% endwith %}
+      {% endfor %}
+    </div>
+  </div>
+
 </div>
 {% endblock %}
