@@ -7,7 +7,7 @@
   </div>
   <h4>
     Prerequsites:
-    {% for prerequisite in artifact.concept.prerequisites %}
+    {% for prerequisite in artifact.prerequisites %}
       <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}}, {{prerequisite.title}})">{{prerequisite.title}}</span>
     {% endfor %}
   </h4>
