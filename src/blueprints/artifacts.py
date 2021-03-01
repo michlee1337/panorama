@@ -18,7 +18,7 @@ def view(artifact_id):
     if artifact is None:
         flash('Artifact not found.')
         return render_template('pages/index.html')
-    return render_template('artifacts/view.html', artifact=artifact)
+    return render_template('artifacts/view/view.html', artifact=artifact)
 
 @artifacts_template.route('/artifacts/new', methods=["GET","POST"])
 def new():
