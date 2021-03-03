@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, IntegerField, SelectField, SubmitField, PasswordField, FieldList, FormField
+from wtforms import StringField, TextAreaField, IntegerField, SelectField, SubmitField, PasswordField, FieldList, FormField, SelectMultipleField
 from wtforms_alchemy import ModelForm, ModelFieldList
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from src.models.users import User
@@ -11,7 +11,7 @@ from src.models.artifacts import Artifact, Chunk, Source
 
 # Credit to M0r13n
 ## https://gist.github.com/M0r13n/71655c53b2fbf41dc1db8412978bcbf9
-class PrerequisitesField(StringField):
+class CommaSepListField(StringField):
     """Stringfield for a list of separated tags"""
 
     def __init__(self, label='', validators=None, remove_duplicates=True, to_lowercase=True, separator=' ', **kwargs):
@@ -23,7 +23,7 @@ class PrerequisitesField(StringField):
         :param to_lowercase: Cast all values to lowercase.
         :param separator: The separator that splits the individual tags.
         """
-        super(PrerequisitesField, self).__init__(label, validators, **kwargs)
+        super(CommaSepListField, self).__init__(label, validators, **kwargs)
         self.remove_duplicates = remove_duplicates
         self.to_lowercase = to_lowercase
         self.separator = separator
@@ -51,24 +51,6 @@ class PrerequisitesField(StringField):
             if item.lower() not in d:
                 d[item.lower()] = True
                 yield item
-
-# Credit to kageurufu
-## https://gist.github.com/kageurufu/6813878
-# class ModelFieldList(FieldList):
-#     def __init__(self, *args, **kwargs):
-#         self.model = kwargs.pop("model", None)
-#         super(ModelFieldList, self).__init__(*args, **kwargs)
-#         if not self.model:
-#             raise ValueError("ModelFieldList requires model to be set")
-#
-#     def populate_obj(self, obj, name):
-#         while len(getattr(obj, name)) < len(self.entries):
-#             newModel = self.model()
-#             db.session.add(newModel)
-#             getattr(obj, name).append(newModel)
-#         while len(getattr(obj, name)) > len(self.entries):
-#             db.session.delete(getattr(obj, name).pop())
-#         super(ModelFieldList, self).populate_obj(obj, name)
 
 # _____ FORMS _____
 class LoginForm(FlaskForm):
@@ -112,7 +94,7 @@ class ArtifactForm(ModelForm):
     class Meta:
         model = Artifact
 
-    prerequisites = PrerequisitesField(
+    prerequisites = CommaSepListField(
         "Prerequisites",
         separator=","
     )
@@ -127,4 +109,12 @@ class ArtifactForm(ModelForm):
     vote_count = IntegerField()
     vote_sum = IntegerField()
     chunks = ModelFieldList(FormField(ChunkForm), min_entries=1)
-    submit = SubmitField('Register')
+    submit = SubmitField('Submit')
+
+class SearchForm(FlaskForm):
+    title = StringField('Title')
+    main_concept = StringField('Main Concept')
+    sub_topics = CommaSepListField('Sub-Concepts')
+    mediatype = SelectMultipleField('Mediatype', choices=[(0, 'Unknown'), (1, 'Text'), (2, 'Video'), (3, 'Other')])
+    duration = SelectMultipleField('Duration', choices=[(0, 'Unknown'), (1, 'Minutes'), (2, 'Days'), (3, 'Days'), (4, 'Months'), (5, 'Long')])
+    submit = SubmitField('Search')
