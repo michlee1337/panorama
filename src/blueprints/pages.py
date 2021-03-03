@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
 from src.models.users import User
+from src.models.artifacts import Artifact
 from src.forms import LoginForm, RegistrationForm
 
 from src.models import db
@@ -9,7 +10,9 @@ pages_template = Blueprint('pages', __name__, template_folder='../templates')
 
 @pages_template.route('/')
 def index():
-    return render_template('pages/index.html')
+    artifacts = Artifact.query.all()
+
+    return render_template('pages/index.html', artifacts=artifacts)
 
 @pages_template.route('/login', methods=['GET', 'POST'])
 def login():
@@ -31,7 +34,6 @@ def login():
             return render_template('pages/login.html', form=form)
     elif request.method == 'POST':
         if form.validate_on_submit():
-            print("VALIDATED")
             user = User.query.filter_by(email=form.email.data).first()
             if user is None or not user.check_password(form.password.data):
                 flash('Invalid username or password')
