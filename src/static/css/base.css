@@ -1,0 +1,13 @@
+input[type=text] {
+  width: 100%;
+}
+
+.inline-radio ul {
+  display: inline-flex;
+  list-style: none;
+
+}
+
+.inline-radio li {
+  margin: 0 10px;
+}
