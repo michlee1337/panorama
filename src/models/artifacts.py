@@ -130,18 +130,27 @@ class Artifact(db.Model):
 
     @classmethod
     def search(cls, arg_dict):
-        accepted_keys = {"title", "mediatype", "duration", "concept", "sub_concepts", "submit"}
+        accepted_keys = {"title",
+            "mediatype",
+            "duration",
+            "concept",
+            "sub_concepts",
+            "submit"}
         filters = {}
 
         for key, value in arg_dict.items():
-            if len(value) == 0 or key == "title" or key=="sub_concepts" or key=="submit":
+            if len(value) == 0 or key == "title" or key=="sub_concepts" or key=="submit" or key == "concept":
                 pass
             elif key not in accepted_keys:
                 flash("Search term {} not recognized and is ignored".format(key))
             else:
                 filters[key] = value
 
-        query = Artifact.query
+        query = Artifact.query.filter_by(**filters)
+
+        if arg_dict.get("concept") != "":
+            query = query.filter(Artifact.concept.has(Concept.title == arg_dict["concept"]))
+
         if arg_dict.get("sub_concepts") != "":
             subs = arg_dict["sub_concepts"].split()
             query = query.join(Chunk).join(Concept).filter(Concept.title.in_(subs))
@@ -149,5 +158,5 @@ class Artifact(db.Model):
         if arg_dict.get("title") != "":
             query = query.filter(Artifact.title.contains(arg_dict["title"]))
 
-        artifacts = query.filter_by(**filters).all()
+        artifacts = query.all()
         return artifacts
