@@ -103,7 +103,6 @@ def search():
         form = SearchForm()
         return render_template('artifacts/search.html', form=form)
     else:
-        print("hello", request.form)
         form = SearchForm(formdata=request.form)
         return render_template('artifacts/search.html', form=form, artifacts = Artifact.search(request.form))
 

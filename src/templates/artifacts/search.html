@@ -12,10 +12,10 @@
     </div>
     <div class="form-group">
       <h2>Concepts</h2>
-      {{ form.main_concept.label }}
-      {{ form.main_concept }}
-      {{ form.sub_topics.label }}
-      {{ form.sub_topics }}
+      {{ form.concept.label }}
+      {{ form.concept }}
+      {{ form.sub_concepts.label }}
+      {{ form.sub_concepts }}
     </div>
     <div class="form-group">
       <h2>Metadata</h2>
@@ -33,6 +33,19 @@
     </div> -->
     {{ form.submit }}
   </form>
+
+  {% if artifacts is defined %}
+    <h2>Artifacts</h2>
+    <div id="studyplan-list">
+      {% for artifact in artifacts %}
+        {% with artifact = artifact %}
+          {% include "pages/_artifact_card.html" %}
+          </br>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
 
 </div>
 

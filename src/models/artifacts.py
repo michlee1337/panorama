@@ -4,12 +4,13 @@ from src.models.chunks import Chunk
 from src.models.sources import Source
 from src.models.concept_relationships import ConceptRelationship
 
-from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey, Table, func
 from sqlalchemy.orm import relationship, backref
 from flask_login import current_user
 from flask import flash
 
 from sqlalchemy.ext.orderinglist import ordering_list
+from sqlalchemy.sql import or_
 
 from src.helpers import get_or_create
 
@@ -129,19 +130,24 @@ class Artifact(db.Model):
 
     @classmethod
     def search(cls, arg_dict):
-        accepted_keys = {"term", "mediatype", "duration"}
+        accepted_keys = {"title", "mediatype", "duration", "concept", "sub_concepts", "submit"}
         filters = {}
 
         for key, value in arg_dict.items():
-            if len(value) == 0 or key == "term":
+            if len(value) == 0 or key == "title" or key=="sub_concepts" or key=="submit":
                 pass
             elif key not in accepted_keys:
                 flash("Search term {} not recognized and is ignored".format(key))
             else:
                 filters[key] = value
 
-        if arg_dict.get("term") != "":
-            artifacts = Artifact.query.filter(Artifact.title.contains(arg_dict["term"])).filter_by(**filters).all()
-        else:
-            artifacts = Artifact.query.filter_by(**filters).all()
+        query = Artifact.query
+        if arg_dict.get("sub_concepts") != "":
+            subs = arg_dict["sub_concepts"].split()
+            query = query.join(Chunk).join(Concept).filter(Concept.title.in_(subs))
+
+        if arg_dict.get("title") != "":
+            query = query.filter(Artifact.title.contains(arg_dict["title"]))
+
+        artifacts = query.filter_by(**filters).all()
         return artifacts

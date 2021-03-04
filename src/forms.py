@@ -118,8 +118,8 @@ class ArtifactForm(ModelForm):
 
 class SearchForm(FlaskForm):
     title = StringField('Title')
-    main_concept = StringField('Main Concept')
-    sub_topics = CommaSepListField('Sub-Concepts')
+    concept = StringField('Main Concept')
+    sub_concepts = CommaSepListField('Sub-Concepts')
     mediatype = MultiCheckboxField('Mediatype', choices=[(0, 'Unknown'), (1, 'Text'), (2, 'Video'), (3, 'Other')])
     duration = MultiCheckboxField('Duration', choices=[(0, 'Unknown'), (1, 'Minutes'), (2, 'Days'), (3, 'Days'), (4, 'Months'), (5, 'Long')])
     submit = SubmitField('Search')
