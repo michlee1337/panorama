@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, SelectField, SubmitField, PasswordField, FieldList, FormField, SelectMultipleField
 from wtforms_alchemy import ModelForm, ModelFieldList
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms.widgets import ListWidget, CheckboxInput
 from src.models.users import User
 # from src.models.chunks import Chunk
 from src.models.artifacts import Artifact, Chunk, Source
@@ -51,6 +52,10 @@ class CommaSepListField(StringField):
             if item.lower() not in d:
                 d[item.lower()] = True
                 yield item
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = ListWidget(prefix_label=False)
+    option_widget = CheckboxInput()
 
 # _____ FORMS _____
 class LoginForm(FlaskForm):
@@ -115,6 +120,6 @@ class SearchForm(FlaskForm):
     title = StringField('Title')
     main_concept = StringField('Main Concept')
     sub_topics = CommaSepListField('Sub-Concepts')
-    mediatype = SelectMultipleField('Mediatype', choices=[(0, 'Unknown'), (1, 'Text'), (2, 'Video'), (3, 'Other')])
-    duration = SelectMultipleField('Duration', choices=[(0, 'Unknown'), (1, 'Minutes'), (2, 'Days'), (3, 'Days'), (4, 'Months'), (5, 'Long')])
+    mediatype = MultiCheckboxField('Mediatype', choices=[(0, 'Unknown'), (1, 'Text'), (2, 'Video'), (3, 'Other')])
+    duration = MultiCheckboxField('Duration', choices=[(0, 'Unknown'), (1, 'Minutes'), (2, 'Days'), (3, 'Days'), (4, 'Months'), (5, 'Long')])
     submit = SubmitField('Search')

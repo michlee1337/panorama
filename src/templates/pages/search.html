@@ -4,7 +4,13 @@
 {% block app_content %}
 
 <div class="container">
-  {{ wtf.quick_form(form) }}
+  {{ form.title.label }}: {{ form.title }}
+  {{ form.main_concept.label }}: {{ form.main_concept }}
+  {{ form.sub_topics.label }}: {{ form.sub_topics }}
+  {{ form.mediatype.label }}: {{ form.mediatype}}
+  {{ form.duration.label }}: {{ form.duration }}
+  {{ form.submit }}
+
 </div>
 
 {% endblock %}
