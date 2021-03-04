@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
 from src.models.users import User
-from src.forms import LoginForm, RegistrationForm, SearchForm
+from src.forms import LoginForm, RegistrationForm
 
 from src.models import db
 
@@ -11,10 +11,6 @@ pages_template = Blueprint('pages', __name__, template_folder='../templates')
 def index():
     return render_template('pages/index.html')
 
-@pages_template.route('/search')
-def search():
-    form = SearchForm()
-    return render_template('pages/search.html', form=form)
 
 @pages_template.route('/login', methods=['GET', 'POST'])
 def login():

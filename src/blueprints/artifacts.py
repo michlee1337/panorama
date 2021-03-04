@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, request, redirect, url_for,
 from flask_login import current_user
 from src.models.artifacts import Artifact, Chunk
 from src.models.concepts import Concept
-from src.forms import ArtifactForm
+from src.forms import ArtifactForm, SearchForm
 
 artifacts_template = Blueprint('artifacts', __name__, template_folder='../templates')
 
@@ -79,7 +79,7 @@ def edit(artifact_id):
             flash('Error creating artifact... sorry! {}'.format(e))
             return render_template('artifacts/edit.html', form=form, artifact=artifact)
 
-@artifacts_template.route('/artifacts/search')
+@artifacts_template.route('/artifacts/search', methods=["GET", "POST"])
 def search():
     '''
     Returns index page with only results that have a title that match
@@ -99,7 +99,13 @@ def search():
 
     Any search patterns not recognized will be ignored and a warning will flash.
     '''
-    return render_template('pages/index.html', artifacts = Artifact.search(request.args))
+    if request.method == 'GET':
+        form = SearchForm()
+        return render_template('artifacts/search.html', form=form)
+    else:
+        print("hello", request.form)
+        form = SearchForm(formdata=request.form)
+        return render_template('artifacts/search.html', form=form, artifacts = Artifact.search(request.form))
 
 @artifacts_template.route('/artifacts/by_concept')
 def by_concept():
