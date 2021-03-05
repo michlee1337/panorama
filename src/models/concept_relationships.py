@@ -20,6 +20,12 @@ class ConceptRelationship(db.Model):
         "nested": 2
     }
 
+    DIRECTIONAL_TYPE =  {
+        0: {True: "undetermined", False: "undetermined"},
+        1: {True: "first", False: "second"},
+        2: {True: "up", False: "down"}
+    }
+
     # _____ TABLE ATTRIBUTES _____
 
     id = Column(Integer, primary_key=True)
@@ -39,3 +45,6 @@ class ConceptRelationship(db.Model):
             self.relationship_type = self.STR_TO_TYPE[typestr]
         except:
             raise
+
+    def directional_type(self, a_to_b=True):
+        return self.DIRECTIONAL_TYPE[self.relationship_type][a_to_b]

@@ -58,7 +58,6 @@ def edit(artifact_id):
     '''
     edit for artifact
 
-    Only accepts GET requests.
     It gets the appropriate information and passes it to the View.
     '''
     artifact = Artifact.query.get(artifact_id)
@@ -104,7 +103,14 @@ def search():
         return render_template('artifacts/search.html', form=form)
     else:
         form = SearchForm(formdata=request.form)
-        return render_template('artifacts/search.html', form=form, artifacts = Artifact.search(request.form))
+        artifacts = Artifact.search(request.form)
+
+        concepts = None
+        if len(artifacts) > 0:
+            concept = artifacts[0].concept
+            exclude = set(request.form["sub_concepts"].split())
+            concepts = concept.related(exclude=exclude)
+        return render_template('artifacts/search.html', form=form, artifacts = artifacts, concepts = concepts)
 
 @artifacts_template.route('/artifacts/by_concept')
 def by_concept():
