@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
 
+{% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/search.css') }}">
+
+{% endblock %}
+
 {% block app_content %}
 
 <div class="container">
@@ -33,7 +39,26 @@
     </div> -->
     {{ form.submit }}
   </form>
-  {{concepts}}
+  <h2>Related Concepts</h2>
+  {% if concepts is defined %}
+    {% for concept, type in concepts %}
+      {% if type == "first" %}
+        <span class="badge badge-pill badge-first">
+      {% elif type == "second" %}
+        <span class="badge badge-pill badge-second">
+      {% elif type == "up" %}
+        <span class="badge badge-pill badge-up">
+      {% elif type == "first" %}
+        <span class="badge badge-pill badge-first">
+      {% elif type == "down" %}
+        <span class="badge badge-pill badge-down">
+      {% else %}
+        <span class="badge badge-pill badge-secondary">
+      {% endif %}
+        {{concept.title}}
+      </span>
+    {% endfor %}
+  {% endif %}
   {% if artifacts is defined %}
     <h2>Artifacts</h2>
     <div id="studyplan-list">
