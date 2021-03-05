@@ -29,8 +29,8 @@ class ConceptRelationship(db.Model):
     concept_a_id = Column(Integer, ForeignKey('concepts.id'))
     concept_b_id = Column(Integer, ForeignKey('concepts.id'))
 
-    concept_a = relationship("Concept", foreign_keys=[concept_a_id], backref=backref("relationships_out", uselist=False))
-    concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in", uselist=False))
+    concept_a = relationship("Concept", foreign_keys=[concept_a_id], backref=backref("relationships_out"))
+    concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in"))
 
     def __init__(self, concept_a, concept_b, typestr):
         try:
