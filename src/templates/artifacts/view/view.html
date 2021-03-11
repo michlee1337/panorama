@@ -45,6 +45,12 @@
   <!-- CONTENT -->
   <div class="container content">
 
+    <a class="float-right" href="{{ url_for('artifacts.new', fork_id=artifact.id) }}" target="_blank">
+      <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Create an editable copy of this artifact">
+        Fork
+      </button>
+    </a>
+
     <div class="title">
       <h1> {{artifact.concept.title}}: {{artifact.title}} </h1>
       <p> {{artifact.description}} </p>
