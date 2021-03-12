@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.com/michlee1337/panorama.svg?branch=master)](https://travis-ci.com/michlee1337/panorama)
 
 This project is a WIP. </br>
-View the latest production code [here](https://panorama-pro.herokuapp.com/). </br>
 View this [demo video](https://www.loom.com/share/99ebf66f2c13421ea1cc5d23f741786f?sharedAppSource=personal_library) for an overview of current functionality.
 
 # Prerequisites
