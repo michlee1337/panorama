@@ -24,3 +24,6 @@ class Concept(db.Model):
             if rel.concept_b.title not in exclude:
                 rels.append((rel.concept_b, rel.directional_type(a_to_b=False)))
         return rels
+
+    def description(self):
+        return self.artifacts[0].description

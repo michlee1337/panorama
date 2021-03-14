@@ -57,9 +57,22 @@
 
     </div>
     <h4>
-      Prerequsites:
+      Prerequsites
+      <div class="help">
+        <div class="question">?</div>
+        <div class="popup">
+          <p>More content about topics covered in this artifact</p>
+        </div>
+      </div>
+      :
       {% for prerequisite in artifact.prerequisites %}
-        <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}}, {{prerequisite.title}})">{{prerequisite.title}}</span>
+        {{prerequisite.id}}
+        <span class="badge badge-pill badge-secondary clickable help">
+          {{prerequisite.title}}
+          <div class="popup">
+            <p>{{prerequisite.description()}}</p>
+          </div>
+        </span>
       {% endfor %}
     </h4>
     <p><i>Click on any of the prerequisites to open search for them in a new tab</i></p>
