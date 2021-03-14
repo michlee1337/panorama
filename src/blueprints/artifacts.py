@@ -73,9 +73,9 @@ def edit(artifact_id):
             form = ArtifactForm(formdata=request.form)
             artifact.save_changes(form)
             flash('Changes saved!')
-            return render_template(url_for('artifacts.view', artifact_id=artifact.id))
+            return render_template('artifacts/view/view.html', artifact=artifact)
         except Exception as e:
-            flash('Error creating artifact... sorry! {}'.format(e))
+            flash('Error creating artifact... sorry! {}, {}'.format(type(e).__name__, e.args))
             return render_template('artifacts/edit.html', form=form, artifact=artifact)
 
 @artifacts_template.route('/artifacts/search', methods=["GET", "POST"])

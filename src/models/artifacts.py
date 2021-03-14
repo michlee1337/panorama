@@ -95,38 +95,51 @@ class Artifact(db.Model):
 
             # create prerequisite concepts and add relationships
             for prereq in form.prerequisites.data:
-                prereq_concept = get_or_create(db.session, Concept, title=prereq)
-
-                # add to self
+                prereq_concept = self.__create_prereqconcept(db.session, prereq)
                 self.prerequisites.append(prereq_concept)
 
-                # add concept relationship
-                prereq_rltn = ConceptRelationship(
-                    concept_a=prereq_concept,
-                    concept_b=main_concept,
-                    typestr="prerequisite")
-                db.session.add(prereq_rltn)
-
-            for chunk in form.chunks.entries:
-                chunk_concept = get_or_create(db.session, Concept, title=chunk.concept.data)
-
-                nested_rltn = ConceptRelationship(concept_a=main_concept,
-                    concept_b=chunk_concept,
-                    typestr="nested")
-                db.session.add(nested_rltn)
-
-                chunk = Chunk(
-                    artifact=self,
-                    concept=chunk_concept,
-                    title=chunk.title.data,
-                    content=chunk.content.data)
+            num_chunks = len(self.chunks.all())
+            for i, chunk_entry in enumerate(form.chunks.entries):
+                chunk_concept = self.__create_chunkconcept(db.session, chunk_entry.concept.data)
+                if i < num_chunks:
+                    chunk = self.chunks[i]
+                    chunk.concept = chunk_concept
+                    chunk.title = chunk_entry.title.data
+                    chunk.content = chunk_entry.content.data
+                else:
+                    chunk = Chunk(
+                        artifact=self,
+                        concept=chunk_concept,
+                        title=chunk_entry.title.data,
+                        content=chunk_entry.content.data)
+                    self.chunks.append(chunk)
                 db.session.add(chunk)
-                self.chunks.append(chunk)
+
+            for i in range(len(form.chunks.entries)-1, num_chunks-1):
+                db.session.delete(self.chunks[-1])
 
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             raise
+
+    def __create_prereqconcept(self, session, title):
+        concept = get_or_create(db.session, Concept, title=title)
+        prereq_rltn = ConceptRelationship(
+            concept_a=concept,
+            concept_b=self.concept,
+            typestr="prerequisite")
+        session.add(prereq_rltn)
+        return concept
+
+    def __create_chunkconcept(self, session, title):
+        concept = get_or_create(db.session, Concept, title=title)
+        nested_rltn = ConceptRelationship(
+            concept_a=self.concept,
+            concept_b=concept,
+            typestr="nested")
+        session.add(nested_rltn)
+        return concept
 
     @classmethod
     def search(cls, arg_dict):
