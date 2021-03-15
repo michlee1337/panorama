@@ -1,4 +1,12 @@
 <div id="accordion">
+  {% if concepts is not defined %}
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">No concepts specified by this artifact :(</h5>
+      </div>
+    </div>
+  {% endif %}
+
   {% for concept in concepts %}
     <div class="card">
       <div class="card-header" id="heading-{{loop.index}}">
@@ -12,7 +20,7 @@
       <div id="collapsible-{{loop.index}}" class="collapse" aria-labelledby="heading-{{loop.index}}" data-parent="#accordion">
         <div class="card-body">
           {% if concept.artifacts|length == 0 %}
-            <p> No artifacts found </p>
+            <p> No artifacts found for this concept :(</p>
           {% else %}
             <!-- CAROUSEL -->
             <div id="carousel-{{loop.index}}" class="carousel slide" data-ride="carousel">
@@ -27,7 +35,7 @@
                     {% endif %}
 
                       {% with artifact = artifact %}
-                        {% include "_artifact_card.html" %}
+                        {% include "artifacts/_artifact_card.html" %}
                       {% endwith %}
                     </div>
 

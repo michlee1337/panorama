@@ -3,17 +3,5 @@
 {% block app_content %}
 
 <div class="container">
-  {% if artifacts is defined %}
-    <h2>Artifacts</h2>
-    <div id="studyplan-list">
-      {% for artifact in artifacts %}
-        {% with artifact = artifact %}
-          {% include "_artifact_card.html" %}
-          </br>
-        {% endwith %}
-      {% endfor %}a
-    </div>
-  {% endif %}
-
 </div>
 {% endblock %}

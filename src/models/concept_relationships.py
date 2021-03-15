@@ -20,6 +20,12 @@ class ConceptRelationship(db.Model):
         "nested": 2
     }
 
+    DIRECTIONAL_TYPE =  {
+        0: {True: "undetermined", False: "undetermined"},
+        1: {True: "first", False: "second"},
+        2: {True: "up", False: "down"}
+    }
+
     # _____ TABLE ATTRIBUTES _____
 
     id = Column(Integer, primary_key=True)
@@ -29,13 +35,12 @@ class ConceptRelationship(db.Model):
     concept_a_id = Column(Integer, ForeignKey('concepts.id'))
     concept_b_id = Column(Integer, ForeignKey('concepts.id'))
 
-    concept_a = relationship("Concept", foreign_keys=[concept_a_id], backref=backref("relationships_out", uselist=False))
-    concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in", uselist=False))
+    concept_a = relationship("Concept", foreign_keys=[concept_a_id], backref=backref("relationships_out"))
+    concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in"))
 
-    def __init__(self, concept_a, concept_b, typestr):
-        try:
-            self.concept_a_id = concept_a.id
-            self.concept_b_id = concept_b.id
-            self.relationship_type = self.STR_TO_TYPE[typestr]
-        except:
-            raise
+    def directional_type(self, a_to_b=True):
+        return self.DIRECTIONAL_TYPE[self.relationship_type][a_to_b]
+
+    @classmethod
+    def type(cls, type_str):
+        return cls.STR_TO_TYPE[type_str]

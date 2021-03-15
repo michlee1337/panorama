@@ -4,12 +4,13 @@ from src.models.chunks import Chunk
 from src.models.sources import Source
 from src.models.concept_relationships import ConceptRelationship
 
-from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey, Table, func
 from sqlalchemy.orm import relationship, backref
 from flask_login import current_user
 from flask import flash
 
 from sqlalchemy.ext.orderinglist import ordering_list
+from sqlalchemy.sql import or_
 
 from src.helpers import get_or_create
 
@@ -96,7 +97,6 @@ class Artifact(db.Model):
             for prereq in form.prerequisites.data:
                 prereq_concept = self.__create_prereqconcept(db.session, prereq)
                 self.prerequisites.append(prereq_concept)
-
             num_chunks = len(self.chunks.all())
             for i, chunk_entry in enumerate(form.chunks.entries):
                 chunk_concept = self.__create_chunkconcept(db.session, chunk_entry.concept.data)
@@ -123,38 +123,52 @@ class Artifact(db.Model):
             raise
 
     def __create_prereqconcept(self, session, title):
-        concept = get_or_create(db.session, Concept, title=title)
-        prereq_rltn = ConceptRelationship(
-            concept_a=concept,
-            concept_b=self.concept,
-            typestr="prerequisite")
+        concept = get_or_create(session, Concept, title=title)
+        prereq_rltn = get_or_create(session, ConceptRelationship,
+            concept_a_id=concept.id,
+            concept_b_id=self.concept.id,
+            relationship_type=ConceptRelationship.type("prerequisite"))
         session.add(prereq_rltn)
         return concept
 
     def __create_chunkconcept(self, session, title):
-        concept = get_or_create(db.session, Concept, title=title)
-        nested_rltn = ConceptRelationship(
-            concept_a=self.concept,
-            concept_b=concept,
-            typestr="nested")
+        concept = get_or_create(session, Concept, title=title)
+        nested_rltn = get_or_create(session, ConceptRelationship,
+            concept_a_id=self.concept.id,
+            concept_b_id=concept.id,
+            relationship_type=ConceptRelationship.type("nested"))
         session.add(nested_rltn)
         return concept
 
     @classmethod
     def search(cls, arg_dict):
-        accepted_keys = {"term", "mediatype", "duration"}
+        accepted_keys = {"title",
+            "mediatype",
+            "duration",
+            "concept",
+            "sub_concepts",
+            "submit"}
         filters = {}
 
         for key, value in arg_dict.items():
-            if len(value) == 0 or key == "term":
+            if len(value) == 0 or key == "title" or key=="sub_concepts" or key=="submit" or key == "concept":
                 pass
             elif key not in accepted_keys:
                 flash("Search term {} not recognized and is ignored".format(key))
             else:
                 filters[key] = value
 
-        if arg_dict.get("term") != "":
-            artifacts = Artifact.query.filter(Artifact.title.contains(arg_dict["term"])).filter_by(**filters).all()
-        else:
-            artifacts = Artifact.query.filter_by(**filters).all()
+        query = Artifact.query.filter_by(**filters)
+
+        if arg_dict.get("concept") != "":
+            query = query.filter(Artifact.concept.has(Concept.title == arg_dict["concept"]))
+
+        if arg_dict.get("sub_concepts") != "":
+            subs = arg_dict["sub_concepts"].split()
+            query = query.join(Chunk).join(Concept).filter(Concept.title.in_(subs))
+
+        if arg_dict.get("title") != "":
+            query = query.filter(Artifact.title.contains(arg_dict["title"]))
+
+        artifacts = query.all()
         return artifacts

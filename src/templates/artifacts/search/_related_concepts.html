@@ -1,0 +1,21 @@
+{% if concepts is defined %}
+  {% for concept, type in concepts %}
+    {% if type == "first" %}
+      <span class="badge badge-pill badge-first">
+    {% elif type == "second" %}
+      <span class="badge badge-pill badge-second">
+    {% elif type == "up" %}
+      <span class="badge badge-pill badge-up">
+    {% elif type == "first" %}
+      <span class="badge badge-pill badge-first">
+    {% elif type == "down" %}
+      <span class="badge badge-pill badge-down">
+    {% else %}
+      <span class="badge badge-pill badge-secondary">
+    {% endif %}
+      {{concept.title}}
+    </span>
+  {% endfor %}
+{% else %}
+  <i>Try searching something to see recommendations of related concepts!</i>
+{% endif %}

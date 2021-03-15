@@ -26,7 +26,7 @@
         {% for alt_artifact in artifact.concept.artifacts %}
           {% if artifact.id != alt_artifact.id %}
             {% with artifact = alt_artifact %}
-              {% include "_artifact_card.html" %}
+              {% include "artifacts/_artifact_card.html" %}
             {% endwith %}
           {% endif %}
         {% endfor %}
