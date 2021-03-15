@@ -14,7 +14,7 @@
         <h1> Prerequisites </h1>
         <p> Strengthen your foundations. </p>
 
-        {% with concepts = artifact.prerequisites %}
+        {% with concepts = artifact.prerequisites.all() %}
           {% include "artifacts/view/_by_concept.html" %}
         {% endwith %}
       </div>
