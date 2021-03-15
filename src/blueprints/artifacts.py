@@ -100,7 +100,7 @@ def search():
     '''
     if request.method == 'GET':
         form = SearchForm()
-        return render_template('artifacts/search.html', form=form)
+        return render_template('artifacts/search/search.html', form=form, artifacts = Artifact.query.limit(10))
     else:
         form = SearchForm(formdata=request.form)
         artifacts = Artifact.search(request.form)
@@ -110,7 +110,7 @@ def search():
             concept = artifacts[0].concept
             exclude = set(request.form["sub_concepts"].split())
             concepts = concept.related(exclude=exclude)
-        return render_template('artifacts/search.html', form=form, artifacts = artifacts, concepts = concepts)
+        return render_template('artifacts/search/search.html', form=form, artifacts = artifacts, concepts = concepts)
 
 @artifacts_template.route('/artifacts/by_concept')
 def by_concept():
