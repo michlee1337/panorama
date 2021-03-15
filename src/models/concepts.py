@@ -12,11 +12,9 @@ class Concept(db.Model):
         return self.title
 
     def related(self, exclude):
-        if exclude is None:
-            exclude = set()
+        exclude = set(exclude)
 
         rels = []
-        print("DEBUG", self.relationships_in)
         for rel in self.relationships_in:
             if rel.concept_a.title not in exclude:
                 rels.append((rel.concept_a, rel.directional_type(a_to_b=True)))

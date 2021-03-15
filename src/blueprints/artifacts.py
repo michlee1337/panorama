@@ -108,7 +108,7 @@ def search():
         concepts = None
         if len(artifacts) > 0:
             concept = artifacts[0].concept
-            exclude = set(request.form["sub_concepts"].split())
+            exclude = request.form["sub_concepts"].split()
             concepts = concept.related(exclude=exclude)
         return render_template('artifacts/search/search.html', form=form, artifacts = artifacts, concepts = concepts)
 
