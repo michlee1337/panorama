@@ -1,5 +1,6 @@
 {% if concepts is defined %}
   {% for concept, type in concepts %}
+    <a onclick="searchConcept('{{concept.title}}')">
     {% if type == "first" %}
       <span class="badge badge-pill badge-first">
     {% elif type == "second" %}
@@ -15,6 +16,7 @@
     {% endif %}
       {{concept.title}}
     </span>
+    </a>
   {% endfor %}
 {% else %}
   <i>Try searching something to see recommendations of related concepts!</i>

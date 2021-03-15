@@ -4,7 +4,7 @@
 {% block head %}
     {{ super() }}
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/search.css') }}">
-
+    <script src="{{ url_for('static', filename='js/artifacts/search.js') }}"></script>
 {% endblock %}
 
 {% block app_content %}
