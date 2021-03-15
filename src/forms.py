@@ -62,7 +62,7 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(message="Username is required")])
     email = StringField('Email', validators=[Email()])
     password = PasswordField('Password', validators=[DataRequired(message="Password is required")])
-    submit = SubmitField('Login')
+    login = SubmitField('Login')
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -70,7 +70,7 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
+    register = SubmitField('Register')
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
@@ -114,7 +114,7 @@ class ArtifactForm(ModelForm):
     vote_count = IntegerField()
     vote_sum = IntegerField()
     chunks = ModelFieldList(FormField(ChunkForm), min_entries=1)
-    submit = SubmitField('Submit')
+    create = SubmitField('Create')
 
 class SearchForm(FlaskForm):
     title = StringField('Title')
@@ -122,4 +122,4 @@ class SearchForm(FlaskForm):
     sub_concepts = CommaSepListField('Sub-Concepts')
     mediatype = MultiCheckboxField('Mediatype', choices=[(0, 'Unknown'), (1, 'Text'), (2, 'Video'), (3, 'Other')])
     duration = MultiCheckboxField('Duration', choices=[(0, 'Unknown'), (1, 'Minutes'), (2, 'Days'), (3, 'Days'), (4, 'Months'), (5, 'Long')])
-    submit = SubmitField('Search')
+    search = SubmitField('Search')
