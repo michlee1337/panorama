@@ -32,6 +32,15 @@
     margin-top: -1.5em;
 }
 
+#related-tabs {
+  display: None;
+  transition: all 0.3s;
+}
+
+#related-tabs.active {
+    display: flex;
+}
+
 #search-sidebar-content {
   padding-top: 2em;
 }
@@ -50,4 +59,15 @@ a .reading_card {
   color: black;
 }
 
-/* Overview */
+/* Tabs */
+.nav-tabs {
+  border-bottom: None;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.nav-link.active, .nav-link:hover {
+  border-color: transparent;
+  border-radius: .25em;
+  background-color: #d1ecf1;
+}
