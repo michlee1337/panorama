@@ -26,9 +26,14 @@
     flex: 0;
     display: None;
     padding: 3%;
-    background: #dfdfdf;
+    background: #d1ecf1;
     transition: all 0.3s;
     min-height: 100vh;
+    margin-top: -1.5em;
+}
+
+#search-sidebar-content {
+  padding-top: 2em;
 }
 
 #search-sidebar.active {
