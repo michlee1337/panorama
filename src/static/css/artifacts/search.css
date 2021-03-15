@@ -13,3 +13,9 @@
 .badge-down {
   background-color: orange;
 }
+
+.search {
+  background-color: #d1ecf1;
+  margin-top: -1.5rem; /* bg-color under nav */
+  padding: 1.5rem 0;
+}

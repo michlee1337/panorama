@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/search.css') }}">
+
+{% endblock %}
+
+{% block app_content %}
+
+<div class="search">
+  <div class="container">
+    <!-- SEARCH FORM -->
+    <h2> Search </h2>
+    <form id="search-form" action="{{ url_for('artifacts.search') }}" method="POST">
+      <!-- Title -->
+      <div class="row">
+        {{ form.title.label(class="col-form-label col-sm-2") }}
+        <div class="col-sm-10">
+          {{ form.title }}
+        </div>
+      </div>
+      </br>
+      <!-- Concepts -->
+      <div class="row">
+        {{ form.concept.label(class="col-form-label col-sm-2") }}
+        <div class="col-sm-10">
+          {{ form.concept }}
+        </div>
+      </div>
+      <div class="row">
+        {{ form.sub_concepts.label(class="col-form-label col-sm-2") }}
+        <div class="col-sm-10">
+          {{ form.sub_concepts }}
+        </div>
+      </div>
+      </br>
+      <!-- Metadata -->
+      <div class="row">
+        {{ form.mediatype.label(class="col-form-label col-sm-2") }}
+        <div class="custom-control inline-radio col-sm-10">
+          {{ form.mediatype(_class="custom-control-input") }}
+        </div>
+      </div>
+      <div class="row">
+        {{ form.duration.label(class="col-form-label col-sm-2") }}
+        <div class="custom-control inline-radio col-sm-10">
+          {{ form.duration }}
+        </div>
+      </div>
+      {{ form.submit(class="btn btn-primary") }}
+    </form>
+    </br>
+
+    <!-- RELATED CONCEPT SEARCH -->
+    <h2>Related Concepts</h2>
+    {% include "artifacts/search/_related_concepts.html" %}
+  </div>
+</div>
+<div class="container pt-4">
+{% if artifacts is defined %}
+  <h2>Artifacts</h2>
+  <div id="studyplan-list">
+    {% for artifact in artifacts %}
+      {% with artifact = artifact %}
+        {% include "artifacts/_artifact_card.html" %}
+        </br>
+      {% endwith %}
+    {% endfor %}
+  </div>
+{% endif %}
+</div>
+
+{% endblock %}
