@@ -28,6 +28,7 @@
     padding: 3%;
     background: #dfdfdf;
     transition: all 0.3s;
+    min-height: 100vh;
 }
 
 #search-sidebar.active {
