@@ -97,7 +97,6 @@ class Artifact(db.Model):
             for prereq in form.prerequisites.data:
                 prereq_concept = self.__create_prereqconcept(db.session, prereq)
                 self.prerequisites.append(prereq_concept)
-
             num_chunks = len(self.chunks.all())
             for i, chunk_entry in enumerate(form.chunks.entries):
                 chunk_concept = self.__create_chunkconcept(db.session, chunk_entry.concept.data)
@@ -124,20 +123,20 @@ class Artifact(db.Model):
             raise
 
     def __create_prereqconcept(self, session, title):
-        concept = get_or_create(db.session, Concept, title=title)
-        prereq_rltn = ConceptRelationship(
-            concept_a=concept,
-            concept_b=self.concept,
-            typestr="prerequisite")
+        concept = get_or_create(session, Concept, title=title)
+        prereq_rltn = get_or_create(session, ConceptRelationship,
+            concept_a_id=concept.id,
+            concept_b_id=self.concept.id,
+            relationship_type=ConceptRelationship.type("prerequisite"))
         session.add(prereq_rltn)
         return concept
 
     def __create_chunkconcept(self, session, title):
-        concept = get_or_create(db.session, Concept, title=title)
-        nested_rltn = ConceptRelationship(
-            concept_a=self.concept,
-            concept_b=concept,
-            typestr="nested")
+        concept = get_or_create(session, Concept, title=title)
+        nested_rltn = get_or_create(session, ConceptRelationship,
+            concept_a_id=self.concept.id,
+            concept_b_id=concept.id,
+            relationship_type=ConceptRelationship.type("nested"))
         session.add(nested_rltn)
         return concept
 
