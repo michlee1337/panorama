@@ -27,9 +27,6 @@ class Artifact(db.Model):
     __tablename__ = 'artifacts'
     # _____ CLASS ATTRIBUTES _____
     # DEV: prevents saving unrecognized data into db
-    RECOGNIZED_MEDIATYPES = {0,1,2,3}
-
-    RECOGNIZED_DURATIONS = {0,1,2,3}
 
     DURATION_TO_STR = {
         0: 'Unknown',
@@ -84,10 +81,10 @@ class Artifact(db.Model):
                 db.session.add(self)
 
             # check required data
-            if form.mediatype.data not in self.RECOGNIZED_MEDIATYPES:
+            if form.mediatype.data not in self.MEDIATYPE_TO_STR.keys():  # Python3 .keys() returns set-like
                 raise AttributeError("Mediatype is not recognized.")
 
-            if form.duration.data not in self.RECOGNIZED_DURATIONS:
+            if form.duration.data not in self.DURATION_TO_STR.keys():
                 raise AttributeError("Duration is not recognized.")
 
             if form.source.data["name"] != "":
