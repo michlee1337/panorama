@@ -27,9 +27,6 @@ class Artifact(db.Model):
     __tablename__ = 'artifacts'
     # _____ CLASS ATTRIBUTES _____
     # DEV: prevents saving unrecognized data into db
-    RECOGNIZED_MEDIATYPES = {0,1,2,3}
-
-    RECOGNIZED_DURATIONS = {0,1,2,3}
 
     DURATION_TO_STR = {
         0: 'Unknown',
@@ -37,6 +34,12 @@ class Artifact(db.Model):
         2: 'Days',
         3: 'Months',
         4: 'Long'}
+
+    MEDIATYPE_TO_STR = {
+        0: 'Unknown',
+        1: 'Text',
+        2: 'Video',
+        3: 'Other'}
 
     id = Column(Integer, primary_key=True)
     title = Column(String(100))
@@ -78,10 +81,10 @@ class Artifact(db.Model):
                 db.session.add(self)
 
             # check required data
-            if form.mediatype.data not in self.RECOGNIZED_MEDIATYPES:
+            if form.mediatype.data not in self.MEDIATYPE_TO_STR.keys():  # Python3 .keys() returns set-like
                 raise AttributeError("Mediatype is not recognized.")
 
-            if form.duration.data not in self.RECOGNIZED_DURATIONS:
+            if form.duration.data not in self.DURATION_TO_STR.keys():
                 raise AttributeError("Duration is not recognized.")
 
             if form.source.data["name"] != "":
@@ -150,6 +153,9 @@ class Artifact(db.Model):
     def duration_str(self):
         return self.DURATION_TO_STR[self.duration]
 
+    def mediatype_str(self):
+        return self.MEDIATYPE_TO_STR[self.mediatype]
+
     @classmethod
     def search(cls, arg_dict):
         accepted_keys = {"title",
@@ -182,3 +188,11 @@ class Artifact(db.Model):
 
         artifacts = query.all()
         return artifacts
+
+    @classmethod
+    def duration_options(cls):
+        return [(k, v) for k, v in cls.DURATION_TO_STR.items()]
+
+    @classmethod
+    def mediatype_options(cls):
+        return [(k, v) for k, v in cls.MEDIATYPE_TO_STR.items()]
