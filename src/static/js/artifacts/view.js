@@ -3,6 +3,7 @@
 $(document).ready(function () {
   $('#sidebarCollapse').on('click', function () {
       $('#search-sidebar').toggleClass('active');
+      $('#related-tabs').toggleClass('active');
   });
 
 });

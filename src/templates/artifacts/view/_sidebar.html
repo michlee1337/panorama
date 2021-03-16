@@ -1,9 +1,9 @@
 <div id="search-sidebar">
   <div id="search-sidebar-content">
-    <div class="tab-content" id="myTabContent">
+    <div class="tab-content" id="related-tabs-content">
 
       <div class="tab-pane fade show active" role="tabpanel">
-        <h3 id="search-sidebar-title">Related Artifacts</h3>
+        <h1 id="search-sidebar-title">Related Artifacts</h1>
         <p>Click one of the tabs by the side to explore related artifacts.</p>
         <p>If you are missing prerequisite knowledge, check out 'Prerequisites'.</p>
         <p>If you are want to find another resource on the same topic, check out 'Alternatives'.</p>
@@ -11,16 +11,16 @@
       </div>
 
       <div class="tab-pane fade" id="prerequisites" role="tabpanel" aria-labelledby="prerequisites-tab">
-        <h3> Prerequisites </h3>
+        <h1> Prerequisites </h1>
         <p> Strengthen your foundations. </p>
 
-        {% with concepts = artifact.prerequisites %}
+        {% with concepts = artifact.prerequisites.all() %}
           {% include "artifacts/view/_by_concept.html" %}
         {% endwith %}
       </div>
 
       <div class="tab-pane fade" id="alternative" role="tabpanel" aria-labelledby="alternative-tab">
-        <h3> Alternatives </h3>
+        <h1> Alternatives </h1>
         <p> If this artifact isn't working for you, find another one on the same concept. </p>
 
         {% for alt_artifact in artifact.concept.artifacts %}
@@ -33,7 +33,7 @@
       </div>
 
       <div class="tab-pane fade" id="explore" role="tabpanel" aria-labelledby="explore-tab">
-        <h3> Deep dive </h3>
+        <h1> Deep dive </h1>
         <p> Explore the topics in more depth. </p>
 
         {% with concepts = artifact.chunks | map(attribute='concept') | list %}

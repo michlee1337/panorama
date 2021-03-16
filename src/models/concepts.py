@@ -22,3 +22,9 @@ class Concept(db.Model):
             if rel.concept_b.title not in exclude:
                 rels.append((rel.concept_b, rel.directional_type(a_to_b=False)))
         return rels
+
+    def description(self):
+        dscptn = "No description found :("
+        if self.artifacts:
+            dscptn = self.artifacts[0].description
+        return (dscptn[:75] + '..') if len(dscptn) > 75 else dscptn

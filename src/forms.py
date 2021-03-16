@@ -32,13 +32,13 @@ class CommaSepListField(StringField):
 
     def _value(self):
         if self.data:
-            return u', '.join([str(x) for x in self.data])
+            return (u', '.join([str(x) for x in self.data]))
         else:
             return u''
 
     def process_formdata(self, valuelist):
         if valuelist:
-            self.data = [x.strip() for x in valuelist[0].split(self.separator)]
+            self.data = filter(None, [x.strip() for x in valuelist[0].split(self.separator)])
             if self.remove_duplicates:
                 self.data = list(self._remove_duplicates(self.data))
             if self.to_lowercase:
@@ -101,7 +101,8 @@ class ArtifactForm(ModelForm):
 
     prerequisites = CommaSepListField(
         "Prerequisites",
-        separator=","
+        separator=",",
+        to_lowercase=True
     )
     concept = StringField('Main Concept', validators=[DataRequired()])
     # source = StringField('Source')
@@ -119,7 +120,7 @@ class ArtifactForm(ModelForm):
 class SearchForm(FlaskForm):
     title = StringField('Title')
     concept = StringField('Main Concept')
-    sub_concepts = CommaSepListField('Sub-Concepts')
+    sub_concepts = CommaSepListField('Sub-Concepts', to_lowercase=True)
     mediatype = MultiCheckboxField('Mediatype', choices=[(0, 'Unknown'), (1, 'Text'), (2, 'Video'), (3, 'Other')])
     duration = MultiCheckboxField('Duration', choices=[(0, 'Unknown'), (1, 'Minutes'), (2, 'Days'), (3, 'Days'), (4, 'Months'), (5, 'Long')])
     search = SubmitField('Search')

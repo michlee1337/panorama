@@ -1,8 +1,8 @@
 <div id="accordion">
-  {% if concepts is not defined %}
+   {% if concepts is not defined or concepts==[] %}
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">No concepts specified by this artifact :(</h5>
+        <p class="card-title">No concepts specified by this artifact :(</p>
       </div>
     </div>
   {% endif %}
