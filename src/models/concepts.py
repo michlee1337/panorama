@@ -24,4 +24,7 @@ class Concept(db.Model):
         return rels
 
     def description(self):
-        return self.artifacts[0].description
+        dscptn = "No description found :("
+        if self.artifacts:
+            dscptn = self.artifacts[0].description
+        return (dscptn[:75] + '..') if len(dscptn) > 75 else dscptn
