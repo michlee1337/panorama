@@ -2,10 +2,11 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">
+        <span class="badge alert-info">
+          {{chunk.concept.title}}
+        </span>
       {% if chunk.title|length > 0 and chunk.concept.title != chunk.title %}
-        {{chunk.concept.title}}: {{chunk.title}}
-      {% else %}
-        {{chunk.concept.title}}
+        : {{chunk.title}}
       {% endif %}
       </h5>
       <p>{{chunk.content}}</p>

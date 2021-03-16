@@ -1,4 +1,4 @@
-{% if concepts is defined %}
+{% if concepts is defined and concepts is not none and concepts != [] %}
   {% for concept, type in concepts %}
     <a onclick="searchConcept('{{concept.title}}')">
     {% if type == "first" %}
