@@ -38,6 +38,12 @@ class Artifact(db.Model):
         3: 'Months',
         4: 'Long'}
 
+    MEDIATYPE_TO_STR = {
+        0: 'Unknown',
+        1: 'Text',
+        2: 'Video',
+        3: 'Other'}
+
     id = Column(Integer, primary_key=True)
     title = Column(String(100))
     description = Column(UnicodeText)
@@ -149,6 +155,9 @@ class Artifact(db.Model):
 
     def duration_str(self):
         return self.DURATION_TO_STR[self.duration]
+
+    def mediatype_str(self):
+        return self.MEDIATYPE_TO_STR[self.mediatype]
 
     @classmethod
     def search(cls, arg_dict):
