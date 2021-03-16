@@ -83,3 +83,109 @@ a .reading_card {
   border-radius: .25em;
   background-color: #d1ecf1;
 }
+
+/* HELP */
+/* credits: https://codepen.io/MrJonesOBA/pen/jEzwbJ*/
+.help {
+  display: inline-block;
+  margin: 0;
+}
+
+.help .question {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  background: #ccc;
+  font-size: 32px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.help .popup {
+  width: 560px;
+  height: 0px;
+  text-align: left;
+  overflow: hidden;
+  position: relative;
+  background: #eee;
+  /* opacity: 0; */
+  display: none;
+  transition: 1s;
+}
+
+.help .popup {
+  position: absolute;
+}
+
+/* .help .popup2 {
+  height: 220px;
+}
+
+.help .popup2 h4 {
+  font-size: 18px;
+  padding: 10px;
+  margin: 0;
+}
+ */
+.help:hover .popup {
+  display: block;
+  height: auto;
+  width: auto;
+}
+
+/* .help .tell-me p:first-child {
+  color: #317eac;
+  cursor: pointer;
+}
+
+.tell-me {
+  width: 150px;
+}
+
+.help .tell-me:hover .popup2 {
+  top: -220px;
+  opacity: 1;
+}
+ */
+.help .popup h3 {
+  margin: 0;
+  padding: 10px 0 0 10px;
+  height: 30px;
+  background: #555;
+  color: #fff;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.help .popup p {
+  font-size: 16px;
+  padding: 10px;
+  margin: 0;
+}
+
+/* .help .popup .popup2 .sub-levels {
+  padding: 0 0 10px 140px;
+}
+
+.help .popup .popup2 .sub-levels strong {
+  font-size: 20px;
+}
+
+.help .popup .popup2 p:nth-child(5) {
+  padding: 20px 0 0 10px;
+}
+ */
+.help .popup a {
+  text-decoration: none;
+  color: #317eac;
+}
+
+.help .popup a:visited {
+  color: #317eac;
+}
+
+.help .popup p em {
+  font-size: 12px;
+}
