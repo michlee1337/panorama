@@ -17,25 +17,37 @@
   <!-- MENU -->
   <div id="menu" class="container">
     <div>
-      <button type="button" id="sidebarCollapse" class="btn btn-info roundBtn">
+      <button type="button" id="sidebarCollapse" class="btn btn-info roundBtn help">
         <i class="fas fa-list-ul"></i>
+        <div class="popup">
+          <p><i>View related artifacts</i></p>
+        </div>
       </button>
     </div>
     <ul class="nav nav-tabs" id="related-tabs" role="tablist">
-    <li class="nav-item">
+    <li class="nav-item help">
       <a class="nav-link" id="prerequisites-tab" data-toggle="tab" href="#prerequisites" role="tab" aria-controls="prerequisites" aria-selected="true">
         <i class="fas fa-seedling"></i>
+        <div class="popup">
+          <p><i> foundations </i></p>
+        </div>
       </a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item help">
       <a class="nav-link" id="alternative-tab" data-toggle="tab" href="#alternative" role="tab" aria-controls="alternative" aria-selected="false">
         <i class="fa fa-tree" aria-hidden="true"></i>
+        <div class="popup">
+          <p><i> alternatives </i></p>
+        </div>
       </a>
     </li>
 
-    <li class="nav-item">
+    <li class="nav-item help">
       <a class="nav-link" id="explore-tab" data-toggle="tab" href="#explore" role="tab" aria-controls="explore" aria-selected="false">
         <i class="fa fa-rocket" aria-hidden="true"></i>
+        <div class="popup">
+          <p><i> deep dive </i></p>
+        </div>
       </a>
     </li>
 
@@ -46,8 +58,11 @@
   <div class="container content">
 
     <a class="float-right" href="{{ url_for('artifacts.new', fork_id=artifact.id) }}" target="_blank">
-      <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Create an editable copy of this artifact">
+      <button type="button" class="btn btn-primary help">
         Fork
+        <div class="popup">
+          <p><i>Create an editable copy</i></p>
+        </div>
       </button>
     </a>
 
@@ -73,19 +88,13 @@
 
     <div><b>
       Prerequsites:
-      <div class="help">
-        <div class="question">?</div>
-        <div class="popup">
-          <p>More content about topics covered in this artifact</p>
-        </div>
-      </div>
       {% for prerequisite in artifact.prerequisites %}
-        {{prerequisite.id}}
-        <span class="badge badge-pill badge-secondary clickable help">
+        <span class="badge badge-pill badge-secondary help">
           {{prerequisite.title}}
           <div class="popup">
-            <p>{{prerequisite.description()}}</p>
+            <p><i>{{prerequisite.description()}}</i></p>
           </div>
+
         </span>
       {% endfor %}
     </div></b>
