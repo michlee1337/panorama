@@ -3,27 +3,45 @@
 {% block app_content %}
 
 <div class="container">
-  <h1>Panorama</h1>
+  <div class="text-center">
+    <h1>Panorama</h1>
+    <h5><i>Because learning is most fun when it feels like exploring</i></h5>
+  </div>
 
-  <h2>Discover</h2>
-  <p>whatever resource fits your purpose best based on relevant metadata</p>
-  <p>and continue tuning it, if its not quite right</p>
+  </br>
+  </br>
 
-  <h2>Explore</h2>
-  <p>See the bigger picture of how what you're learning now is connected to much more knowledge</p>
-  <p>And traverse related resources to see what else is interesting around here</p>
-
-  {% if artifacts is defined and artifacts|length%}
-    <h2>Artifacts</h2>
-    <div id="studyplan-list">
-      {% for artifact in artifacts %}
-        {% with artifact = artifact %}
-          {% include "_artifact_card.html" %}
-          </br>
-        {% endwith %}
-      {% endfor %}a
+  <div class="row">
+    <div class="col text-right">
+      <h2>Discover</h2>
+      <p>the resource that is best for you</p>
+      </div>
+    <div class="col">
+      <iframe width="416" height="234" src="https://www.youtube.com/embed/y881t8ilMyc" frameborder="0" allowfullscreen></iframe>
+      </iframe>
     </div>
-  {% endif %}
+  </div>
+  </br>
+  </br>
 
+  <div class="row">
+    <div class="col text-right">
+      <iframe width="416" height="234" src="https://www.youtube.com/embed/y881t8ilMyc" frameborder="0" allowfullscreen></iframe>
+      </iframe>
+    </div>
+    <div class="col">
+      <h2>Explore</h2>
+      <p>related information</p>
+    </div>
+  </div>
+
+  </br>
+  </br>
+
+  <div class="text-center">
+    <a href="{{url_for('artifacts.search')}}" class="btn btn-info">
+      <h5>Try It Yourself</h5>
+    </a>
+  </div>
 </div>
 {% endblock %}
