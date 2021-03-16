@@ -20,7 +20,8 @@ input[type=text] {
 }
 
 #navbar a {
-  color: black;
+  color: #6c757d;
+}
 
 /* ARTIFACT CARD */
 .neutral-link:hover {
