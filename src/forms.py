@@ -32,7 +32,7 @@ class CommaSepListField(StringField):
 
     def _value(self):
         if self.data:
-            return (u', '.join([str(x) for x in self.data]))
+            return u', '.join([str(x) for x in self.data])
         else:
             return u''
 
