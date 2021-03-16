@@ -31,6 +31,13 @@ class Artifact(db.Model):
 
     RECOGNIZED_DURATIONS = {0,1,2,3}
 
+    DURATION_TO_STR = {
+        0: 'Unknown',
+        1: 'Minutes',
+        2: 'Days',
+        3: 'Months',
+        4: 'Long'}
+
     id = Column(Integer, primary_key=True)
     title = Column(String(100))
     description = Column(UnicodeText)
@@ -139,6 +146,9 @@ class Artifact(db.Model):
             relationship_type=ConceptRelationship.type("nested"))
         session.add(nested_rltn)
         return concept
+
+    def duration_str(self):
+        return self.DURATION_TO_STR[self.duration]
 
     @classmethod
     def search(cls, arg_dict):
