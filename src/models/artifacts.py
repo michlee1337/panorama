@@ -191,3 +191,11 @@ class Artifact(db.Model):
 
         artifacts = query.all()
         return artifacts
+
+    @classmethod
+    def duration_options(cls):
+        return [(k, v) for k, v in cls.DURATION_TO_STR.items()]
+
+    @classmethod
+    def mediatype_options(cls):
+        return [(k, v) for k, v in cls.MEDIATYPE_TO_STR.items()]
