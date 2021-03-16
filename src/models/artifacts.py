@@ -87,9 +87,10 @@ class Artifact(db.Model):
                 raise AttributeError("Duration is not recognized.")
 
             if form.source.data["name"] != "":
-                source = Source(
+                source = get_or_create(db.session, Source,
                     name=form.source.data["name"],
                     link=form.source.data["link"])
+
             else:
                 source = None
             # create self
