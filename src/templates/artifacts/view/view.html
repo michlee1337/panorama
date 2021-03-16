@@ -67,7 +67,7 @@
     </a>
 
     <div class="title">
-      <h1> {{artifact.concept.title}}: {{artifact.title}} </h1>
+      <h1><span class="badge alert-primary">{{artifact.concept.title}}</span>: {{artifact.title}} </h1>
       <div class="artifact-metadata text-secondary">
         {% if artifact.duration != 0 %}
           <span>
@@ -95,7 +95,7 @@
     <div><b>
       Prerequsites:
       {% for prerequisite in artifact.prerequisites %}
-        <span class="badge badge-pill badge-secondary help">
+        <span class="badge alert-danger help">
           {{prerequisite.title}}
           <div class="popup">
             <p><i>{{prerequisite.description()}}</i></p>
