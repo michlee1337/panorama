@@ -77,7 +77,7 @@ class Artifact(db.Model):
             if form.duration.data not in self.RECOGNIZED_DURATIONS:
                 raise AttributeError("Duration is not recognized.")
 
-            if "name" in form.source.data:
+            if form.source.data["name"] != "":
                 source = Source(
                     name=form.source.data["name"],
                     link=form.source.data["link"])
