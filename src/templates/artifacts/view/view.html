@@ -53,17 +53,31 @@
 
     <div class="title">
       <h1> {{artifact.concept.title}}: {{artifact.title}} </h1>
+      <div class="artifact-metadata text-secondary">
+        {% if artifact.duration != 0 %}
+          <span>
+            <i class="fas fa-clock"></i>
+            {{artifact.duration_str()}}
+          </span>
+        {% endif %}
+        {% if artifact.source is not none %}
+          <span>
+            <i class="fas fa-university"></i>
+            {{artifact.source.name}}
+          </span>
+        {% endif %}
+      </div>
+      </br>
       <p> {{artifact.description}} </p>
-
     </div>
-    <h4>
+
+    <div><b>
       Prerequsites:
       {% for prerequisite in artifact.prerequisites %}
         <span class="badge badge-pill badge-secondary clickable" onclick="searchRelated({{prerequisite.id}}, {{prerequisite.title}})">{{prerequisite.title}}</span>
       {% endfor %}
-    </h4>
-    <p><i>Click on any of the prerequisites to open search for them in a new tab</i></p>
-
+    </div></b>
+    </br>
     <div class="chunks">
       {% for chunk in artifact.chunks %}
         {% with chunk = chunk %}
