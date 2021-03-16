@@ -12,7 +12,19 @@ input[type=text] {
   margin: 0 10px;
 }
 
-/* ARTIFACT CARD */
 .neutral-link:hover {
   text-decoration: None;
+}
+
+/* ARTIFACT CARD */
+.artifact_card {
+  color: #6c757d;
+}
+
+.artifact_card-metadata {
+  display: inline-flex;
+}
+
+.artifact_card-metadata span {
+  margin: 0 10px;
 }

@@ -111,7 +111,7 @@ class ArtifactForm(ModelForm):
     title = StringField('Title', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     mediatype = SelectField('Mediatype', choices=[(0, 'Unknown'), (1, 'Text'), (2, 'Video'), (3, 'Other')], validators=[DataRequired()], coerce=int)
-    duration = SelectField('Duration', choices=[(0, 'Unknown'), (1, 'Minutes'), (2, 'Days'), (3, 'Days'), (4, 'Months'), (5, 'Long')], validators=[DataRequired()], coerce=int)
+    duration = SelectField('Duration', choices=[(0, 'Unknown'), (1, 'Minutes'), (2, 'Days'), (3, 'Months'), (4, 'Long')], validators=[DataRequired()], coerce=int)
     vote_count = IntegerField()
     vote_sum = IntegerField()
     chunks = ModelFieldList(FormField(ChunkForm), min_entries=1)

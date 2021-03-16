@@ -75,6 +75,12 @@
             {{artifact.duration_str()}}
           </span>
         {% endif %}
+        {% if artifact.mediatype != 0 %}
+          <span>
+            <i class="fas fa-images"></i>
+            {{artifact.mediatype_str()}}
+          </span>
+        {% endif %}
         {% if artifact.source is not none %}
           <span>
             <i class="fas fa-university"></i>
