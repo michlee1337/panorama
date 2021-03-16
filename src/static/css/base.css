@@ -1,5 +1,5 @@
 /* GENERAL */
-input[type=text] {
+input[type=text], textarea {
   width: 100%;
 }
 
@@ -11,6 +11,33 @@ input[type=text] {
 
 .inline-radio li {
   margin: 0 10px;
+}
+
+.horizontal-rows {
+  display: block;
+}
+
+.horizontal-rows tbody {
+  display: flex;
+}
+
+.horizontal-rows tr {
+  display: inline-block;
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.horizontal-rows th {
+  display: None;
+}
+
+.horizontal-rows td {
+  display: inline-block;
+  width: -webkit-fill-available;
+}
+
+.horizontal-rows tr:not(:last-child){
+  padding-right: 15px;
 }
 
 /* NAVBAR */

@@ -1,12 +1,58 @@
-{{ form.prerequisites.label }}: {{ form.prerequisites }}
-{{ form.concept.label }}: {{ form.concept }}
-{{ form.title.label }}: {{ form.title }}
-</br
-{{form.source}}
-</br>
-{{ form.description.label }}: {{ form.description }}
-{{ form.mediatype.label }}: {{ form.mediatype }}
-{{ form.duration.label }}: {{ form.duration }}
+<div class="row">
+  {{ form.prerequisites.label(class="col-form-label col-sm-2") }}
+  <div class="col-sm-10">
+    {{ form.prerequisites }}
+  </div>
+</div>
+<div class="row">
+  {{ form.concept.label(class="col-form-label col-sm-2") }}
+  <div class="col-sm-10">
+    {{ form.concept }}
+  </div>
+</div>
+<div class="row">
+  {{ form.title.label(class="col-form-label col-sm-2") }}
+  <div class="col-sm-10">
+    {{ form.title }}
+  </div>
+</div>
+<div class="row">
+  {{ form.description.label(class="col-form-label col-sm-2") }}
+  <div class="col-sm-10">
+    {{ form.description }}
+  </div>
+</div>
+<div class="row">
+  {{ form.source.label(class="col-form-label col-sm-2") }}
+  <div class="col-sm-10">
+    {{ form.source(class="horizontal-rows") }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-form-label col-sm-2">
+    Metadata
+  </div>
+  <div class="col-sm-5">
+    <select id="mediatype" name="mediatype" class="w-100" required>
+      {% for option in form.mediatype %}
+        {% if loop.first %}
+            <option value="" disabled selected>Mediatype</option>
+        {% endif %}
+        {{ option }}
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-sm-5 pl-0">
+    <select id="duration" name="duration" class="w-100" required>
+      {% for option in form.duration %}
+        {% if loop.first %}
+            <option value="" disabled selected>Duration</option>
+        {% endif %}
+        {{ option }}
+      {% endfor %}
+    </select>
+  </div>
+</div>
 
 <div data-toggle="fieldset" id="chunks-fieldset">
      <table>

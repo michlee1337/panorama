@@ -92,8 +92,8 @@ class ChunkForm(ModelForm):
 class SourceForm(ModelForm):
     class Meta:
         model = Source
-    name = StringField('Name')
-    link = StringField('Link')
+    name = StringField('Name', render_kw={"placeholder": "Name"})
+    link = StringField('Link', render_kw={"placeholder": "Link"})
 
 class ArtifactForm(ModelForm):
     class Meta:
@@ -105,8 +105,6 @@ class ArtifactForm(ModelForm):
         to_lowercase=True
     )
     concept = StringField('Main Concept', validators=[DataRequired()])
-    # source = StringField('Source')
-    # source_link = StringField('Source Link')
     source = FormField(SourceForm)
     title = StringField('Title', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
