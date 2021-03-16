@@ -1,6 +1,9 @@
 from src.models import db
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, backref
+
+from src.helpers import get_or_create
 
 class Concept(db.Model):
     __tablename__ = 'concepts'
@@ -28,3 +31,64 @@ class Concept(db.Model):
         if self.artifacts:
             dscptn = self.artifacts[0].description
         return (dscptn[:75] + '..') if len(dscptn) > 75 else dscptn
+
+    @classmethod
+    def infer_relationships(cls, session, artifact):
+        try:
+            for prereq_concept in artifact.prerequisites:
+                rltn = get_or_create(session, ConceptRelationship,
+                    concept_a_id=prereq_concept.id,
+                    concept_b_id=artifact.concept.id,
+                    relationship_type=ConceptRelationship.type("prerequisite"))
+                session.add(rltn)
+            for chunk in artifact.chunks:
+                rltn = get_or_create(session, ConceptRelationship,
+                    concept_a_id=artifact.concept.id,
+                    concept_b_id=chunk.concept.id,
+                    relationship_type=ConceptRelationship.type("nested"))
+                session.add(rltn)
+            return
+        except Exception as e:
+            db.session.rollback()
+            raise
+
+class ConceptRelationship(db.Model):
+    __tablename__ = 'concept_relationships'
+    # _____ CLASS ATTRIBUTES _____
+    # DEV: encapsulating conversion
+    TYPE_TO_STR = {
+        0: "undetermined",
+        1: "prerequisite",
+        2: "nested"
+    }
+
+    STR_TO_TYPE = {
+        "undetermined": 0,
+        "prerequisite": 1,
+        "nested": 2
+    }
+
+    DIRECTIONAL_TYPE =  {
+        0: {True: "undetermined", False: "undetermined"},
+        1: {True: "first", False: "second"},
+        2: {True: "up", False: "down"}
+    }
+
+    # _____ TABLE ATTRIBUTES _____
+
+    id = Column(Integer, primary_key=True)
+    relationship_type = Column(Integer, default=0)
+
+    # _____ RELATIONSHIPS _____
+    concept_a_id = Column(Integer, ForeignKey('concepts.id'))
+    concept_b_id = Column(Integer, ForeignKey('concepts.id'))
+
+    concept_a = relationship("Concept", foreign_keys=[concept_a_id], backref=backref("relationships_out"), post_update=True)
+    concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in"), post_update=True)
+
+    def directional_type(self, a_to_b=True):
+        return self.DIRECTIONAL_TYPE[self.relationship_type][a_to_b]
+
+    @classmethod
+    def type(cls, type_str):
+        return cls.STR_TO_TYPE[type_str]

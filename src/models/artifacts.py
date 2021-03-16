@@ -2,7 +2,6 @@ from src.models import db
 from src.models.concepts import Concept
 from src.models.chunks import Chunk
 from src.models.sources import Source
-from src.models.concept_relationships import ConceptRelationship
 
 from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey, Table, func
 from sqlalchemy.orm import relationship, backref
@@ -94,8 +93,7 @@ class Artifact(db.Model):
             else:
                 source = None
             # create self
-            main_concept = get_or_create(db.session, Concept, title=form.concept.data)
-            self.concept = main_concept
+            self.concept = get_or_create(db.session, Concept, title=form.concept.data)
             self.source = source
             self.user = current_user
             self.description = form.description.data
@@ -105,11 +103,12 @@ class Artifact(db.Model):
 
             # create prerequisite concepts and add relationships
             for prereq in form.prerequisites.data:
-                prereq_concept = self.__create_prereqconcept(db.session, prereq)
+                prereq_concept = get_or_create(db.session, Concept, title=prereq)
                 self.prerequisites.append(prereq_concept)
+
             num_chunks = len(self.chunks.all())
             for i, chunk_entry in enumerate(form.chunks.entries):
-                chunk_concept = self.__create_chunkconcept(db.session, chunk_entry.concept.data)
+                chunk_concept = get_or_create(db.session, Concept, title=chunk_entry.concept.data)
                 if i < num_chunks:
                     chunk = self.chunks[i]
                     chunk.concept = chunk_concept
@@ -127,28 +126,13 @@ class Artifact(db.Model):
             for i in range(len(form.chunks.entries)-1, num_chunks-1):
                 db.session.delete(self.chunks[-1])
 
+            # infer concept relationships from artifact
+            Concept.infer_relationships(db.session, self)
+
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             raise
-
-    def __create_prereqconcept(self, session, title):
-        concept = get_or_create(session, Concept, title=title)
-        prereq_rltn = get_or_create(session, ConceptRelationship,
-            concept_a_id=concept.id,
-            concept_b_id=self.concept.id,
-            relationship_type=ConceptRelationship.type("prerequisite"))
-        session.add(prereq_rltn)
-        return concept
-
-    def __create_chunkconcept(self, session, title):
-        concept = get_or_create(session, Concept, title=title)
-        nested_rltn = get_or_create(session, ConceptRelationship,
-            concept_a_id=self.concept.id,
-            concept_b_id=concept.id,
-            relationship_type=ConceptRelationship.type("nested"))
-        session.add(nested_rltn)
-        return concept
 
     def duration_str(self):
         return self.DURATION_TO_STR[self.duration]
