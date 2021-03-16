@@ -3,5 +3,45 @@
 {% block app_content %}
 
 <div class="container">
+  <div class="text-center">
+    <h1>Panorama</h1>
+    <h5 class="text-muted"><i>Because learning is most fun when it feels like exploring</i></h5>
+  </div>
+
+  </br>
+  </br>
+
+  <div class="row">
+    <div class="col text-right">
+      <h2>Discover</h2>
+      <p class="text-muted">the resource that is best for you</p>
+      </div>
+    <div class="col">
+      <iframe width="416" height="234" src="https://www.youtube.com/embed/y881t8ilMyc" frameborder="0" allowfullscreen></iframe>
+      </iframe>
+    </div>
+  </div>
+  </br>
+  </br>
+
+  <div class="row">
+    <div class="col text-right">
+      <iframe width="416" height="234" src="https://www.youtube.com/embed/y881t8ilMyc" frameborder="0" allowfullscreen></iframe>
+      </iframe>
+    </div>
+    <div class="col">
+      <h2>Explore</h2>
+      <p class="text-muted">related information</p>
+    </div>
+  </div>
+
+  </br>
+  </br>
+
+  <div class="text-center">
+    <a href="{{url_for('artifacts.search')}}" class="btn btn-info">
+      <h5>Try It Yourself</h5>
+    </a>
+  </div>
 </div>
 {% endblock %}
