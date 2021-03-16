@@ -5,64 +5,12 @@
     {{ super() }}
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='css/artifacts/new.css') }}">
     <script src="{{ url_for('static', filename='js/artifacts/new.js') }}"></script>
-    <script src="{{ url_for('static', filename='node_modules/taggle/dist/taggle.min.js') }}"></script>
 {% endblock %}
 
 {% block app_content %}
 <div class="container">
   <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
     {% include "artifacts/_artifact_form.html" %}
-  </form>
-  <!-- <form id="artifact-form" action="{{ url_for('artifacts.new') }}" method="POST">
-
-    <label>Prerequisites</label>
-    <div id="prereqs-taggle" class="taggle-textarea"></div>
-    </br>
-
-    <label>Title</label>
-    <input type="text" name="title" placeholder="Title">
-    </br>
-
-    <label>Main Concept</label>
-    <input type="text" name="main_concept" placeholder="Main concept">
-    </br>
-
-    <label>External Source</label>
-    <input type="text" name="source_name" placeholder="Optional: Name of Source">
-    <input type="text" name="source_link" placeholder="Optional: Source link">
-    </br>
-
-    <label>Description</label>
-    <input type="text" name="description" placeholder="...">
-    </br>
-
-    <div class="form-row">
-      <div class="col-auto">
-        Media type:
-        <select name="mediatype">
-          <option value="0" selected="selected">Other</option>
-          <option value="1">Text</option>
-          <option value="2">Video</option>
-        </select>
-      </div>
-      <div class="col-auto">
-        Duration:
-        <select name="duration">
-          <option value="0" selected="selected">Other</option>
-          <option value="1">Minutes</option>
-          <option value="2">Days</option>
-          <option value="3">Months</option>
-        </select>
-      </div>
-    </div>
-
-
-    <div id="artifacts-creator_wrapper">
-    </div>
-    <button type="button" class="btn btn-secondary" onclick="addChunk()">Add a Chunk</button>
-
-    <input type="submit" value="Submit">
-  </form> -->
 </div>
 
 {% endblock %}
