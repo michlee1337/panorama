@@ -14,6 +14,7 @@ def index():
 
     return render_template('pages/index.html', artifacts=artifacts)
 
+
 @pages_template.route('/login', methods=['GET', 'POST'])
 def login():
     """

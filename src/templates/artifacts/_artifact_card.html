@@ -1,0 +1,36 @@
+<a href="{{url_for('artifacts.view', artifact_id=artifact.id)}}" class="neutral-link">
+<div class="artifact_card card">
+  <div class="card-body">
+    <h5 class="card-title">
+      <span class="badge badge-pill badge-primary">{{artifact.concept.title}}</span>:
+      {{artifact.title}}
+    </h5>
+    <!-- METADATA -->
+    {% if artifact.duration != 0 %}
+      <div>
+        <i class="fas fa-clock"></i>
+        {{artifact.duration_str()}}
+      </div>
+    {% endif %}
+    {% if artifact.source is not none %}
+      <div>
+        <i class="fas fa-university"></i>
+        {{artifact.source.name}}
+      </div>
+    {% endif %}
+    </br>
+    <!-- METADATA END-->
+    <p>
+      Prerequisites:
+      {% for prereq in artifact.prerequisites%}
+        <span class="badge badge-pill badge-danger">{{prereq.title}}</span>
+      {% endfor %}
+      </br>
+      Chunks:
+      {% for chunk in artifact.chunks %}
+        <span class="badge badge-pill badge-secondary">{{chunk.concept.title}}</span>
+      {% endfor %}
+    </p>
+  </div>
+</div>
+</a>
