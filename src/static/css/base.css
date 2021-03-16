@@ -11,3 +11,8 @@ input[type=text] {
 .inline-radio li {
   margin: 0 10px;
 }
+
+/* ARTIFACT CARD */
+.neutral-link:hover {
+  text-decoration: None;
+}
