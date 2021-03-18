@@ -9,21 +9,21 @@
 
   {% for concept in concepts %}
     <div class="card">
-      <div class="card-header" id="heading-{{loop.index}}">
+      <div class="card-header" id="heading-{{title}}{{loop.index}}">
         <h5 class="mb-0">
-          <button class="btn btn-link" data-toggle="collapse" data-target="#collapsible-{{loop.index}}" aria-expanded="true" aria-controls="collapsible-{{loop.index}}">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#collapsible-{{title}}{{loop.index}}" aria-expanded="true" aria-controls="collapsible-{{title}}{{loop.index}}">
             {{ concept.title }}
           </button>
         </h5>
       </div>
 
-      <div id="collapsible-{{loop.index}}" class="collapse" aria-labelledby="heading-{{loop.index}}" data-parent="#accordion">
+      <div id="collapsible-{{title}}{{loop.index}}" class="collapse" aria-labelledby="heading-{{title}}{{loop.index}}" data-parent="#accordion">
         <div class="card-body">
           {% if concept.artifacts|length == 0 %}
             <p> No artifacts found for this concept :(</p>
           {% else %}
             <!-- CAROUSEL -->
-            <div id="carousel-{{loop.index}}" class="carousel slide" data-ride="carousel">
+            <div id="carousel-{{title}}{{loop.index}}" class="carousel slide" data-ride="carousel">
 
               <div class="carousel-inner">
                 <!-- CAROUSEL ITEMS -->
@@ -43,11 +43,11 @@
                 <!-- CAROUSEL ITEMS END -->
 
               </div>
-              <a class="carousel-control-prev" href="#carousel-{{loop.index}}" role="button" data-slide="prev">
+              <a class="carousel-control-prev" href="#carousel-{{title}}{{loop.index}}" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
               </a>
-              <a class="carousel-control-next" href="#carousel-{{loop.index}}" role="button" data-slide="next">
+              <a class="carousel-control-next" href="#carousel-{{title}}{{loop.index}}" role="button" data-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
               </a>

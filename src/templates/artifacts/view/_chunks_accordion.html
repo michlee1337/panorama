@@ -1,0 +1,24 @@
+<div class="chunks accordion" id="chunk-accordion">
+  {% for chunk in chunks %}
+    <div class="card">
+      <div class="card-header" id="chunk{{loop.index}}">
+        <h2 class="mb-0">
+          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{loop.index}}" aria-expanded="false" aria-controls="collapse-{{loop.index}}">
+            <span class="badge alert-info">
+              {{chunk.concept.title}}
+            </span>
+            {% if chunk.title|length > 0 and chunk.concept.title != chunk.title %}
+              : {{chunk.title}}
+            {% endif %}
+          </button>
+        </h2>
+      </div>
+
+      <div id="collapse-{{loop.index}}" class="collapse" aria-labelledby="chunk{{loop.index}}" data-parent="#chunk-accordion">
+        <div class="card-body">
+          {{chunk.content}}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

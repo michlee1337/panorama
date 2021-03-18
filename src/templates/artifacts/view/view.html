@@ -105,13 +105,10 @@
       {% endfor %}
     </div></b>
     </br>
-    <div class="chunks">
-      {% for chunk in artifact.chunks %}
-        {% with chunk = chunk %}
-          {% include "artifacts/_chunk.html" %}
-        {% endwith %}
-      {% endfor %}
-    </div>
+
+    {% with chunks = artifact.chunks %}
+      {% include "artifacts/view/_chunks_accordion.html" %}
+    {% endwith %}
   </div>
 
 </div>
