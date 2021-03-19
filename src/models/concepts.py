@@ -120,32 +120,32 @@ class Concept(db.Model):
             raise
 
 class ConceptRelationship(db.Model):
-        """
-        A class to represent relationships between Concepts
+    """
+    A class to represent relationships between Concepts
 
-        ...
+    ...
 
-        Attributes
-        ----------
-        TYPE_TO_STR: {int: string}
-            mapping of ordinals to strings of relationship types
-        STR_TO_TYPE: {string: int}
-            mapping of strings to ordinals of relationship types
-        DIRECTIONAL_TYPE {int: {bool: string}}
-            mapping of ordinal relationship types to directional relationships
+    Attributes
+    ----------
+    TYPE_TO_STR: {int: string}
+        mapping of ordinals to strings of relationship types
+    STR_TO_TYPE: {string: int}
+        mapping of strings to ordinals of relationship types
+    DIRECTIONAL_TYPE {int: {bool: string}}
+        mapping of ordinal relationship types to directional relationships
 
-        id : integer
-            primary key
-        relationship_type : integer
-            ordinal representing one of the recognized types
+    id : integer
+        primary key
+    relationship_type : integer
+        ordinal representing one of the recognized types
 
-        Methods
-        -------
-        directional_type(self, a_to_b=True):
-            Returns a string of directional relationship type
-        type(cls, type_str):
-            Converts a string type to an ordinal type
-        """
+    Methods
+    -------
+    directional_type(self, a_to_b=True):
+        Returns a string of directional relationship type
+    type(cls, type_str):
+        Converts a string type to an ordinal type
+    """
 
     __tablename__ = 'concept_relationships'
     # _____ CLASS ATTRIBUTES _____
