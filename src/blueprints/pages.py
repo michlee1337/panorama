@@ -1,3 +1,7 @@
+"""
+Controller for Pages
+"""
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, login_required, logout_user
 from src.models.users import User
@@ -10,6 +14,10 @@ pages_template = Blueprint('pages', __name__, template_folder='../templates')
 
 @pages_template.route('/')
 def index():
+    """
+    Homepage
+    """
+
     artifacts = Artifact.query.all()
 
     return render_template('pages/index.html', artifacts=artifacts)

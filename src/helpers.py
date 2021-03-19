@@ -1,10 +1,24 @@
-def get_or_create(session, model, **kwargs):
-    # Custom get or create instance of Model with kwargs
-    ## Checks to see if a model instance with given arguments exist
-    ## If none, create a new instance with given arguments in current db session
+"""
+Application-wide helper functions
 
-    # !!Note: it DOES NOT COMMIT the instance creation,
-    ## That should be handled in the business logic.
+Functions:
+
+    get_or_create(db.session, class, **kwargs) -> object
+
+"""
+
+def get_or_create(session, model, **kwargs):
+    """
+    Creates and returns an instance of the model with given kwargs,
+    if it does not yet exist. Otherwise, get instance and return.
+        Parameters:
+            session: Current database session
+            model: The Class of the database model
+            **kwargds: The attributes for the desired instance
+
+        Returns:
+            (object): An object instance of the model with given kwargs
+    """
     instance = session.query(model).filter_by(**kwargs).first()
     if instance:
         return instance

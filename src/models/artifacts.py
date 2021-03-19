@@ -1,3 +1,13 @@
+"""
+Class definition for the Chunk model
+
+Classes:
+    Chunk
+
+Misc variables:
+    artifact_prerequisites
+"""
+
 from src.models import db
 from src.models.concepts import Concept
 from src.models.chunks import Chunk
@@ -23,6 +33,44 @@ artifact_prerequisites = Table(
 )
 
 class Artifact(db.Model):
+    """
+    A class to represent an Artifact
+
+    ...
+
+    Attributes
+    ----------
+    DURATION_TO_STR: {int: string}
+        mapping of ordinal to string duration values
+    MEDIATYPE_TO_STR: {int: string}
+        mapping of ordinal to string mediatype values
+    id : integer
+        primary key
+    title : string
+        title of artifact
+    description: UnicodeText
+        text description of artifact
+    mediatype: Integer
+        ordinal value of mediatype
+    duration: Integer
+        ordinal value of duration
+
+    Methods
+    ----------
+    edit(self, form):
+        Updates the artifact to match the form values
+    duration_str(self):
+        Returns the duration as a string
+    mediatype_str(self):
+        Returns the mediatype as a string
+    search(cls, arg_dict):
+        Returns all artifacts matching the arguments given
+    duration_options(cls):
+        Returns list of accepted durations as a tuple of ordinal and string values
+    mediatype_options(cls):
+        Returns list of accepted mediatypes as a tuple of ordinal and string values
+    """
+
     __tablename__ = 'artifacts'
     # _____ CLASS ATTRIBUTES _____
     # DEV: prevents saving unrecognized data into db
@@ -47,8 +95,6 @@ class Artifact(db.Model):
     # search metadata
     mediatype = Column(Integer)
     duration = Column(Integer)
-    vote_count = Column(Integer, default=0)
-    vote_sum = Column(Integer, default=0)
 
     # relationships
     concept_id = Column(Integer, ForeignKey('concepts.id'))
@@ -65,16 +111,9 @@ class Artifact(db.Model):
 
     # custom constructor
     def __init__(self, form):
-        '''
-        Creates a new artifact from a dictionary of relevant information.
-        Will find or create relevant concepts and ConceptRelationship.
-        All artifacts and chunks have an associated concept.
-        A artifact<>chunk implies a nested concept relationship.
-        A artifact<>prerequisite implies a related concept relationship.
-        '''
-        return self.save_changes(form, new=True)
+        return self.__save_changes(form, new=True)
 
-    def save_changes(self, form, new=False):
+    def __save_changes(self, form, new=False):
         try:
             if new:
                 db.session.add(self)
@@ -93,6 +132,7 @@ class Artifact(db.Model):
 
             else:
                 source = None
+
             # create self
             self.concept = get_or_create(db.session, Concept, title=form.concept.data)
             self.source = source
@@ -107,14 +147,11 @@ class Artifact(db.Model):
                 prereq_concept = get_or_create(db.session, Concept, title=prereq)
                 self.prerequisites.append(prereq_concept)
 
+            # create chunks
             num_chunks = len(self.chunks.all())
-            print("HALO", len(form.chunks.entries), num_chunks)
-            print("HALO2", form.chunks.entries, self.chunks)
             for i, chunk_entry in enumerate(form.chunks.entries):
-                print(i,)
                 chunk_concept = get_or_create(db.session, Concept, title=chunk_entry.concept.data)
                 if i < num_chunks:
-                    print(i, chunk_entry, self.chunks[i])
                     chunk = self.chunks[i]
                     chunk.concept = chunk_concept
                     chunk.title = chunk_entry.title.data
@@ -139,14 +176,53 @@ class Artifact(db.Model):
             db.session.rollback()
             raise
 
+    def edit(self, form):
+        """
+        Updates the artifact to match the form values
+
+            Parameters:
+                form (werkzeug.MultiDict): A mapping of attribute names to values
+
+            Returns:
+                None
+        """
+        return self.__save_changes(form, new=False)
+
     def duration_str(self):
+        """
+        Returns the duration as a string
+
+            Parameters:
+                None
+
+            Returns:
+                (string): the duration value
+        """
         return self.DURATION_TO_STR[self.duration]
 
     def mediatype_str(self):
+        """
+        Returns the mediatype as a string
+
+            Parameters:
+                None
+
+            Returns:
+                (string): the mediatype value
+        """
         return self.MEDIATYPE_TO_STR[self.mediatype]
 
     @classmethod
     def search(cls, arg_dict):
+        """
+        Returns all artifacts matching the arguments given
+
+            Parameters:
+                arg_dict({string: string}): a mapping of attribute key to value
+
+            Returns:
+                (Artifact[]): a list of atrifacts matching the arguments
+        """
         accepted_keys = {"title",
             "mediatype",
             "duration",
@@ -180,8 +256,27 @@ class Artifact(db.Model):
 
     @classmethod
     def duration_options(cls):
+        """
+        Returns list of accepted durations as a tuple of ordinal and string values
+
+            Parameters:
+                None
+
+            Returns:
+                ((int, string))[]: List of accepted durations
+        """
+
         return [(k, v) for k, v in cls.DURATION_TO_STR.items()]
 
     @classmethod
     def mediatype_options(cls):
+        """
+        Returns list of accepted mediatypes as a tuple of ordinal and string values
+
+            Parameters:
+                None
+
+            Returns:
+                ((int, string))[]: List of accepted mediatypes
+        """
         return [(k, v) for k, v in cls.MEDIATYPE_TO_STR.items()]

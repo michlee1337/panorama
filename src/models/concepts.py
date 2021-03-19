@@ -1,3 +1,14 @@
+"""
+Class definitions for the Concept model and ConceptRelationship model
+
+DEV: These cannot be seperated into seperate files
+  due to circular dependency
+
+Classes:
+    Concept
+    ConceptRelationship
+"""
+
 from src.models import db
 
 from sqlalchemy import Column, Integer, String, ForeignKey
@@ -6,6 +17,28 @@ from sqlalchemy.orm import relationship, backref
 from src.helpers import get_or_create
 
 class Concept(db.Model):
+    """
+    A class to represent an Concept
+
+    ...
+
+    Attributes
+    ----------
+    id : integer
+        primary key
+    title : str
+        title of concept
+
+    Methods
+    -------
+    related(self, exclude):
+        Returns all concepts and relationship types of related concepts
+    description(self, password):
+        Returns a description of the concept
+    infer_relationships(cls, session, artifact):
+        Infers concept relationships from an artifact
+
+    """
     __tablename__ = 'concepts'
 
     id = Column(Integer, primary_key=True)
@@ -15,6 +48,17 @@ class Concept(db.Model):
         return self.title
 
     def related(self, exclude):
+        """
+        Returns all concepts and relationship types of related concepts
+
+            Parameters:
+                exclude (string[]): A list of concept titles to exclude
+
+            Returns:
+                ((object, string)[]): A list of tuples of related concepts and
+                    their relationship types
+        """
+
         exclude = set(exclude)
 
         rels = []
@@ -27,6 +71,14 @@ class Concept(db.Model):
         return rels
 
     def description(self):
+        """
+        Returns a desctiption of the given concept
+        based on the description of artifacts on the concept
+
+            Returns:
+                (string): A description string of max length 75
+        """
+
         dscptn = "No description found :("
         if self.artifacts:
             dscptn = self.artifacts[0].description
@@ -34,6 +86,21 @@ class Concept(db.Model):
 
     @classmethod
     def infer_relationships(cls, session, artifact):
+        """
+        Infers concept relationships based on an artifact.
+        Creates prerequisite relationships between prerequisites
+          and the main concept.
+        Creates nested relationships between the main concept
+          and chunk concepts.
+
+            Parameters:
+                session(db.session): The current database session
+                artifact(object): An artifact object
+
+            Returns:
+                None
+        """
+
         try:
             for prereq_concept in artifact.prerequisites:
                 rltn = get_or_create(session, ConceptRelationship,
@@ -53,6 +120,33 @@ class Concept(db.Model):
             raise
 
 class ConceptRelationship(db.Model):
+        """
+        A class to represent relationships between Concepts
+
+        ...
+
+        Attributes
+        ----------
+        TYPE_TO_STR: {int: string}
+            mapping of ordinals to strings of relationship types
+        STR_TO_TYPE: {string: int}
+            mapping of strings to ordinals of relationship types
+        DIRECTIONAL_TYPE {int: {bool: string}}
+            mapping of ordinal relationship types to directional relationships
+
+        id : integer
+            primary key
+        relationship_type : integer
+            ordinal representing one of the recognized types
+
+        Methods
+        -------
+        directional_type(self, a_to_b=True):
+            Returns a string of directional relationship type
+        type(cls, type_str):
+            Converts a string type to an ordinal type
+        """
+
     __tablename__ = 'concept_relationships'
     # _____ CLASS ATTRIBUTES _____
     # DEV: encapsulating conversion
@@ -87,8 +181,27 @@ class ConceptRelationship(db.Model):
     concept_b = relationship("Concept", foreign_keys=[concept_b_id], backref=backref("relationships_in"), post_update=True)
 
     def directional_type(self, a_to_b=True):
+        """
+        Returns a string of directional relationship type
+
+            Parameters:
+                a_to_b (bool): If the direction is from concept_a to concept_b
+
+            Returns:
+                (string): The directional relationship type
+        """
         return self.DIRECTIONAL_TYPE[self.relationship_type][a_to_b]
 
     @classmethod
     def type(cls, type_str):
+        """
+        Converts a string type to an ordinal type
+
+            Parameters:
+                type_str (string): The string of relationship type
+
+            Returns:
+                (int): The ordinal of relationship type
+        """
+
         return cls.STR_TO_TYPE[type_str]

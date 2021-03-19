@@ -1,3 +1,7 @@
+"""
+Controller for Artifacts
+"""
+
 from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
 from flask_login import current_user
 from src.models.artifacts import Artifact, Chunk
@@ -9,7 +13,7 @@ artifacts_template = Blueprint('artifacts', __name__, template_folder='../templa
 @artifacts_template.route('/artifacts/<artifact_id>')
 def view(artifact_id):
     '''
-    View for artifact
+    View given artifact
 
     Only accepts GET requests.
     It gets the appropriate information and passes it to the View.
@@ -71,7 +75,7 @@ def edit(artifact_id):
     elif request.method == 'POST':
         try:
             form = ArtifactForm(formdata=request.form)
-            artifact.save_changes(form)
+            artifact.edit(form)
             flash('Changes saved!')
             return render_template('artifacts/view/view.html', artifact=artifact)
         except Exception as e:
@@ -81,22 +85,13 @@ def edit(artifact_id):
 @artifacts_template.route('/artifacts/search', methods=["GET", "POST"])
 def search():
     '''
-    Returns index page with only results that have a title that match
-    given search parameters
+    Returns search page
 
-    If no filters are provided, will return artifacts that contain the search
-    term in their title.
 
-    If filters are provided, will return artifacts that contain the search term
-    and match provided filters.
+    A GET request will render the search page with random artifacts.
 
-    Uses Postgres LIKE query to match search terms.
-
-    Accepts filters
-        - search by type (text/ video)
-        - search by duration (mins, hours, days, months, ?)
-
-    Any search patterns not recognized will be ignored and a warning will flash.
+    A POST request will render the search page with artifacts that
+    meet provided filters and concepts that are related to the search concept
     '''
     if request.method == 'GET':
         form = SearchForm()
