@@ -82,10 +82,12 @@
           </span>
         {% endif %}
         {% if artifact.source is not none %}
-          <span>
-            <i class="fas fa-university"></i>
-            {{artifact.source.name}}
-          </span>
+          <a href="{{artifact.source.link}}">
+            <span href="{{artifact.source.link}}">
+              <i class="fas fa-university"></i>
+              {{artifact.source.name}}
+            </span>
+          </a>
         {% endif %}
       </div>
       </br>
