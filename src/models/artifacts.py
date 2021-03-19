@@ -108,9 +108,13 @@ class Artifact(db.Model):
                 self.prerequisites.append(prereq_concept)
 
             num_chunks = len(self.chunks.all())
+            print("HALO", len(form.chunks.entries), num_chunks)
+            print("HALO2", form.chunks.entries, self.chunks)
             for i, chunk_entry in enumerate(form.chunks.entries):
+                print(i,)
                 chunk_concept = get_or_create(db.session, Concept, title=chunk_entry.concept.data)
                 if i < num_chunks:
+                    print(i, chunk_entry, self.chunks[i])
                     chunk = self.chunks[i]
                     chunk.concept = chunk_concept
                     chunk.title = chunk_entry.title.data
