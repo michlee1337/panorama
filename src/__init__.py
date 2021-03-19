@@ -7,9 +7,6 @@ from flask_login import LoginManager
 import sys
 import os
 
-# Get Font Awesome
-from flask_fontawesome import FontAwesome
-
 # Create a flask app
 sys.path.append('src')
 app = Flask(__name__)

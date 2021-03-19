@@ -13,6 +13,7 @@ from sqlalchemy.orm import relationship, backref
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 class User(UserMixin, db.Model):
     """
     A class to represent a User.
@@ -42,6 +43,7 @@ class User(UserMixin, db.Model):
     username = Column(String(200))
     email = Column(String(200))
     password_hash = Column(String(128))
+
     def set_password(self, password):
         """
         Sets User.password_hash to the hash of the provided string

@@ -2,13 +2,16 @@
 Controller for Artifacts
 """
 
-from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, flash, request, redirect, \
+    url_for, jsonify
 from flask_login import current_user
 from src.models.artifacts import Artifact, Chunk
 from src.models.concepts import Concept
 from src.forms import ArtifactForm, SearchForm
 
-artifacts_template = Blueprint('artifacts', __name__, template_folder='../templates')
+artifacts_template = Blueprint('artifacts', __name__,
+                               template_folder='../templates')
+
 
 @artifacts_template.route('/artifacts/<artifact_id>')
 def view(artifact_id):
@@ -24,7 +27,8 @@ def view(artifact_id):
         return render_template('pages/index.html')
     return render_template('artifacts/view/view.html', artifact=artifact)
 
-@artifacts_template.route('/artifacts/new', methods=["GET","POST"])
+
+@artifacts_template.route('/artifacts/new', methods=["GET", "POST"])
 def new():
     '''
     Creates new artifact
@@ -57,7 +61,9 @@ def new():
             flash('Error creating artifact... sorry! {}'.format(e))
             return render_template('artifacts/new.html', form=form)
 
-@artifacts_template.route('/artifacts/<artifact_id>/edit',  methods=["GET","POST"])
+
+@artifacts_template.route('/artifacts/<artifact_id>/edit',
+                          methods=["GET", "POST"])
 def edit(artifact_id):
     '''
     edit for artifact
@@ -71,16 +77,21 @@ def edit(artifact_id):
 
     if request.method == 'GET':
         form = ArtifactForm(obj=artifact)
-        return render_template('artifacts/edit.html', form=form, artifact=artifact)
+        return render_template('artifacts/edit.html', form=form,
+                               artifact=artifact)
     elif request.method == 'POST':
         try:
             form = ArtifactForm(formdata=request.form)
             artifact.edit(form)
             flash('Changes saved!')
-            return render_template('artifacts/view/view.html', artifact=artifact)
+            return render_template('artifacts/view/view.html',
+                                   artifact=artifact)
         except Exception as e:
-            flash('Error creating artifact... sorry! {}, {}'.format(type(e).__name__, e.args))
-            return render_template('artifacts/edit.html', form=form, artifact=artifact)
+            flash('Error creating artifact... sorry! {}, {}'.format(
+                type(e).__name__, e.args))
+            return render_template('artifacts/edit.html', form=form,
+                                   artifact=artifact)
+
 
 @artifacts_template.route('/artifacts/search', methods=["GET", "POST"])
 def search():
@@ -95,7 +106,8 @@ def search():
     '''
     if request.method == 'GET':
         form = SearchForm()
-        return render_template('artifacts/search/search.html', form=form, artifacts = Artifact.query.limit(10))
+        return render_template('artifacts/search/search.html', form=form,
+                               artifacts=Artifact.query.limit(10))
     else:
         form = SearchForm(formdata=request.form)
         artifacts = Artifact.search(request.form)
@@ -105,7 +117,9 @@ def search():
             concept = artifacts[0].concept
             exclude = request.form["sub_concepts"].split()
             concepts = concept.related(exclude=exclude)
-        return render_template('artifacts/search/search.html', form=form, artifacts = artifacts, concepts = concepts)
+        return render_template('artifacts/search/search.html', form=form,
+                               artifacts=artifacts, concepts=concepts)
+
 
 @artifacts_template.route('/artifacts/by_concept')
 def by_concept():

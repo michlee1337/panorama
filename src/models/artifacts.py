@@ -13,7 +13,8 @@ from src.models.concepts import Concept
 from src.models.chunks import Chunk
 from src.models.sources import Source
 
-from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey, Table, func
+from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey, \
+    Table, func
 from sqlalchemy.orm import relationship, backref
 from flask_login import current_user
 from flask import flash
@@ -31,6 +32,7 @@ artifact_prerequisites = Table(
     Column('concept_id', Integer, ForeignKey('concepts.id')),
     Column('artifact_id', Integer, ForeignKey('artifacts.id'))
 )
+
 
 class Artifact(db.Model):
     """
@@ -66,9 +68,11 @@ class Artifact(db.Model):
     search(cls, arg_dict):
         Returns all artifacts matching the arguments given
     duration_options(cls):
-        Returns list of accepted durations as a tuple of ordinal and string values
+        Returns list of accepted durations as a tuple of
+        ordinal and string values
     mediatype_options(cls):
-        Returns list of accepted mediatypes as a tuple of ordinal and string values
+        Returns list of accepted mediatypes as a tuple of
+        ordinal and string values
     """
 
     __tablename__ = 'artifacts'
@@ -100,11 +104,14 @@ class Artifact(db.Model):
     concept_id = Column(Integer, ForeignKey('concepts.id'))
     concept = relationship('Concept', backref='artifacts')
     prerequisites = relationship('Concept', secondary='artifact_prerequisites',
-        backref='dependant_artifacts', lazy='dynamic')
+                                 backref='dependant_artifacts', lazy='dynamic')
     source_id = Column(Integer, ForeignKey('sources.id'), nullable=True)
     source = relationship('Source', backref='artifacts')
     user_id = Column(Integer, ForeignKey('users.id'))
-    chunks = relationship("Chunk", backref="artifact", order_by=[Chunk.position], collection_class=ordering_list('position'), lazy="dynamic")
+    chunks = relationship("Chunk", backref="artifact",
+                          order_by=[Chunk.position],
+                          collection_class=ordering_list('position'),
+                          lazy="dynamic")
 
     def __str__(self):
         return f"<id={self.id}, title={self.title}"
@@ -119,7 +126,8 @@ class Artifact(db.Model):
                 db.session.add(self)
 
             # check required data
-            if form.mediatype.data not in self.MEDIATYPE_TO_STR.keys():  # Python3 .keys() returns set-like
+            # DEV: Python3 .keys() returns set-like
+            if form.mediatype.data not in self.MEDIATYPE_TO_STR.keys():
                 raise AttributeError("Mediatype is not recognized.")
 
             if form.duration.data not in self.DURATION_TO_STR.keys():
@@ -127,14 +135,15 @@ class Artifact(db.Model):
 
             if form.source.data["name"] != "":
                 source = get_or_create(db.session, Source,
-                    name=form.source.data["name"],
-                    link=form.source.data["link"])
+                                       name=form.source.data["name"],
+                                       link=form.source.data["link"])
 
             else:
                 source = None
 
             # create self
-            self.concept = get_or_create(db.session, Concept, title=form.concept.data)
+            self.concept = get_or_create(db.session, Concept,
+                                         title=form.concept.data)
             self.source = source
             self.user = current_user
             self.description = form.description.data
@@ -144,13 +153,15 @@ class Artifact(db.Model):
 
             # create prerequisite concepts and add relationships
             for prereq in form.prerequisites.data:
-                prereq_concept = get_or_create(db.session, Concept, title=prereq)
+                prereq_concept = get_or_create(db.session, Concept,
+                                               title=prereq)
                 self.prerequisites.append(prereq_concept)
 
             # create chunks
             num_chunks = len(self.chunks.all())
             for i, chunk_entry in enumerate(form.chunks.entries):
-                chunk_concept = get_or_create(db.session, Concept, title=chunk_entry.concept.data)
+                chunk_concept = get_or_create(db.session, Concept,
+                                              title=chunk_entry.concept.data)
                 if i < num_chunks:
                     chunk = self.chunks[i]
                     chunk.concept = chunk_concept
@@ -181,7 +192,7 @@ class Artifact(db.Model):
         Updates the artifact to match the form values
 
             Parameters:
-                form (werkzeug.MultiDict): A mapping of attribute names to values
+                form (werkzeug.MultiDict): A mapping of attributes to values
 
             Returns:
                 None
@@ -224,29 +235,35 @@ class Artifact(db.Model):
                 (Artifact[]): a list of atrifacts matching the arguments
         """
         accepted_keys = {"title",
-            "mediatype",
-            "duration",
-            "concept",
-            "sub_concepts",
-            "submit"}
+                         "mediatype",
+                         "duration",
+                         "concept",
+                         "sub_concepts",
+                         "submit"}
+        special_filters = {"title",
+                           "sub_concepts",
+                           "concept"}
+
         filters = {}
 
         for key, value in arg_dict.items():
-            if len(value) == 0 or key == "title" or key=="sub_concepts" or key=="submit" or key == "concept":
+            if len(value) == 0 or key == "submit" or key in special_filters:
                 pass
             elif key not in accepted_keys:
-                flash("Search term {} not recognized and is ignored".format(key))
+                flash("Term {} not recognized and is ignored".format(key))
             else:
                 filters[key] = value
 
         query = Artifact.query.filter_by(**filters)
 
         if arg_dict.get("concept") != "":
-            query = query.filter(Artifact.concept.has(Concept.title == arg_dict["concept"]))
+            query = query.filter(Artifact.concept.has(
+                Concept.title == arg_dict["concept"]))
 
         if arg_dict.get("sub_concepts") != "":
             subs = arg_dict["sub_concepts"].split()
-            query = query.join(Chunk).join(Concept).filter(Concept.title.in_(subs))
+            query = query.join(Chunk).join(Concept).filter(
+                Concept.title.in_(subs))
 
         if arg_dict.get("title") != "":
             query = query.filter(Artifact.title.contains(arg_dict["title"]))
@@ -257,7 +274,8 @@ class Artifact(db.Model):
     @classmethod
     def duration_options(cls):
         """
-        Returns list of accepted durations as a tuple of ordinal and string values
+        Returns list of accepted durations as a tuple of
+        ordinal and string values
 
             Parameters:
                 None
@@ -271,7 +289,8 @@ class Artifact(db.Model):
     @classmethod
     def mediatype_options(cls):
         """
-        Returns list of accepted mediatypes as a tuple of ordinal and string values
+        Returns list of accepted mediatypes as a tuple of
+        ordinal and string values
 
             Parameters:
                 None

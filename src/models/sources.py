@@ -8,6 +8,7 @@ from src.models import db
 
 from sqlalchemy import Column, Integer, String
 
+
 class Source(db.Model):
     """
     A class to represent an external Source.

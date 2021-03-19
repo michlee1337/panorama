@@ -11,6 +11,7 @@ from src.models.concepts import Concept
 from sqlalchemy import Column, Integer, String, UnicodeText, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
+
 class Chunk(db.Model):
     """
     A class to represent a Chunk

@@ -12,6 +12,7 @@ from src.models import db
 
 pages_template = Blueprint('pages', __name__, template_folder='../templates')
 
+
 @pages_template.route('/')
 def index():
     """
@@ -54,6 +55,7 @@ def login():
             flash('Provided login details not recognized.')
             return render_template('pages/login.html', form=form)
 
+
 @pages_template.route('/logout')
 def logout():
     """
@@ -63,6 +65,7 @@ def logout():
     """
     logout_user()
     return redirect('/')
+
 
 @pages_template.route('/register', methods=['GET', 'POST'])
 def register():
@@ -74,9 +77,6 @@ def register():
     A POST request will check that the user is not currently logged in,
     afterwards it will create a new user based on provided data and redirect
     to homepage.
-
-    Any form input validation (ex: must not be empty) is done in the application logic,
-    visible in /src/forms.py
     """
     if current_user.is_authenticated:
         return redirect(url_for('index'))

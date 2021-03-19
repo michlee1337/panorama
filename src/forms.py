@@ -14,7 +14,8 @@ Classes:
 
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, IntegerField, SelectField, SubmitField, PasswordField, FieldList, FormField, SelectMultipleField
+from wtforms import StringField, TextAreaField, IntegerField, SelectField, \
+    SubmitField, PasswordField, FieldList, FormField, SelectMultipleField
 from wtforms_alchemy import ModelForm, ModelFieldList
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from wtforms.widgets import ListWidget, CheckboxInput
@@ -25,23 +26,30 @@ from src.models.sources import Source
 
 # _____ FIELDS ______
 
-# Credit to M0r13n
-## https://gist.github.com/M0r13n/71655c53b2fbf41dc1db8412978bcbf9
+
 class CommaSepListField(StringField):
+
     """
     A class to represent a comma seperated list inputs.
     Inherits from wtforms.StringField
+
+    Credit to M0r13n
+      https://gist.github.com/M0r13n/71655c53b2fbf41dc1db8412978bcbf9
+
     """
 
-    def __init__(self, label='', validators=None, remove_duplicates=True, to_lowercase=True, separator=' ', **kwargs):
+    def __init__(self, label='', validators=None, remove_duplicates=True,
+                 to_lowercase=True, separator=' ', **kwargs):
         """
         Constructs a new field.
             Parameters:
                 label (string): The label of the field
-                validators (wtforms.validators[]): A sequence of validators to call when validate is called
-                remove_duplicates (bool): Remove duplicates in a case insensitive manner
+                validators (wtforms.validators[]): A sequence of validators to
+                    call when validate is called
+                remove_duplicates (bool): Remove duplicates in
+                    a case insensitive manner
                 to_lowercase (bool): Cast all values to lowercase
-                separator (string): The separator that splits the individual tags
+                separator (string): The separator for splitting tags
         """
         super(CommaSepListField, self).__init__(label, validators, **kwargs)
         self.remove_duplicates = remove_duplicates
@@ -57,7 +65,9 @@ class CommaSepListField(StringField):
 
     def process_formdata(self, valuelist):
         if valuelist:
-            self.data = filter(None, [x.strip() for x in valuelist[0].split(self.separator)])
+            values = valuelist[0].split(self.separator)
+            values = [x.strip() for x in values]
+            self.data = filter(None, values)
             if self.remove_duplicates:
                 self.data = list(self._remove_duplicates(self.data))
             if self.to_lowercase:
@@ -65,25 +75,30 @@ class CommaSepListField(StringField):
 
     @classmethod
     def _remove_duplicates(cls, seq):
-        """Remove duplicates in a case insensitive, but case preserving manner"""
+        """Remove duplicates in a case insensitive manner"""
         d = {}
         for item in seq:
             if item.lower() not in d:
                 d[item.lower()] = True
                 yield item
 
+
 class MultiCheckboxField(SelectMultipleField):
     """An extension of SelectMultipleField to use checkboxes"""
     widget = ListWidget(prefix_label=False)
     option_widget = CheckboxInput()
 
+
 # _____ FORMS _____
 class LoginForm(FlaskForm):
     """Form used for user login"""
-    username = StringField('Username', validators=[DataRequired(message="Username is required")])
+    username = StringField('Username', validators=[
+        DataRequired(message="Username is required")])
     email = StringField('Email', validators=[Email()])
-    password = PasswordField('Password', validators=[DataRequired(message="Password is required")])
+    password = PasswordField('Password', validators=[
+        DataRequired(message="Password is required")])
     login = SubmitField('Login')
+
 
 class RegistrationForm(FlaskForm):
     """Form used for user registration"""
@@ -104,6 +119,7 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
+
 class ChunkForm(ModelForm):
     """Form for creating and editting chunks"""
     class Meta:
@@ -112,12 +128,14 @@ class ChunkForm(ModelForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
 
+
 class SourceForm(ModelForm):
     """Form for creating and editting sources"""
     class Meta:
         model = Source
     name = StringField('Name', render_kw={"placeholder": "Name"})
     link = StringField('Link', render_kw={"placeholder": "Link"})
+
 
 class ArtifactForm(ModelForm):
     """Form for creating and editting artifacts"""
@@ -133,18 +151,23 @@ class ArtifactForm(ModelForm):
     source = FormField(SourceForm)
     title = StringField('Title', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
-    mediatype = SelectField('Mediatype', choices=Artifact.mediatype_options(), validators=[DataRequired()], coerce=int)
-    duration = SelectField('Duration', choices=Artifact.duration_options(), validators=[DataRequired()], coerce=int)
+    mediatype = SelectField('Mediatype', choices=Artifact.mediatype_options(),
+                            validators=[DataRequired()], coerce=int)
+    duration = SelectField('Duration', choices=Artifact.duration_options(),
+                           validators=[DataRequired()], coerce=int)
     vote_count = IntegerField()
     vote_sum = IntegerField()
     chunks = ModelFieldList(FormField(ChunkForm), min_entries=1)
     create = SubmitField('Create')
+
 
 class SearchForm(FlaskForm):
     """Form for searching artifacts"""
     title = StringField('Title')
     concept = StringField('Main Concept')
     sub_concepts = CommaSepListField('Sub-Concepts', to_lowercase=True)
-    mediatype = MultiCheckboxField('Mediatype', choices=Artifact.mediatype_options())
-    duration = MultiCheckboxField('Duration', choices=Artifact.duration_options())
+    mediatype = MultiCheckboxField('Mediatype',
+                                   choices=Artifact.mediatype_options())
+    duration = MultiCheckboxField('Duration',
+                                  choices=Artifact.duration_options())
     search = SubmitField('Search')
