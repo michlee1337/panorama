@@ -83,8 +83,7 @@ class Artifact(db.Model):
         0: 'Unknown',
         1: 'Minutes',
         2: 'Days',
-        3: 'Months',
-        4: 'Long'}
+        3: 'Months'}
 
     MEDIATYPE_TO_STR = {
         0: 'Unknown',
