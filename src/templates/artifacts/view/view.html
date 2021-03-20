@@ -67,7 +67,14 @@
     </a>
 
     <div class="title">
-      <h1><span class="badge alert-primary">{{artifact.concept.title}}</span>: {{artifact.title}} </h1>
+      <h1>
+        <span class="badge alert-primary help">
+          {{artifact.concept.title}}
+          <div class="popup">
+            <p><i>{{artifact.concept.description()}}</i></p>
+          </div>
+        </span>
+        : {{artifact.title}} </h1>
       <div class="artifact-metadata text-secondary">
         {% if artifact.duration != 0 %}
           <span>
