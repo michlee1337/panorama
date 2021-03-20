@@ -19,3 +19,11 @@
   margin-top: -1.5rem; /* bg-color under nav */
   padding: 1.5rem 0;
 }
+
+.related-badge {
+  color: black;
+}
+
+.related-badge:hover {
+  text-decoration: none;
+}

@@ -44,6 +44,10 @@ input[type=text], textarea {
   cursor: pointer;
 }
 
+.neutral-link:hover {
+  text-decoration: None;
+}
+
 /* NAVBAR */
 
 #navbar {
@@ -52,11 +56,6 @@ input[type=text], textarea {
 
 #navbar a {
   color: #6c757d;
-}
-
-/* ARTIFACT CARD */
-.neutral-link:hover {
-  text-decoration: None;
 }
 
 /* ARTIFACT CARD */

@@ -1,19 +1,20 @@
 {% if concepts is defined and concepts is not none and concepts != [] %}
   {% for concept, type in concepts %}
-    <a onclick="searchConcept('{{concept.title}}')">
-    {% if type == "first" %}
-      <span class="clickable badge badge-pill badge-first">
-    {% elif type == "second" %}
-      <span class="clickable badge badge-pill badge-second">
-    {% elif type == "up" %}
-      <span class="clickable badge badge-pill badge-up">
-    {% elif type == "down" %}
-      <span class="clickable badge badge-pill badge-down">
-    {% else %}
-      <span class="clickable badge badge-pill badge-secondary">
-    {% endif %}
-      {{concept.title}}
-    </span>
+    <a onclick="searchConcept('{{concept.title}}')" class="clickable related-badge">
+        {% if type == "first" %}
+          <span class="badge badge-pill badge-first">
+        {% elif type == "second" %}
+          <span class="badge badge-pill badge-second">
+        {% elif type == "up" %}
+          <span class="badge badge-pill badge-up">
+        {% elif type == "down" %}
+          <span class="badge badge-pill badge-down">
+        {% else %}
+          <span class="badge badge-pill badge-secondary">
+        {% endif %}
+          {{concept.title}}
+        </span>
+      <!-- </div> -->
     </a>
   {% endfor %}
 {% else %}
