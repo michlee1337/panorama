@@ -166,6 +166,7 @@ class SearchForm(FlaskForm):
     title = StringField('Title')
     concept = StringField('Main Concept')
     sub_concepts = CommaSepListField('Sub-Concepts', to_lowercase=True)
+    source = StringField('Source')
     mediatype = MultiCheckboxField('Mediatype',
                                    choices=Artifact.mediatype_options())
     duration = MultiCheckboxField('Duration',

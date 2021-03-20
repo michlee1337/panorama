@@ -238,10 +238,12 @@ class Artifact(db.Model):
                          "duration",
                          "concept",
                          "sub_concepts",
+                         "source",
                          "submit"}
         special_filters = {"title",
                            "sub_concepts",
-                           "concept"}
+                           "concept",
+                           "source"}
 
         filters = {}
 
@@ -263,6 +265,10 @@ class Artifact(db.Model):
             subs = arg_dict["sub_concepts"].split()
             query = query.join(Chunk).join(Concept).filter(
                 Concept.title.in_(subs))
+
+        if arg_dict.get("source") != "":
+            query = query.filter(Artifact.source.has(
+                Source.name == arg_dict["source"]))
 
         if arg_dict.get("title") != "":
             query = query.filter(Artifact.title.contains(arg_dict["title"]))
