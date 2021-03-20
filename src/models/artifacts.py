@@ -248,7 +248,7 @@ class Artifact(db.Model):
         filters = {}
 
         for key, value in arg_dict.items():
-            if len(value) == 0 or key == "submit" or key in special_filters:
+            if len(value) == 0 or key == "search" or key in special_filters:
                 pass
             elif key not in accepted_keys:
                 flash("Term {} not recognized and is ignored".format(key))
