@@ -2,15 +2,15 @@
   {% for concept, type in concepts %}
     <a onclick="searchConcept('{{concept.title}}')">
     {% if type == "first" %}
-      <span class="badge badge-pill badge-first">
+      <span class="clickable badge badge-pill badge-first">
     {% elif type == "second" %}
-      <span class="badge badge-pill badge-second">
+      <span class="clickable badge badge-pill badge-second">
     {% elif type == "up" %}
-      <span class="badge badge-pill badge-up">
+      <span class="clickable badge badge-pill badge-up">
     {% elif type == "down" %}
-      <span class="badge badge-pill badge-down">
+      <span class="clickable badge badge-pill badge-down">
     {% else %}
-      <span class="badge badge-pill badge-secondary">
+      <span class="clickable badge badge-pill badge-secondary">
     {% endif %}
       {{concept.title}}
     </span>

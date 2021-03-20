@@ -40,6 +40,10 @@ input[type=text], textarea {
   padding-right: 15px;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 /* NAVBAR */
 
 #navbar {
