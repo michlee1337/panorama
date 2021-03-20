@@ -6,6 +6,13 @@ View these demo videos to see current functionality:
 - [search](https://www.youtube.com/embed/RwjTc0yDfAc)
 - [traverse](https://www.youtube.com/embed/yPmlOpmwDAU)
 
+# Filestucture
+- Loosely follows MVC
+- app initialization can be found in `src/__init__.py`
+- models can be found in `src/models`
+- blueprints can be found in `src/blueprints`
+- templates can be found in `src/templates`
+
 # Prerequisites
 Install [Python3](https://www.python.org/downloads/)
 Set up [Postgresql](https://www.elliotblackburn.com/installing-postgresql-on-macos-osx/)
