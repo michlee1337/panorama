@@ -2,7 +2,9 @@
 
 This project is a WIP. </br>
 See the live demo [here](https://panorama-stage.herokuapp.com/artifacts/search) </br>
-View this [demo video](https://www.loom.com/share/99ebf66f2c13421ea1cc5d23f741786f?sharedAppSource=personal_library) for an overview of current functionality.
+View these demo videos to see current functionality:
+- [search](https://www.youtube.com/embed/RwjTc0yDfAc)
+- [traverse](https://www.youtube.com/embed/yPmlOpmwDAU)
 
 # Prerequisites
 Install [Python3](https://www.python.org/downloads/)
