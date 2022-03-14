@@ -1,10 +1,18 @@
 [![Build Status](https://travis-ci.com/michlee1337/panorama.svg?branch=master)](https://travis-ci.com/michlee1337/panorama)
 
-This project is a WIP. </br>
-See the live demo [here](https://panorama-stage.herokuapp.com/artifacts/search) </br>
-View these demo videos to see current functionality:
-- [search](https://www.youtube.com/embed/RwjTc0yDfAc)
-- [traverse](https://www.youtube.com/embed/yPmlOpmwDAU)
+This project is a side project/ experiment. </br>
+The objective is as follows:
+- support self directed learning via the user journey of figuring out what is the concept you want to learn while searching for resources.
+- encourage metacognition by presenting the concept map first and encouraging users to explore/ search in terms of concepts.
+
+[![Searching for resources](https://img.youtube.com/vi/RwjTc0yDfAc/0.jpg)](https://www.youtube.com/watch?v=RwjTc0yDfAc)
+- Find resources by concepts, subconcepts, prerequisites, mediatype, and duration.
+
+
+[![Exploring related concepts](https://img.youtube.com/vi/yPmlOpmwDAU/0.jpg)](https://www.youtube.com/watch?v=yPmlOpmwDAU)
+- Refine search or explore related resources by exploring foundations (prerequisites), alternatives (same concept), or deep dive (expanding on sub concepts).
+
+See the live website [here](https://panorama-stage.herokuapp.com/artifacts/search) </br>
 
 # Filestucture
 - Loosely follows MVC
