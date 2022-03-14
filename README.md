@@ -6,6 +6,7 @@ The objective is as follows:
 - encourage metacognition by presenting the concept map first and encouraging users to explore/ search in terms of concepts.
 
 See the live website [here](https://panorama-stage.herokuapp.com/artifacts/search) </br>
+Read some unrefined reasonings behind the website [here](https://docs.google.com/document/d/1Ox7XjB1VtSx2qFoDq0pieUCMz7AE9EDSkGPPpYJtELY/edit?usp=sharing)
 
 # Searching for resources
 [![Searching for resources](https://img.youtube.com/vi/RwjTc0yDfAc/0.jpg)](https://www.youtube.com/watch?v=RwjTc0yDfAc)
