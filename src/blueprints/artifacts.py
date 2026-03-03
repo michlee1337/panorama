@@ -7,7 +7,8 @@ from flask import Blueprint, render_template, flash, request, redirect, \
 from flask_login import current_user
 from src.models.artifacts import Artifact, Chunk
 from src.models.concepts import Concept
-from src.forms import ArtifactForm, SearchForm
+from src.forms import ArtifactForm, SearchForm, URLImportForm
+from src.services.importer import extract_artifact_data
 
 artifacts_template = Blueprint('artifacts', __name__,
                                template_folder='../templates')
@@ -60,6 +61,63 @@ def new():
         except Exception as e:
             flash('Error creating artifact... sorry! {}'.format(e))
             return render_template('artifacts/new.html', form=form)
+
+
+@artifacts_template.route('/artifacts/import', methods=["GET", "POST"])
+def import_url():
+    '''
+    Import an artifact from a URL
+
+    A GET request returns a form to paste a URL.
+
+    A POST request fetches the URL, extracts structured data using AI,
+    and renders the artifact creation form pre-filled with the extracted data.
+    '''
+    if not current_user.is_authenticated:
+        flash('Login to contribute!')
+        return redirect(url_for('pages.login'))
+
+    import_form = URLImportForm()
+
+    if request.method == 'GET':
+        return render_template('artifacts/import.html', form=import_form)
+
+    # POST: process the URL
+    if not import_form.validate_on_submit():
+        flash('Please enter a valid URL.')
+        return render_template('artifacts/import.html', form=import_form)
+
+    try:
+        data = extract_artifact_data(import_form.url.data)
+
+        # Build a MultiDict to pre-populate the ArtifactForm
+        from werkzeug.datastructures import MultiDict
+        form_data = MultiDict({
+            'title': data.get('title', ''),
+            'description': data.get('description', ''),
+            'concept': data.get('concept', ''),
+            'prerequisites': ', '.join(data.get('prerequisites', [])),
+            'source-name': data.get('source_name', ''),
+            'source-link': data.get('source_link', ''),
+            'mediatype': str(data.get('mediatype', 0)),
+            'duration': str(data.get('duration', 0)),
+        })
+
+        # Add chunks
+        chunks = data.get('chunks', [])
+        for i, chunk in enumerate(chunks):
+            form_data.add(f'chunks-{i}-concept', chunk.get('concept', ''))
+            form_data.add(f'chunks-{i}-title', chunk.get('title', ''))
+            form_data.add(f'chunks-{i}-content', chunk.get('content', ''))
+
+        form = ArtifactForm(form_data)
+        flash('Breakdown generated! Review and edit before saving.')
+        return render_template('artifacts/new.html', form=form,
+                               imported_url=import_form.url.data)
+
+    except Exception as e:
+        flash('Error importing URL: {}'.format(e))
+        return render_template('artifacts/import.html', form=import_form)
 
 
 @artifacts_template.route('/artifacts/<artifact_id>/edit',

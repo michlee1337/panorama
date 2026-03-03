@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <style>
+        .import-container {
+            max-width: 600px;
+            margin: 40px auto;
+        }
+        .import-container h2 {
+            margin-bottom: 10px;
+        }
+        .import-container p.subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .import-container .form-group {
+            margin-bottom: 20px;
+        }
+        .import-container input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .import-container input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        .import-container .btn-import {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+        }
+        .spinner-overlay {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .spinner-overlay .spinner-border {
+            margin-bottom: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block app_content %}
+<div class="import-container">
+    <h2>Import from URL</h2>
+    <p class="subtitle">
+        Paste a link to an article or webpage and we'll automatically generate
+        a structured breakdown with metadata tags.
+    </p>
+
+    <form id="import-form" action="{{ url_for('artifacts.import_url') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.url.label(class="col-form-label") }}
+            {{ form.url(class="form-control", placeholder="https://example.com/article") }}
+            {% for error in form.url.errors %}
+                <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+        </div>
+        {{ form.submit(class="btn btn-primary btn-import") }}
+    </form>
+
+    <div class="spinner-overlay" id="loading-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <p>Fetching and analyzing the page... this may take a few seconds.</p>
+    </div>
+</div>
+
+<script>
+document.getElementById('import-form').addEventListener('submit', function() {
+    document.getElementById('loading-spinner').style.display = 'block';
+    this.querySelector('button[type="submit"]').disabled = true;
+});
+</script>
+{% endblock %}
