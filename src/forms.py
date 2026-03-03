@@ -17,7 +17,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, SelectField, \
     SubmitField, PasswordField, FieldList, FormField, SelectMultipleField
 from wtforms_alchemy import ModelForm, ModelFieldList
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, \
+    URL
 from wtforms.widgets import ListWidget, CheckboxInput
 from src.models.users import User
 from src.models.artifacts import Artifact
@@ -159,6 +160,14 @@ class ArtifactForm(ModelForm):
     vote_sum = IntegerField()
     chunks = ModelFieldList(FormField(ChunkForm), min_entries=1)
     create = SubmitField('Create')
+
+
+class URLImportForm(FlaskForm):
+    """Form for importing an artifact from a URL"""
+    url = StringField('Article / Webpage URL', validators=[
+        DataRequired(message="URL is required"),
+        URL(message="Please enter a valid URL")])
+    submit = SubmitField('Generate Breakdown')
 
 
 class SearchForm(FlaskForm):
